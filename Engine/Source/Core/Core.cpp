@@ -1,12 +1,16 @@
 #include "Core.h"
-#include "../Source/Core/Engine.h"
-#include "../Source/Core/Time.h"
+#include "Engine.h"
+#include "Time.h"
 #include "box2d.h"
 
 
 #undef main;
 
-int main()
+
+Core* Core::m_Instance = nullptr;
+
+
+void InitEngine()
 {
  	Engine::GetInstance()->Init();
  
@@ -20,5 +24,4 @@ int main()
 
 	Engine::GetInstance()->Clean();
 
-	return 0;
 }

@@ -24,6 +24,7 @@
     <ProjectGuid>{483e3c96-6d1d-4dbb-beee-3ace80012602}</ProjectGuid>
     <RootNamespace>Engine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>PATA45</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -136,6 +137,7 @@
     <ClInclude Include="..\Dependencies\TINYXML\tinystr.h" />
     <ClInclude Include="..\Dependencies\TINYXML\tinyxml.h" />
     <ClInclude Include="..\Source\Components\Camera.h" />
+    <ClInclude Include="..\Source\Core\Core.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\InputHandler.h" />
     <ClInclude Include="..\Source\Core\Level.h" />
@@ -153,7 +155,6 @@
     <ClInclude Include="..\Source\Physics\Point.h" />
     <ClInclude Include="..\Source\Physics\Transform.h" />
     <ClInclude Include="..\Source\Physics\Vector2.h" />
-    <ClInclude Include="Core.h" />
     <ClInclude Include="TestGameWorld.h" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +163,7 @@
     <ClCompile Include="..\Dependencies\TINYXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\Dependencies\TINYXML\tinyxmlparser.cpp" />
     <ClCompile Include="..\Source\Components\Camera.cpp" />
+    <ClCompile Include="..\Source\Core\Core.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\InputHandler.cpp" />
     <ClCompile Include="..\Source\Core\Level.cpp" />
@@ -172,7 +174,6 @@
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
     <ClCompile Include="..\Source\Objects\Player.cpp" />
-    <ClCompile Include="Core.cpp" />
     <ClCompile Include="TestGameWorld.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
