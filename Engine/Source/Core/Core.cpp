@@ -1,11 +1,9 @@
 #include "Core.h"
 #include "Engine.h"
 #include "Time.h"
-#include "box2d.h"
 
 
 Core* Core::m_Instance = nullptr;
-
 
 void Core::InitEngine()
 {

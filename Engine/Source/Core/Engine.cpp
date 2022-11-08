@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include <iostream>
-#include "sdl.h"
+#include "SDL.h"
 #include "../Graphics/TextureManager.h"
 #include "../Objects/Player.h"
 #include "../Core/InputHandler.h"

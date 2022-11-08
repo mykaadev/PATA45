@@ -75,9 +75,6 @@
     <ClInclude Include="..\Source\Physics\Point.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestGameWorld.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\Source\Core\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -126,9 +123,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Components\Camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TestGameWorld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Core.cpp">
