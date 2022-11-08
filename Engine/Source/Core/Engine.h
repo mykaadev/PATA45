@@ -1,10 +1,12 @@
 #pragma once
 
-#include "SDL.h"
 #include "LevelParser.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
+
+class SDL_Renderer;
+class SDL_Window;
 
 class Engine
 {

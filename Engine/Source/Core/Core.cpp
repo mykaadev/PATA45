@@ -4,13 +4,10 @@
 #include "box2d.h"
 
 
-#undef main;
-
-
 Core* Core::m_Instance = nullptr;
 
 
-void InitEngine()
+void Core::InitEngine()
 {
  	Engine::GetInstance()->Init();
  

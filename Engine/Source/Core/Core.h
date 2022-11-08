@@ -7,6 +7,8 @@ public:
 	void InitEngine();
 
 private:
+
+	Core() {}
 	static Core* m_Instance;
 
 };

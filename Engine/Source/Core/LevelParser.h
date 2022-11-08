@@ -4,7 +4,10 @@
 #include <string>
 #include "Level.h"
 #include "../Graphics/TileLayer.h"
-#include "tinyxml.h"
+
+
+class TiXmlElement;
+
 
 class LevelParser
 {

@@ -1,5 +1,6 @@
 #include "InputHandler.h"
 #include "Engine.h"
+#include <iostream>
 
 
 InputHandler* InputHandler::m_Instance = nullptr;
