@@ -6,7 +6,7 @@
 class Animation
 {
 public:
-	Animation() {}
+	Animation() {};
 
 	void Update();
 	void Draw(float x, float y, int spriteWidth, int spriteHeight);

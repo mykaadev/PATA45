@@ -2,11 +2,11 @@
 #include "Engine.h"
 #include "EngineTime.h"
 #include "box2d.h"
-#include <iostream>
+#include "Time.h"
+
 
 
 Core* Core::m_Instance = nullptr;
-
 
 void Core::InitEngine()
 {
@@ -22,9 +22,4 @@ void Core::InitEngine()
 
 	Engine::GetInstance()->Clean();
 
-}
-
-void Core::Init()
-{
-	std::cout << " yoh " << std::endl;
 }

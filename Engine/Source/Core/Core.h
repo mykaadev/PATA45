@@ -9,7 +9,8 @@ public:
 
 private:
 
-	Core() {}
+	Core() {};
+
 	static Core* m_Instance;
 
 };
