@@ -144,6 +144,7 @@
     <ClInclude Include="..\Dependencies\TINYXML\tinystr.h" />
     <ClInclude Include="..\Dependencies\TINYXML\tinyxml.h" />
     <ClInclude Include="..\Source\Components\Camera.h" />
+    <ClInclude Include="..\Source\Core\CodingHelper.h" />
     <ClInclude Include="..\Source\Core\Core.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
     <ClInclude Include="..\Source\Core\InputHandler.h" />
@@ -169,6 +170,7 @@
     <ClCompile Include="..\Dependencies\TINYXML\tinyxmlerror.cpp" />
     <ClCompile Include="..\Dependencies\TINYXML\tinyxmlparser.cpp" />
     <ClCompile Include="..\Source\Components\Camera.cpp" />
+    <ClCompile Include="..\Source\Core\CodingHelper.cpp" />
     <ClCompile Include="..\Source\Core\Core.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
     <ClCompile Include="..\Source\Core\InputHandler.cpp" />

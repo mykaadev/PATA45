@@ -1,6 +1,16 @@
 #include "Animation.h"
 #include "TextureManager.h"
 
+Animation::Animation()
+{
+
+}
+
+Animation::~Animation()
+{
+
+}
+
 void Animation::Update()
 {
 	m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;

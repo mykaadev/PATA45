@@ -8,10 +8,32 @@
 #include "LevelParser.h"
 #include <iostream>
 #include "../Components/Camera.h"
+#include "CodingHelper.h"
 
 Engine* Engine::m_Instance = nullptr;
 
 Player* player = nullptr;
+
+Engine::Engine()
+{
+	m_Instance = nullptr;
+	m_Window = nullptr;
+	m_Renderer = nullptr;
+	m_bIsRunning = false;
+	m_Level = nullptr;
+	CodingHelper::GetInstance()->IncrementAmountToClearCounter(4);
+
+}
+
+Engine::~Engine()
+{
+	delete m_Renderer;
+	delete m_Window;
+	delete m_Instance;
+	delete m_Level;
+	CodingHelper::GetInstance()->DecrementAmountToClearCounter(4);
+
+}
 
 bool Engine::Init()
 {
@@ -86,7 +108,14 @@ void Engine::Renders()
 
 void Engine::Quit()
 {
-	m_bIsRunning = false;
+	if (CodingHelper::GetInstance()->CanQuit())
+	{
+		m_bIsRunning = false;
+	}
+	else
+	{
+		CodingHelper::GetInstance()->DisplayPropertiesLeftToClear();
+	}
 }
 
 bool Engine::Clean()
@@ -96,14 +125,7 @@ bool Engine::Clean()
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 
-	SDL_Log("Texture Maps Cleaned");
+	CodingHelper::GetInstance()->DisplayInfo("Texture Maps Cleaned");
+
 	return true;
-}
-
-
-Engine::~Engine()
-{
-	delete m_Renderer;
-	delete m_Window;
-	delete m_Instance;
 }

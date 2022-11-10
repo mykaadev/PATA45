@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "../Core/Engine.h"
+#include "../Core/CodingHelper.h"
 
 
 Camera* Camera::m_Instance = nullptr;
@@ -11,8 +12,20 @@ Camera::Camera()
 	SetCameraFollowTarget(true);
 	SetCameraTarget(nullptr);
 
+	m_Target = nullptr;
+	m_Instance = nullptr;
+	CodingHelper::GetInstance()->IncrementAmountToClearCounter(2);
+
 }
 
+
+Camera::~Camera()
+{
+	delete m_Instance;
+	delete m_Target;
+	CodingHelper::GetInstance()->DecrementAmountToClearCounter(2);
+
+}
 
 void Camera::Update(float deltaTime)
 {

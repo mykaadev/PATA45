@@ -26,13 +26,7 @@ public:
 
 private:
 	
-	Engine() 
-	{
-		m_Instance = nullptr;
-		m_Window = nullptr;
-		m_Renderer = nullptr;
-		m_bIsRunning = false;
-	};
+	Engine();;
 	~Engine();
 
 

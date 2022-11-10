@@ -8,8 +8,12 @@ public:
 
 private:
 
-	Core() {};
+	Core();
+
+	~Core();
+
 	static Core* m_Instance;
+
 
 };
 
