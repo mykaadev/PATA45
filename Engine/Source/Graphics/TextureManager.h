@@ -13,7 +13,7 @@ public:
 	void Drop(std::string inID);
 	void Clean();
 
-	void Draw(std::string inID, int x, int y, int width, int height, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void Draw(std::string inID, int x, int y, int width, int height, float xScale = 1.0f, float yScale = 1.0f, float lagRatio = 0.5f, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void DrawFrame(std::string inID, int x, int y, int width, int height, int row, int frame, SDL_RendererFlip flip = SDL_FLIP_NONE);
 

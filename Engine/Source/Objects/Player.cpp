@@ -35,7 +35,7 @@ void Player::Update(float deltaTime)
 	SetOriginPoint();
    
 
-    //m_Transform->Interp((m_Transform->X, m_Transform->Y), (m_Transform->X += 0.0f, m_Transform->Y -= 0.1f), 2.f);
+    m_Transform->Interp((m_Transform->X, m_Transform->Y), (m_Transform->X += 0.1f, m_Transform->Y -= 0.1f), 2.f);
     m_Animation->Update();
 }
 
@@ -69,20 +69,20 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 	if (inCurrentAnimationState == Idle && inAxisValue == 0)
 	{
-		m_Animation->SetProperties("Player", 1, 4, 1, 100, SDL_FLIP_NONE);
+		m_Animation->SetProperties("Player", 1, 4, 1, 100);
 	}
 
     if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
 		//turn right
-		m_Animation->SetProperties("Player", 1, 4, 3, 100, SDL_FLIP_NONE);
+		m_Animation->SetProperties("Player", 1, 4, 3, 100);
 	}
 
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
 		//turn left
-		m_Animation->SetProperties("Player", 1, 2, 3, 100, SDL_FLIP_NONE);
+		m_Animation->SetProperties("Player", 1, 2, 3, 100);
 	}
 }
 
