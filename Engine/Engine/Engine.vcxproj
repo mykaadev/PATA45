@@ -149,7 +149,7 @@
     <ClInclude Include="..\Source\Core\InputHandler.h" />
     <ClInclude Include="..\Source\Core\Level.h" />
     <ClInclude Include="..\Source\Core\LevelParser.h" />
-    <ClInclude Include="..\Source\Core\Time.h" />
+    <ClInclude Include="..\Source\Core\EngineTime.h" />
     <ClInclude Include="..\Source\Graphics\Animation.h" />
     <ClInclude Include="..\Source\Graphics\Layer.h" />
     <ClInclude Include="..\Source\Graphics\TextureManager.h" />
@@ -175,7 +175,7 @@
     <ClCompile Include="..\Source\Core\InputHandler.cpp" />
     <ClCompile Include="..\Source\Core\Level.cpp" />
     <ClCompile Include="..\Source\Core\LevelParser.cpp" />
-    <ClCompile Include="..\Source\Core\Time.cpp" />
+    <ClCompile Include="..\Source\Core\EngineTime.cpp" />
     <ClCompile Include="..\Source\Graphics\Animation.cpp" />
     <ClCompile Include="..\Source\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />

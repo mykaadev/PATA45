@@ -1,9 +1,9 @@
-#include "Time.h"
+#include "EngineTime.h"
 #include "sdl.h"
 
-Time* Time::m_Instance = nullptr;
+EngineTime* EngineTime::m_Instance = nullptr;
 
-void Time::Tick()
+void EngineTime::Tick()
 {
 	m_DeltaTime = (SDL_GetTicks() - m_LastTime) * (TARGET_FPS / 1000.0f);
 

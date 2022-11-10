@@ -48,7 +48,7 @@
     <ClInclude Include="..\Source\Objects\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\Time.h">
+    <ClInclude Include="..\Source\Core\EngineTime.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Graphics\Layer.h">
@@ -101,7 +101,7 @@
     <ClCompile Include="..\Source\Objects\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\Time.cpp">
+    <ClCompile Include="..\Source\Core\EngineTime.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Core\Level.cpp">

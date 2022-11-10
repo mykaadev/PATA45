@@ -1,7 +1,8 @@
 #include "Core.h"
 #include "Engine.h"
-#include "Time.h"
+#include "EngineTime.h"
 #include "box2d.h"
+#include <iostream>
 
 
 Core* Core::m_Instance = nullptr;
@@ -16,9 +17,14 @@ void Core::InitEngine()
 		Engine::GetInstance()->Events();
 		Engine::GetInstance()->Update();
 		Engine::GetInstance()->Renders();
-		Time::GetInstance()->Tick();
+		EngineTime::GetInstance()->Tick();
 	}
 
 	Engine::GetInstance()->Clean();
 
+}
+
+void Core::Init()
+{
+	std::cout << " yoh " << std::endl;
 }

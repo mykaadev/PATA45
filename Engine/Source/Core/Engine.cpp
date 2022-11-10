@@ -4,7 +4,7 @@
 #include "../Graphics/TextureManager.h"
 #include "../Objects/Player.h"
 #include "../Core/InputHandler.h"
-#include "Time.h"
+#include "EngineTime.h"
 #include "LevelParser.h"
 #include <iostream>
 #include "../Components/Camera.h"
@@ -64,7 +64,7 @@ void Engine::Events()
 
 void Engine::Update()
 {
-	float deltaTime = Time::GetInstance()->GetDeltaTime();
+	float deltaTime = EngineTime::GetInstance()->GetDeltaTime();
 
 	player->Update(deltaTime);
 	Camera::GetInstance()->Update(deltaTime);

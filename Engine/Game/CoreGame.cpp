@@ -1,10 +1,11 @@
 
 #include "Core.h"
-
+#include <iostream>
 
 int main()
 {
-	Core::GetInstance()->InitEngine();
+	
+	Core::GetInstance()->Init();
 
 	return 0;
 }
