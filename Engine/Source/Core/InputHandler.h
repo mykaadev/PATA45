@@ -1,6 +1,7 @@
 
 #include "sdl.h"
 
+enum Axis {HORIZONTAL, VERTICAL};
 class InputHandler
 {
 
@@ -12,6 +13,9 @@ public:
 
 	void Listen();
 	bool GetKeyDown(SDL_Scancode inKey);
+	float GetAxisKeys(Axis axis);
+	
+	
 
 private:
 

@@ -1,9 +1,20 @@
 #include "TextureManager.h"
 #include "../Core/Engine.h"
 #include "../Components/Camera.h"
+#include "../Core/CodingHelper.h"
+#include "tinyxml.h"
+#include <string>
 
 TextureManager* TextureManager::m_Instance = nullptr;
 
+//Add here Option to draw backgrounds
+// 
+// Add Option to check if the camera is following the player or not
+// 
+// Add Option to check if we imported an PNG or BMP and behave differently in that case
+// 
+//this can be used to create the feeling of the parallax:
+//Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * 0.5f; 
 
 bool TextureManager::Load(std::string inID, std::string inFileName)
 {
@@ -29,15 +40,31 @@ bool TextureManager::Load(std::string inID, std::string inFileName)
 	return true;
 }
 
-//Add here Option to draw backgrounds
-// 
-// Add Option to check if the camera is following the player or not
-// 
-// Add Option to check if we imported an PNG or BMP and behave differently in that case
-// 
-//this can be used to create the feeling of the parallax:
-//Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * 0.5f; 
+bool TextureManager::ParseTextures(std::string source)
+{
+	TiXmlDocument _xml;
+	_xml.LoadFile(source);
 
+	if (_xml.Error())
+	{
+		CodingHelper::GetInstance()->DisplayInfo("Failed to load: " + source);
+		return false;
+	}
+
+	TiXmlElement* _root = _xml.RootElement();
+	for (TiXmlElement* e=_root->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (e->Value() == std::string("texture"))
+		{
+			std::string _id = e->Attribute("id");
+			std::string _src = e->Attribute("source");
+			TextureManager::Load(_id, _src);
+		}
+	}
+
+	CodingHelper::GetInstance()->DisplayInfo("TextureParser loaded:  " + source);
+	return true;
+}
 
 
 void TextureManager::Draw(std::string inID, int x, int y, int width, int height, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
@@ -53,6 +80,7 @@ void TextureManager::Draw(std::string inID, int x, int y, int width, int height,
 
 void TextureManager::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int frame, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
+
 	SDL_Rect srcRect = { width*frame, height*(row-1), width, height};
 
 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();

@@ -62,15 +62,15 @@ bool Engine::Init()
 
 	if (!LevelParser::GetInstance()->Load())
 	{
-		std::cout << "Failed to load map" << std::endl;
+		CodingHelper::GetInstance()->DisplayInfo("Failed to load map");
+		return m_bIsRunning = false;
 	}
 
 	m_Level = LevelParser::GetInstance()->GetLevel("Level0");
-
-
-	TextureManager::GetInstance()->Load("Logo", "../Assets/EngineLogo.bmp");
-	TextureManager::GetInstance()->Load("Player", "../Assets/PlayerTestMovement.bmp");
-	player = new Player(new Properties("Player", SCREEN_WIDTH/2, SCREEN_HEIGHT, 64, 64, SDL_FLIP_NONE));
+	//TextureManager::GetInstance()->Load("Player", "../Assets/Game/Textures/Ship1.bmp");
+	TextureManager::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
+	
+	player = new Player(new Properties("Player", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 64, 64, SDL_FLIP_NONE));
 
 	Camera::GetInstance()->SetCameraTarget(player->GetOrigin());
 
@@ -95,13 +95,14 @@ void Engine::Update()
 
 void Engine::Renders()
 {
+
 	SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
 	SDL_RenderClear(m_Renderer);
+	TextureManager::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, SDL_FLIP_NONE);
 
 	m_Level->Render();
 	player->Draw();
 
-	TextureManager::GetInstance()->Draw("Logo", 0, 0, 960, 640, SDL_FLIP_NONE);
 	SDL_RenderPresent(m_Renderer);
 }
 

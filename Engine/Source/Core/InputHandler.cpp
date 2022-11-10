@@ -21,7 +21,7 @@ void InputHandler::Listen()
 			case SDL_QUIT: Engine::GetInstance()->Quit(); break;
 			case SDL_KEYDOWN: KeyDown(); break;
 			case SDL_KEYUP: KeyUp(); break;
-		}
+		}		
 	}
 }
 
@@ -35,6 +35,45 @@ bool InputHandler::GetKeyDown(SDL_Scancode inKey)
 	return false;
 }
 
+
+float InputHandler::GetAxisKeys(Axis axis)
+{
+	float _axisValue;
+
+	switch (axis)
+	{
+	case HORIZONTAL: 
+		if (GetKeyDown(SDL_SCANCODE_D) || GetKeyDown(SDL_SCANCODE_RIGHT))
+		{
+			return 1;
+		}
+
+		if (GetKeyDown(SDL_SCANCODE_A) || GetKeyDown(SDL_SCANCODE_LEFT))
+		{
+			return -1;
+		}
+
+		break;
+
+	case VERTICAL:
+		if (GetKeyDown(SDL_SCANCODE_W) || GetKeyDown(SDL_SCANCODE_UP))
+		{
+			return 1;
+		}
+
+		if (GetKeyDown(SDL_SCANCODE_S) || GetKeyDown(SDL_SCANCODE_DOWN))
+		{
+			return -1;
+		}
+
+		break;
+
+	default:
+		return 0;
+	
+	}
+}
+
 void InputHandler::KeyUp()
 {
 	m_KeyStates = SDL_GetKeyboardState(nullptr);
@@ -44,6 +83,7 @@ void InputHandler::KeyDown()
 {
 	m_KeyStates = SDL_GetKeyboardState(nullptr);
 }
+
 
 void InputHandler::CheckForGamepadCompatibility()
 {
