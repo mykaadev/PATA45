@@ -15,7 +15,6 @@ public:
 	bool GetKeyDown(SDL_Scancode inKey);
 	float GetAxisKeys(Axis axis);
 	
-	
 
 private:
 

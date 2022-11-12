@@ -38,11 +38,10 @@ bool InputHandler::GetKeyDown(SDL_Scancode inKey)
 
 float InputHandler::GetAxisKeys(Axis axis)
 {
-	float _axisValue;
-
 	switch (axis)
 	{
 	case HORIZONTAL: 
+
 		if (GetKeyDown(SDL_SCANCODE_D) || GetKeyDown(SDL_SCANCODE_RIGHT))
 		{
 			return 1;
@@ -69,8 +68,8 @@ float InputHandler::GetAxisKeys(Axis axis)
 		break;
 
 	default:
+
 		return 0;
-	
 	}
 }
 
