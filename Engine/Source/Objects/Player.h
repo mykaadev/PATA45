@@ -25,8 +25,8 @@ private:
 	void HandleInput();
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
-	
-	
+
+	bool bIdle, bMovingRight, bMovingLeft;
 	
 	~Player();
 

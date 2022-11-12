@@ -7,8 +7,9 @@ Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
 	SetAnimationState(Idle, 0);
+   
+	CodingHelper::GetInstance()->IncrementAmountToClearCounter(1);
 
-    CodingHelper::GetInstance()->IncrementAmountToClearCounter(1);
 }
 
 
@@ -34,28 +35,31 @@ void Player::Update(float deltaTime)
 
 	SetOriginPoint();
    
-
     m_Transform->Interp((m_Transform->X, m_Transform->Y), (m_Transform->X += 0.1f, m_Transform->Y -= 0.1f), 2.f);
-    m_Animation->Update();
+    m_Animation->Update(deltaTime);
 }
+
+
 
 void Player::HandleInput()
 {
+	
+
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) > 0)
 	{
-		SetAnimationState(MovingX, 1);
+ 		SetAnimationState(MovingX, 1);
 	}
 
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) < 0)
 	{
 		SetAnimationState(MovingX, -1);
 	}
-	
+
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == 0)
 	{
 		SetAnimationState(Idle, 0);
 	}
-
+	
 }
 
 void Player::SetOriginPoint()
@@ -69,20 +73,20 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 	if (inCurrentAnimationState == Idle && inAxisValue == 0)
 	{
-		m_Animation->SetProperties("Player", 1, 4, 1, 100);
+		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 50, false);
 	}
 
     if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
 		//turn right
-		m_Animation->SetProperties("Player", 1, 4, 3, 100);
+		m_Animation->SetProperties("ShipRight", 1, 0, 3, 50, false);
 	}
 
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
 		//turn left
-		m_Animation->SetProperties("Player", 1, 2, 3, 100);
+		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 50, false);
 	}
 }
 

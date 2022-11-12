@@ -20,7 +20,7 @@ void Character::Draw()
 
 void Character::Update(float deltaTime)
 {
-    m_Animation->Update();
+    m_Animation->Update(deltaTime);
 }
 
 void Character::Clean()
