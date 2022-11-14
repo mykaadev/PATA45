@@ -2,6 +2,8 @@
 
 #include "SDL.h"
 #include "LevelParser.h"
+#include "../Objects/GameObject.h"
+#include "../Objects/WorldObject.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
@@ -19,6 +21,10 @@ public:
 	void Renders();
 	bool Clean();
 	void Quit();
+
+	void LoadObjects(GameObject Object);
+
+	WorldObject* ObjectsToLoad[1];
 
 	inline bool IsRunning() { return m_bIsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }

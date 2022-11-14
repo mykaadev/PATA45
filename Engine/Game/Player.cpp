@@ -23,7 +23,6 @@ Player::~Player()
 void Player::Draw()
 {
 	m_Animation->Draw(m_Transform->X, m_Transform->Y, m_Width, m_Height);
-
 }
 
 
@@ -32,8 +31,6 @@ void Player::Update(float deltaTime)
 	HandleInput();
 	SetOriginPoint();
     m_Animation->Update(deltaTime);
-
-	std::cout << InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) << std::endl;
 }
 
 
@@ -71,26 +68,18 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	if (inCurrentAnimationState == Idle && inAxisValue == 0)
 	{
 		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 50, true);
-		std::cout << "IDLE" << std::endl;
 	}
 
 	if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
-		//turn right
-		std::cout << "RIGHT" << std::endl;
 		m_Animation->SetProperties("ShipRight", 1, 0, 3, 100, false);
 	}
 
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
-		//turn left
-		std::cout << "LEFT" << std::endl;
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
-
 	}
-
-	
 }
 
 void Player::Clean()

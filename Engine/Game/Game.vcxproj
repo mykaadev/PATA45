@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Components;$(SolutionDir)Source\Core;$(SolutionDir)Source\Graphics;$(SolutionDir)Source\Objects;$(SolutionDir)Source\Physics;%(AdditionalIncludeDirectories);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Components;$(SolutionDir)Source\Core;$(SolutionDir)Source\Graphics;$(SolutionDir)Source\Objects;$(SolutionDir)Source\Physics;$(SolutionDir)Dependencies\SDL2;$(SolutionDir)Dependencies\BOX2D;$(SolutionDir)Dependencies\TINYXML;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;%(AdditionalIncludeDirectories);</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PATA45.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)x64\Debug;%(AdditionalIncludeDirectories);$(SolutionDir)Libraries;$(SolutionDir)Dependencies</AdditionalLibraryDirectories>
+      <AdditionalDependencies>PATA45.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,6 +131,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CoreGame.cpp" />
+    <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="Player.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CoreGame.h" />
+    <ClInclude Include="ObjectHandler.h" />
+    <ClInclude Include="Player.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

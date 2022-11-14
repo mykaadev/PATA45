@@ -158,7 +158,6 @@
     <ClInclude Include="..\Source\Objects\Character.h" />
     <ClInclude Include="..\Source\Objects\GameObject.h" />
     <ClInclude Include="..\Source\Objects\IObject.h" />
-    <ClInclude Include="..\Source\Objects\Player.h" />
     <ClInclude Include="..\Source\Objects\WorldObject.h" />
     <ClInclude Include="..\Source\Physics\Point.h" />
     <ClInclude Include="..\Source\Physics\Transform.h" />
@@ -181,7 +180,6 @@
     <ClCompile Include="..\Source\Graphics\TextureManager.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
-    <ClCompile Include="..\Source\Objects\Player.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
