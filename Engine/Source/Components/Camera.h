@@ -21,7 +21,6 @@ public:
 protected:
 private:
 
-
 	Camera();
 	~Camera();
 	static Camera* m_Instance;

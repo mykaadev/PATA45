@@ -7,9 +7,8 @@ Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
 	SetAnimationState(Idle, 0);
-   
-	CodingHelper::GetInstance()->IncrementAmountToClearCounter(1);
 
+	CodingHelper::GetInstance()->IncrementAmountToClearCounter(1);
 }
 
 
@@ -31,16 +30,21 @@ void Player::Draw()
 void Player::Update(float deltaTime)
 {
 	HandleInput();
-
 	SetOriginPoint();
-
     m_Animation->Update(deltaTime);
+
+	std::cout << InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) << std::endl;
 }
 
 
 
 void Player::HandleInput()
 {
+
+	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) > -1 && InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) < 1)
+	{
+		SetAnimationState(Idle, 0);
+	}
 	
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == 1)
 	{
@@ -52,11 +56,7 @@ void Player::HandleInput()
 		SetAnimationState(MovingX, -1);
 	}
 
-	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == 0)
-	{
-		
-		SetAnimationState(Idle, 0);
-	}
+	
 }
 
 void Player::SetOriginPoint()
@@ -67,13 +67,18 @@ void Player::SetOriginPoint()
 
 void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue)
 {
-	
 
-    if (inCurrentAnimationState == MovingX && inAxisValue > 0)
+	if (inCurrentAnimationState == Idle && inAxisValue == 0)
+	{
+		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 50, true);
+		std::cout << "IDLE" << std::endl;
+	}
+
+	if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
 		//turn right
 		std::cout << "RIGHT" << std::endl;
-		m_Animation->SetProperties("ShipRight", 1, 0, 3, 50, false);
+		m_Animation->SetProperties("ShipRight", 1, 0, 3, 100, false);
 	}
 
 
@@ -81,15 +86,11 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	{
 		//turn left
 		std::cout << "LEFT" << std::endl;
-		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 50, false);
+		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 
 	}
 
-	if (inCurrentAnimationState == Idle && inAxisValue == 0)
-	{
-		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 500, false);
-		std::cout << "IDLE" << std::endl;
-	}
+	
 }
 
 void Player::Clean()

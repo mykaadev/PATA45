@@ -67,9 +67,11 @@ bool Engine::Init()
 	}
 
 	m_Level = LevelParser::GetInstance()->GetLevel("Level0");
-	//TextureManager::GetInstance()->Load("Player", "../Assets/Game/Textures/Ship1.bmp");
+
 	TextureManager::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
 	
+
+
 	player = new Player(new Properties("Player", SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 64, 64, SDL_FLIP_NONE));
 
 	Camera::GetInstance()->SetCameraTarget(player->GetOrigin());

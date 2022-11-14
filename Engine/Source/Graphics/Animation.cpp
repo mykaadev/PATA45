@@ -19,7 +19,7 @@ void Animation::SetProperties(std::string textureID, int spriteRow, int starting
 	m_SpriteRow = spriteRow;
 	m_FrameCount = frameCount;
 	m_StartingFrame = startingFrame;
-	m_EndFrame = startingFrame + frameCount - 1;
+	m_EndFrame = startingFrame + frameCount-1;
 	m_AnimSpeed = animSpeed;
 	m_Flip = flip;
 	m_Loop = loop;
@@ -33,7 +33,7 @@ void Animation::Update(float deltaTime)
 	
 	if ( !m_Loop && m_FrameCount != 0 && m_FrameCounter > 0)
 	{
-		if (m_SpriteFrame == m_FrameCount - 1)
+		if (m_SpriteFrame == m_FrameCount-1)
 		{
 			m_SpriteFrame = m_EndFrame;
 			std::cout << m_SpriteFrame << std::endl;
