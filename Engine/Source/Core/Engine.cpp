@@ -2,7 +2,6 @@
 #include <iostream>
 #include "SDL.h"
 #include "../Graphics/TextureManager.h"
-//#include "../Objects/Player.h"
 #include "../Core/InputHandler.h"
 #include "EngineTime.h"
 #include "LevelParser.h"
@@ -10,6 +9,7 @@
 #include "../Components/Camera.h"
 #include "CodingHelper.h"
 #include "../../Game/ObjectHandler.h"
+#include "../../Game/Player.h"
 
 Engine* Engine::m_Instance = nullptr;
 
@@ -93,7 +93,6 @@ bool Engine::Init()
 	
 	ObjectHandler::GetInstance()->LoadObjects();
 
-
 	return m_bIsRunning = true;
 }
 
@@ -108,8 +107,14 @@ void Engine::Update()
 {
 	float deltaTime = EngineTime::GetInstance()->GetDeltaTime();
 
-	ObjectHandler::GetInstance()->UpdateObjects(deltaTime);
+	//ObjectHandler::GetInstance()->UpdateObjects(deltaTime);
 	m_Level->Update();
+	
+
+	for (auto Object : GameObjectLoaded)
+	{
+		Object->Update(deltaTime);
+	}
 }
 
 void Engine::Renders()
@@ -120,7 +125,13 @@ void Engine::Renders()
 
 	TextureManager::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
 	m_Level->Render();
-	ObjectHandler::GetInstance()->RenderObjects();
+
+
+	for (auto Object : GameObjectLoaded)
+	{
+		Object->Draw();
+	}
+
 	SDL_RenderPresent(m_Renderer);
 }
 

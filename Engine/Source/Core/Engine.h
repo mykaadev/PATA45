@@ -22,9 +22,9 @@ public:
 	bool Clean();
 	void Quit();
 
-	void LoadObjects(GameObject Object);
+	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back( (GameObject*) Object); }
 
-	WorldObject* ObjectsToLoad[1];
+	std::vector <GameObject*> GameObjectLoaded;
 
 	inline bool IsRunning() { return m_bIsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }

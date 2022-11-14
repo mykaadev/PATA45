@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Character.h"
+#include "../Objects/Character.h"
 
 enum AnimationStates
 {
@@ -16,12 +16,14 @@ class Player : public Character
 public:
 	Player(Properties* props);
 	
+	virtual void Init();
 	virtual void Draw();
 	virtual void Update(float deltaTime);
 	virtual void Clean();
 
 private:
-	
+
+	void SetupBody();
 	void HandleInput();
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);

@@ -43,6 +43,7 @@ public:
 		m_Origin = new Point(px, py);
 	};
 	
+	virtual void Init() = 0;
 	virtual void Draw() = 0;
 	virtual void Update(float deltaTime) = 0;
 	virtual void Clean() = 0;

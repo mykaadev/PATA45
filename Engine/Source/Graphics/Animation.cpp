@@ -36,14 +36,10 @@ void Animation::Update(float deltaTime)
 		if (m_SpriteFrame == m_FrameCount-1)
 		{
 			m_SpriteFrame = m_EndFrame;
-			std::cout << m_SpriteFrame << std::endl;
-
 		}
 		else
 		{
 			m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-			std::cout << m_SpriteFrame << std::endl;
-
 		}
 	}
 
@@ -55,7 +51,6 @@ void Animation::Update(float deltaTime)
 	if (m_Loop)
 	{
 		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-		std::cout << m_SpriteFrame << std::endl;
 	}
 	
 	if (m_FrameCount == 0)
