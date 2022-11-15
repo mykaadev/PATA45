@@ -2,6 +2,9 @@
 #include "GameObject.h"
 #include <string>
 
+
+// as an transform and name 
+// second level 
 class WorldObject : public GameObject
 {
 public:

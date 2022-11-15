@@ -2,6 +2,9 @@
 
 #include "../Objects/Character.h"
 
+
+// custom player game side 
+
 enum AnimationStates
 {
 	Idle,
@@ -27,6 +30,7 @@ private:
 	void HandleInput();
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
+	void Shooting();
 
 	bool bIdle, bMovingRight, bMovingLeft;
 	

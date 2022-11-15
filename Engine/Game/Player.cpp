@@ -5,6 +5,13 @@
 #include "box2d.h"
 #include "World.h"
 
+
+/*
+* Create a void for shooting and input in hold 
+* 
+* Create an component for gun (with bullet class inside and render sprite ) fire rate 0.1
+* 
+*/
 Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
@@ -49,8 +56,6 @@ void Player::SetupBody()
 	bodyDef.type = b2_dynamicBody;
 	bodyDef.position.Set(0.0f, 4.0f);
 
-
-
 	b2Body* body = World::GetInstance()->GetWorld().CreateBody(&bodyDef);
 
 	// Define another box shape for our dynamic body
@@ -71,12 +76,16 @@ void Player::SetupBody()
 	*/
 }
 
+
 void Player::HandleInput()
 {
 	
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) > -1 && InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) < 1)
 	{
 		SetAnimationState(Idle, 0);
+		// add force and speeeeeeed trough the physics with float not ints and normalize the vector
+
+
 	}
 	
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == 1)
@@ -114,6 +123,11 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	{
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 	}
+}
+
+void Player::Shooting()
+{
+	// in this function check holding 
 }
 
 void Player::Clean()

@@ -2,6 +2,10 @@
 #include "WorldObject.h"
 #include "../Graphics/Animation.h"
 
+
+// base character of the player with animation
+// third level 
+
 class Character : public WorldObject
 {
 public:
