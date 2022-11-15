@@ -43,6 +43,7 @@ void Player::Update(float deltaTime)
 
 void Player::SetupBody()
 {
+	/*
 	// Define the dynamic body. We set its position and call the body factory.
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;
@@ -67,11 +68,12 @@ void Player::SetupBody()
 
 	// Add the shape to the body.
 	body->CreateFixture(&fixtureDef);
+	*/
 }
 
 void Player::HandleInput()
 {
-
+	
 	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) > -1 && InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) < 1)
 	{
 		SetAnimationState(Idle, 0);

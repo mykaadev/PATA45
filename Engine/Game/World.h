@@ -9,12 +9,12 @@ public:
 
 	void SetupWorld();
 	void HandlePhysics(float deltaTime);
-	inline b2World GetWorld() {	return myWorld;	}
+	//inline b2World GetWorld() {	return myWorld;	}
 
 private:
 	World();
 
 	static World* m_Instance;
-	b2World myWorld;
+	//b2World myWorld;
 
 };

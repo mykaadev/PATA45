@@ -11,8 +11,8 @@ World::World()
 
 void World::SetupWorld()
 {
-	b2Vec2 gravity(0.0f, -10.0f);
-	myWorld = b2World(gravity);
+//	b2Vec2 gravity(0.0f, -10.0f);
+//	myWorld = b2World(gravity);
 
 }
 
