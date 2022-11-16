@@ -1,6 +1,6 @@
 #include "Camera.h"
 #include "../Core/Engine.h"
-#include "../Core/CodingHelper.h"
+
 
 
 Camera* Camera::m_Instance = nullptr;
@@ -14,8 +14,6 @@ Camera::Camera()
 
 	m_Target = nullptr;
 	m_Instance = nullptr;
-	CodingHelper::GetInstance()->IncrementAmountToClearCounter(2);
-
 }
 
 
@@ -23,8 +21,6 @@ Camera::~Camera()
 {
 	delete m_Instance;
 	delete m_Target;
-	CodingHelper::GetInstance()->DecrementAmountToClearCounter(2);
-
 }
 
 void Camera::Update(float deltaTime)
@@ -37,8 +33,8 @@ void Camera::Update(float deltaTime)
 		if (m_Viewport.x < 0) { m_Viewport.x = 0; }
 		if (m_Viewport.y < 0) { m_Viewport.y = 0; }
 
-		if (m_Viewport.x > (2 * SCREEN_WIDTH - m_Viewport.w)) { m_Viewport.x = (SCREEN_WIDTH - m_Viewport.w); }
-		if (m_Viewport.y > (2 * SCREEN_HEIGHT - m_Viewport.h)) { m_Viewport.y = (SCREEN_HEIGHT - m_Viewport.h); }
+// 		if (m_Viewport.x > (2 * SCREEN_WIDTH - m_Viewport.w)) { m_Viewport.x = (SCREEN_WIDTH - m_Viewport.w); }
+// 		if (m_Viewport.y > (2 * SCREEN_HEIGHT - m_Viewport.h)) { m_Viewport.y = (SCREEN_HEIGHT - m_Viewport.h); }
 
 		m_Position = Vector2(m_Viewport.x, m_Viewport.y);
 

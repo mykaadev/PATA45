@@ -75,7 +75,7 @@
     <ClInclude Include="..\Source\Core\Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Core\CodingHelper.h">
+    <ClInclude Include="..\Source\Core\World.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,7 +125,7 @@
     <ClCompile Include="..\Source\Core\Core.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Core\CodingHelper.cpp">
+    <ClCompile Include="..\Source\Core\World.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

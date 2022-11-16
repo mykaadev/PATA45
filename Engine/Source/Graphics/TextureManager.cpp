@@ -1,8 +1,8 @@
 #include "TextureManager.h"
 #include "../Core/Engine.h"
 #include "../Components/Camera.h"
-#include "../Core/CodingHelper.h"
 #include "tinyxml.h"
+#include <iostream>
 #include <string>
 
 TextureManager* TextureManager::m_Instance = nullptr;
@@ -47,7 +47,7 @@ bool TextureManager::ParseTextures(std::string source)
 
 	if (_xml.Error())
 	{
-		CodingHelper::GetInstance()->DisplayInfo("Failed to load: " + source);
+		std::cout<< "Failed to load: " << source << std::endl;
 		return false;
 	}
 
@@ -62,7 +62,7 @@ bool TextureManager::ParseTextures(std::string source)
 		}
 	}
 
-	CodingHelper::GetInstance()->DisplayInfo("TextureParser loaded:  " + source);
+	std::cout << "TextureParser loaded: " << source << std::endl;
 	return true;
 }
 

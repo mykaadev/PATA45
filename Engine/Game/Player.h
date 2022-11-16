@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Objects/Character.h"
-
+#include "box2d.h"
 
 // custom player game side 
 
@@ -20,7 +20,7 @@ public:
 	Player(Properties* props);
 	
 	virtual void Init();
-	virtual void Draw();
+	virtual void Draw(); 
 	virtual void Update(float deltaTime);
 	virtual void Clean();
 
@@ -34,8 +34,8 @@ private:
 
 	bool bIdle, bMovingRight, bMovingLeft;
 	
+	b2Body* m_Body;
+
 	~Player();
-
-
 };
 

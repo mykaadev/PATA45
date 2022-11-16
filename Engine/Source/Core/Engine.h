@@ -23,9 +23,7 @@ public:
 	bool Clean();
 	void Quit();
 
-	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back( (GameObject*) Object); }
 
-	std::vector <GameObject*> GameObjectLoaded;
 
 	inline bool IsRunning() { return m_bIsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }
@@ -37,7 +35,6 @@ private:
 	~Engine();
 
 
-	Level* m_Level;
 	bool m_bIsRunning;
 	static Engine* m_Instance;
 
