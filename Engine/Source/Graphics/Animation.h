@@ -12,7 +12,7 @@ public:
 	void Update(float deltaTime);
 	void Draw(float x, float y, int spriteWidth, int spriteHeight);
 	void SetProperties(std::string textureID, int spriteRow, int startingFrame, int frameCount, int animSpeed, bool loop = true, SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void DecrementFrameCounter();
+
 private:
 
 	int m_SpriteRow;

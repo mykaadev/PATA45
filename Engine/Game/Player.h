@@ -33,7 +33,7 @@ private:
 	void Shooting();
 
 	bool bIdle, bMovingRight, bMovingLeft;
-	
+	float fSpeed;
 	b2Body* m_Body;
 
 	~Player();

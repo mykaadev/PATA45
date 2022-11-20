@@ -1,5 +1,6 @@
 
 #include "sdl.h"
+#include "../Physics/Vector2.h"
 
 enum Axis {HORIZONTAL, VERTICAL};
 class InputHandler
@@ -13,7 +14,10 @@ public:
 
 	void Listen();
 	bool GetKeyDown(SDL_Scancode inKey);
-	float GetAxisKeys(Axis axis);
+	Vector2 GetAxisKeys();
+
+	float xValue;
+	float yValue;
 	
 
 private:

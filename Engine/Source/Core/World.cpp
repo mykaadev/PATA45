@@ -52,7 +52,7 @@ void World::HandlePhysics(float deltaTime)
 	// It is generally best to keep the time step and iterations fixed.
 
 	m_World->Step(deltaTime, 6, 2);
-	std::cout << "step" << std::endl;
+	//std::cout << "step" << std::endl;
 
 
 // 	b2Vec2 position = playerBody->GetPosition();
@@ -67,7 +67,7 @@ void World::Update(float deltaTime)
 	for (auto Object : GameObjectLoaded)
 	{
 		Object->Update(deltaTime);
-		std::cout << "updoot" << std::endl;
+	//	std::cout << "updoot" << std::endl;
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
@@ -80,7 +80,7 @@ void World::Render()
 	for (auto Object : GameObjectLoaded)
 	{
 		Object->Draw();
-		std::cout << "renderoot" << std::endl;
+	//	std::cout << "renderoot" << std::endl;
 
 	}
 

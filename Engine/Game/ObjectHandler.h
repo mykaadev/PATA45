@@ -8,8 +8,7 @@ public:
 
 
 	void LoadObjects();
-	void UpdateObjects(float deltaTime);
-	void RenderObjects();
+
 
 private:
 

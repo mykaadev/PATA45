@@ -8,8 +8,7 @@
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
 
-// Base class and add to an array 
-// base level 
+
 class Engine
 {
 

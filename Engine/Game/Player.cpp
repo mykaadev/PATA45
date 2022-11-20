@@ -22,6 +22,8 @@ void Player::Init()
 	
 	SetupBody();
 	SetAnimationState(Idle, 0);
+
+	fSpeed = 5.0f;
 }
 
 Player::~Player()
@@ -35,11 +37,6 @@ void Player::Update(float deltaTime)
 {
 	HandleInput();
 	SetOriginPoint();
-
-	//m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeysAsVector()));
-
-	std::cout << "PLAYER POSITION: " << m_Body->GetPosition().x << " " << m_Body->GetPosition().y << std::endl;
-
 	m_Animation->Update(deltaTime);
 }
 
@@ -70,37 +67,25 @@ void Player::SetupBody()
 }
 
 
-
-//TODO: FIX INPUTS SO WE CAN BUILD A VECTOR2 WITH THE X AND Y INPUTS
-// SO WE CAN NORMALIZE IT AFTER
-
-
-
 void Player::HandleInput()
 {
-	
-	
-	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) > -1 && InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) < 1 ||
-		InputHandler::GetInstance()->GetAxisKeys(VERTICAL) > -1 && InputHandler::GetInstance()->GetAxisKeys(VERTICAL) < 1)
+	if (InputHandler::GetInstance()->GetAxisKeys().X == 0 && InputHandler::GetInstance()->GetAxisKeys().Y == 0)
 	{
-		SetAnimationState(Idle, 0);
-		// add force and speeeeeeed trough the physics with float not ints and normalize the vector
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		SetAnimationState(Idle, InputHandler::GetInstance()->GetAxisKeys().X);
 	}
 	
-	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == 1)
+	if (InputHandler::GetInstance()->GetAxisKeys().X < 0 || InputHandler::GetInstance()->GetAxisKeys().X > 0)
 	{
- 		SetAnimationState(MovingX, 1);
-		m_Body->SetLinearVelocity(b2Vec2(5.0f, 0.0f));
+ 		SetAnimationState(MovingX, InputHandler::GetInstance()->GetAxisKeys().X);
 	}
 
-	if (InputHandler::GetInstance()->GetAxisKeys(HORIZONTAL) == -1)
+	if (InputHandler::GetInstance()->GetAxisKeys().Y < 0 || InputHandler::GetInstance()->GetAxisKeys().Y > 0)
 	{
-		SetAnimationState(MovingX, -1);
-		m_Body->SetLinearVelocity(b2Vec2(-5.0f, 0.0f));
+		SetAnimationState(Idle, InputHandler::GetInstance()->GetAxisKeys().X);
 	}	
 
-	
+	m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeys().X * fSpeed, InputHandler::GetInstance()->GetAxisKeys().Y * -fSpeed));
+
 }
 
 void Player::SetOriginPoint()

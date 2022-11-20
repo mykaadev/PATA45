@@ -5,11 +5,21 @@
 #include "../Core/InputHandler.h"
 
 
+/*
+*    IObject
+*    |--GameObject
+*    |----Character
+*
+*    Character Handles Animations
+* 
+*    TODO: Add RigidBody Component
+*
+*
+*/
 
 Character::Character(Properties* props) : WorldObject(props)
 {
     m_Animation = new Animation();
-   
 }
 
 

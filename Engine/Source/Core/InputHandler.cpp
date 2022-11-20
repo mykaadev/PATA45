@@ -1,6 +1,7 @@
 #include "InputHandler.h"
 #include "Engine.h"
 #include <iostream>
+#include "../Physics/Vector2.h"
 
 
 InputHandler* InputHandler::m_Instance = nullptr;
@@ -36,41 +37,43 @@ bool InputHandler::GetKeyDown(SDL_Scancode inKey)
 }
 
 
-float InputHandler::GetAxisKeys(Axis axis)
+Vector2 InputHandler::GetAxisKeys()
 {
-	switch (axis)
+	
+	if (GetKeyDown(SDL_SCANCODE_D) || GetKeyDown(SDL_SCANCODE_RIGHT))
 	{
-	case HORIZONTAL: 
-
-		if (GetKeyDown(SDL_SCANCODE_D) || GetKeyDown(SDL_SCANCODE_RIGHT))
-		{
-			return 1;
-		}
-
-		if (GetKeyDown(SDL_SCANCODE_A) || GetKeyDown(SDL_SCANCODE_LEFT))
-		{
-			return -1;
-		}
-
-		break;
-
-	case VERTICAL:
-		if (GetKeyDown(SDL_SCANCODE_W) || GetKeyDown(SDL_SCANCODE_UP))
-		{
-			return 1;
-		}
-
-		if (GetKeyDown(SDL_SCANCODE_S) || GetKeyDown(SDL_SCANCODE_DOWN))
-		{
-			return -1;
-		}
-
-		break;
-
-	default:
-
-		return 0;
+		xValue = 1.0f;
 	}
+
+	if (GetKeyDown(SDL_SCANCODE_A) || GetKeyDown(SDL_SCANCODE_LEFT))
+	{
+		xValue = -1.0f;
+	}
+
+	if (!GetKeyDown(SDL_SCANCODE_D) && !GetKeyDown(SDL_SCANCODE_RIGHT) && !GetKeyDown(SDL_SCANCODE_A) && !GetKeyDown(SDL_SCANCODE_LEFT))
+	{
+		xValue = 0.0f;
+	}
+
+
+	if (GetKeyDown(SDL_SCANCODE_W) || GetKeyDown(SDL_SCANCODE_UP))
+	{
+		yValue = 1.0f;
+	}
+
+	if (GetKeyDown(SDL_SCANCODE_S) || GetKeyDown(SDL_SCANCODE_DOWN))
+	{
+		yValue = -1.0f;
+	}
+
+
+	if (!GetKeyDown(SDL_SCANCODE_S) && !GetKeyDown(SDL_SCANCODE_DOWN) && !GetKeyDown(SDL_SCANCODE_W) && !GetKeyDown(SDL_SCANCODE_UP))
+	{
+		yValue = 0.0f;
+	}
+
+
+	return Vector2(xValue, yValue);
 }
 
 void InputHandler::KeyUp()

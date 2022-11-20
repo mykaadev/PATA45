@@ -3,8 +3,17 @@
 #include "../Graphics/Animation.h"
 
 
-// base character of the player with animation
-// third level 
+/*
+*    IObject
+*    |--GameObject
+*    |----Character
+*
+*    Character Handles Animations
+* 
+*    TODO: Add RigidBody Component
+*     
+*
+*/
 
 class Character : public WorldObject
 {
@@ -17,11 +26,6 @@ public:
 	virtual void Clean() = 0;
 
 protected:
-// 	int m_Row;
-// 	int m_Frame;
-// 	int m_FrameCount;
-// 	int m_AnimationSpeed;
-
 	Animation* m_Animation;
 };
 

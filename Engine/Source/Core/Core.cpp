@@ -3,11 +3,9 @@
 #include "EngineTime.h"
 #include "box2d.h"
 #include "Time.h"
-#include "CodingHelper.h"
 #include "World.h"
 
 Core* Core::m_Instance = nullptr;
-
 
 Core::Core()
 {
@@ -33,5 +31,4 @@ void Core::InitEngine()
 	}
 
 	Engine::GetInstance()->Clean();
-
 }
