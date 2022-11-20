@@ -16,6 +16,8 @@ public:
 
 private:
 	EngineTime() {};
+	~EngineTime();
+
 
 	static EngineTime* m_Instance;
 

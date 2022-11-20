@@ -5,6 +5,16 @@
 #include "../Physics/Point.h"
 
 
+/*
+*    IObject
+*    |--GameObject
+*   
+*
+*    GameObjects Handles Basic Textures without animations
+*	 GameObjects Handles basic Translations and Transformations
+*    
+*/
+
 struct Properties
 {
 
@@ -49,6 +59,12 @@ public:
 	virtual void Clean() = 0;
 
 	inline Point* GetOrigin() { return m_Origin; }
+
+	~GameObject() 
+	{
+		delete m_Origin;
+		delete m_Transform;
+	};
 
 protected:
 	Point* m_Origin;

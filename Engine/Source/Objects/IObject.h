@@ -2,6 +2,16 @@
 class IObject
 {
 
+
+/*
+*    IObject
+*    |--GameObject
+*    |----Character
+*
+*	 A simple interface to help building the ECS system	 
+*
+*/
+
 public:
 	virtual void Init() = 0;
 	virtual void Draw() = 0;

@@ -12,10 +12,14 @@ public:
 		return m_Instance = (m_Instance != nullptr) ? m_Instance : new InputHandler();
 	}
 
+	//Listens for input events
 	void Listen();
-	bool GetKeyDown(SDL_Scancode inKey);
-	Vector2 GetAxisKeys();
 
+	//Listens for KeysPressed
+	bool GetKeyDown(SDL_Scancode inKey);
+
+	//Returns a vector from a default 2d axis
+	Vector2 GetAxisKeys();
 	float xValue;
 	float yValue;
 	

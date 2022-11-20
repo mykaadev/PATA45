@@ -1,6 +1,11 @@
 #include "EngineTime.h"
 #include "sdl.h"
 
+EngineTime::~EngineTime()
+{
+	delete m_Instance;
+}
+
 EngineTime* EngineTime::m_Instance = nullptr;
 
 void EngineTime::Tick()

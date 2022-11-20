@@ -15,11 +15,22 @@ class Engine
 public:
 	static Engine* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new Engine(); }
 	
+	//Initializes the Window
 	bool Init();
+
+	//Handles inputs
 	void Events();
+
+	//Update Obhects
 	void Update();
+
+	//Renders the Updated Objects
 	void Renders();
+
+	//Clean the engine
 	bool Clean();
+
+	//Closes the engine
 	void Quit();
 
 
