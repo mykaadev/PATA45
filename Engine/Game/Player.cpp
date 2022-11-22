@@ -106,7 +106,7 @@ void Player::HandleInput()
 void Player::SetOriginPoint()
 {
 	m_Origin->X = m_Body->GetPosition().x + m_Width / 2;
-	m_Origin->Y = m_Body->GetPosition().y- + m_Height / 2;
+	m_Origin->Y = m_Body->GetPosition().y -  m_Height / 2;
 }
 
 // animation states according the input
@@ -132,12 +132,14 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 void Player::Shooting()
 {
-
-	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
-	myBullets.push_back((GameObject*)bullet);
-	myBullets[myBullets.size()-1]->Init();
-	World::GetInstance()->LoadObjects(myBullets[myBullets.size()-1]);
-
+// 	/*
+// 	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
+// 	myBullets.push_back((GameObject*)bullet);
+// 	myBullets[myBullets.size()-1]->Init();
+// 	World::GetInstance()->LoadObjects(myBullets[myBullets.size()-1]);
+// 
+// 		Object->Update(deltaTime);
+// 		*/
 }
 
 void Player::Clean()
