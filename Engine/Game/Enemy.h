@@ -11,7 +11,12 @@
 *  create object
 *
 */
-class Enemy :
-    public Character
+class Enemy : public Character
 {
+
+public:
+private:
+
+
+
 };

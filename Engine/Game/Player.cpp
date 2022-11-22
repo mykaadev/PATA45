@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Bullet.h"
 #include "../Graphics/TextureManager.h"
 #include "../Core/InputHandler.h"
 #include "box2d.h"
@@ -6,7 +7,7 @@
 
 
 /*
-* Create a void for shooting and input in hold 
+* Create a void for shooting and input in hold  done/ not input
 * 
 * Create an component for gun (with bullet class inside and render sprite ) fire rate 0.1
 * 
@@ -14,6 +15,7 @@
 Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
+	canShoot = true;
 }
 
 
@@ -86,14 +88,28 @@ void Player::HandleInput()
 
 	m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeys().X * fSpeed, InputHandler::GetInstance()->GetAxisKeys().Y * -fSpeed));
 
+	// Input shooting
+
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
+	{
+		canShoot = false;
+ 		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
+		myBullets.push_back((GameObject*)bullet);
+		World::GetInstance()->LoadObjects(myBullets[myBullets.size() - 1]);
+		myBullets[myBullets.size() - 1]->Init();
+	}
+
 }
 
+// position
 void Player::SetOriginPoint()
 {
 	m_Origin->X = m_Body->GetPosition().x + m_Width / 2;
 	m_Origin->Y = m_Body->GetPosition().y- + m_Height / 2;
 }
 
+// animation states according the input
 void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue)
 {
 
@@ -116,7 +132,12 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 void Player::Shooting()
 {
-	// in this function check holding 
+
+	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
+	myBullets.push_back((GameObject*)bullet);
+	myBullets[myBullets.size()-1]->Init();
+	World::GetInstance()->LoadObjects(myBullets[myBullets.size()-1]);
+
 }
 
 void Player::Clean()

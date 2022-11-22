@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <textures>
-    <texture id="EngineLogo" source="../Assets/Engine/EngineLogo.bmp"/>
-    <texture id="ShipIdle" source="../Assets/Game/Textures/ShipIdle.bmp"/>
+	
+	<texture id="EngineLogo" source="../Assets/Engine/EngineLogo.bmp"/>
+	
+	<texture id="ShipIdle" source="../Assets/Game/Textures/ShipIdle.bmp"/>
     <texture id="ShipLeft" source="../Assets/Game/Textures/ShipTurningLeft.bmp"/>
     <texture id="ShipRight" source="../Assets/Game/Textures/ShipTurningRight.bmp"/>
-</textures>
+	
+	
+    <texture id="BulletOne" source="../Assets/Game/Textures/missileOne.bmp"/>
+    <texture id="BulletTwo" source="../Assets/Game/Textures/missileTwo.bmp"/>
+    <texture id="BulletThree" source="../Assets/Game/Textures/missileThree.bmp"/>
+	
+	
+	
+	
+	
+    
+</textures>	

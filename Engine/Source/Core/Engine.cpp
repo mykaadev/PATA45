@@ -87,7 +87,7 @@ void Engine::Renders()
 	SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
 	SDL_RenderClear(m_Renderer);
 
-	TextureManager::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
+	//TextureManager::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
 
 	World::GetInstance()->Render();
 

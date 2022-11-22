@@ -66,8 +66,14 @@ void World::Update(float deltaTime)
 
 	for (auto Object : GameObjectLoaded)
 	{
-		Object->Update(deltaTime);
-	//	std::cout << "updoot" << std::endl;
+		if (Object != nullptr)
+		{
+			Object->Update(deltaTime);
+		}
+		else
+		{
+			continue;
+		}
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
@@ -80,8 +86,6 @@ void World::Render()
 	for (auto Object : GameObjectLoaded)
 	{
 		Object->Draw();
-	//	std::cout << "renderoot" << std::endl;
-
 	}
 
 	m_Level->Render();
