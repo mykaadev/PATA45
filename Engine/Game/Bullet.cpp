@@ -29,12 +29,18 @@ void Bullet::Clean()
 }
 
 
+
 void Bullet::SetupBody()
 {
 	b2BodyDef _BodyDef;
 	_BodyDef.type = b2_dynamicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
+	//speed
+	_BodyDef.linearVelocity(2.f);
+	//is bullet
+	_BodyDef.bullet= true;
+
 
 	m_BulletBody = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
@@ -47,8 +53,14 @@ void Bullet::SetupBody()
 	_fixtureDef.friction = 0.3f;
 	b2Fixture* _Fixture;
 	_Fixture = m_BulletBody->CreateFixture(&_fixtureDef);
+}
 
 
+void Bullet::CheckColision()
+{
+	//make the check for collsion
+
+	m_BulletBody->SetBullet(true);
 }
 
 void Bullet::SetAnimationState(BulletStates inCurrentAnimationState, float inAxisValue)
@@ -56,10 +68,7 @@ void Bullet::SetAnimationState(BulletStates inCurrentAnimationState, float inAxi
 	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
 }
 
-void Bullet::HandleMove(const int x_border, const int y_border)
-{
-	// movement and speddddddx
-}
+
 
 // position
 void Bullet::SetOriginPoint()
@@ -71,6 +80,6 @@ void Bullet::SetOriginPoint()
 }
 Bullet::~Bullet()
 {
-
+	
 }
 

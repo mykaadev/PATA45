@@ -2,6 +2,8 @@
 
 #include "../Objects/Character.h"
 #include "Bullet.h"
+#include "HealthSystem.h"
+#include "EnemyBullet.h"
 #include "box2d.h"
 #include <vector>
 
@@ -22,6 +24,8 @@ public:
 
 	Player(Properties* props);
 	Bullet* bullet;
+	HealthSystem* health;
+	EnemyBullet* enemeyBullet;
 
 	virtual void Init();
 	virtual void Draw(); 
@@ -35,9 +39,16 @@ private:
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Shooting();
+	void HealthHandler(int damage);
+	void DeathAnimation();
 
 	bool bIdle, bMovingRight, bMovingLeft, canShoot;
 	float fSpeed;
+	int maxHealth = 100;
+	int currentHealth = 100;
+	
+
+
 	b2Body* m_Body;
 	std::vector <GameObject*> myBullets;
 

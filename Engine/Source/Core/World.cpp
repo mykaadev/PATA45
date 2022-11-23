@@ -66,13 +66,16 @@ void World::Update(float deltaTime)
 
 	for (auto Object : GameObjectLoaded)
 	{
+
 		if (Object != nullptr)
 		{
 			Object->Update(deltaTime);
+			
 		}
 		else
 		{
 			continue;
+			
 		}
 	}
 

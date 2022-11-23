@@ -5,12 +5,12 @@
 #include "Engine.h"
 #include "World.h"
 
-
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
 
 Player* player = nullptr;
 Bullet* bullet = nullptr;
+
 
 
 ObjectHandler* ObjectHandler::m_Instance = nullptr;
@@ -25,7 +25,11 @@ void ObjectHandler::LoadObjects()
 
 	/*-----------Bullet-----------------*/
 
-	
+	/*----------Enemies----------------*/
+
+
+
+
 
 
 	Camera::GetInstance()->SetCameraFollowTarget(false);

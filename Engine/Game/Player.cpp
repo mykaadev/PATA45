@@ -7,9 +7,11 @@
 
 
 /*
-* Create a void for shooting and input in hold  done/ not input
+* Create a void for shooting and input in hold  done/ not input - done
 * 
-* Create an component for gun (with bullet class inside and render sprite ) fire rate 0.1
+* Create an component for gun (with bullet class inside and render sprite ) fire rate 0.1  - with bug
+* 
+* Health system is local but almost finished 
 * 
 */
 Player::Player(Properties* props) : Character(props) {
@@ -26,6 +28,8 @@ void Player::Init()
 	SetAnimationState(Idle, 0);
 
 	fSpeed = 5.0f;
+
+	currentHealth = maxHealth;
 }
 
 Player::~Player()
@@ -39,6 +43,7 @@ void Player::Update(float deltaTime)
 {
 	HandleInput();
 	SetOriginPoint();
+	HealthHandler(currentHealth);
 	m_Animation->Update(deltaTime);
 }
 
@@ -90,14 +95,21 @@ void Player::HandleInput()
 
 	// Input shooting
 
+
+	// At the second bullet the engine crashes
 	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
+
+	
 		canShoot = false;
- 		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
+		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
 		myBullets.push_back((GameObject*)bullet);
 		World::GetInstance()->LoadObjects(myBullets[myBullets.size() - 1]);
 		myBullets[myBullets.size() - 1]->Init();
+		myBullets.push_back((GameObject*)bullet);
+
+		
 	}
 
 }
@@ -128,18 +140,46 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	{
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 	}
+
+	if (inCurrentAnimationState == Dead && inAxisValue !=0 || inAxisValue == 0)
+	{
+		m_Animation->SetProperties("Explosion", 1, 0, 3, 100, false);
+	}
 }
 
 void Player::Shooting()
 {
-// 	/*
+
+
 // 	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
 // 	myBullets.push_back((GameObject*)bullet);
 // 	myBullets[myBullets.size()-1]->Init();
 // 	World::GetInstance()->LoadObjects(myBullets[myBullets.size()-1]);
 // 
 // 		Object->Update(deltaTime);
-// 		*/
+
+}
+
+// Health Part
+void Player::HealthHandler(int damage)
+{
+	
+	isDead = false;
+	maxHealth -= damage;
+
+	if (currentHealth == 0)
+	{
+		DeathAnimation();
+		isDead = true;
+	}
+}
+
+void Player::DeathAnimation()
+{
+	// play animation 
+	SetAnimationState(Dead, InputHandler::GetInstance()->GetAxisKeys().X);
+	m_Body->World();
+
 }
 
 void Player::Clean()

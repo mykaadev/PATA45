@@ -12,6 +12,16 @@
     <texture id="BulletTwo" source="../Assets/Game/Textures/missileTwo.bmp"/>
     <texture id="BulletThree" source="../Assets/Game/Textures/missileThree.bmp"/>
 	
+	 <texture id="Explosion" source="../Assets/Game/Textures/explode64.bmp"/>
+	
+	
+	
+    <texture id="HorizontalEnemyLoner" source="../Assets/Game/Textures/LonerA.bmp"/>
+    <texture id="VerticalEnemyRusher" source="../Assets/Game/Textures/rusher.bmp"/>
+    <texture id="EnemyBullet" source="../Assets/Game/Textures/“EnemyBullet.bmp"/> 
+  
+	
+	
 	
 	
 	

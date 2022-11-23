@@ -20,13 +20,13 @@ public:
 	virtual void Draw();
 	virtual void Update(float deltaTime);
 	virtual void Clean();
+	void CheckColision();
 
 
 private:
 
 	void SetupBody();
 	void SetAnimationState(BulletStates inCurrentAnimationState, float inAxisValue);
-	void HandleMove(const int x_border, const int y_border);
 	void SetOriginPoint();
 	b2Body* m_BulletBody;
 
