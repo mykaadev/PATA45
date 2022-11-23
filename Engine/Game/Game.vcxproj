@@ -133,6 +133,8 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CoreGame.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemySpawner.cpp" />
+    <ClCompile Include="HealthSystem.cpp" />
     <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="Player.cpp" />
   </ItemGroup>
@@ -140,6 +142,8 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CoreGame.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemySpawner.h" />
+    <ClInclude Include="HealthSystem.h" />
     <ClInclude Include="ObjectHandler.h" />
     <ClInclude Include="Player.h" />
   </ItemGroup>
