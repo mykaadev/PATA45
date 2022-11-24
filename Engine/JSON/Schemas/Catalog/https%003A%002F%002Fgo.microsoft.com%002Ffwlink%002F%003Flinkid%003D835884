@@ -842,6 +842,12 @@
       "url": "https://static.codemagic.io/codemagic-schema.json"
     },
     {
+      "name": "Codux",
+      "description": "Codux configuration file",
+      "fileMatch": ["codux.config.json"],
+      "url": "https://wixplosives.github.io/codux-config-schema/codux.config.schema.json"
+    },
+    {
       "name": "JSON schema for Codecov configuration files",
       "description": "Schema for codecov.yml files.",
       "fileMatch": [".codecov.yml", "codecov.yml"],
@@ -1910,6 +1916,15 @@
       "description": "A JSON schema for the ASP.NET LaunchSettings.json files",
       "fileMatch": ["launchsettings.json"],
       "url": "https://json.schemastore.org/launchsettings.json"
+    },
+    {
+      "name": "lego.json",
+      "description": "Config file for the lego-build CLI tool.",
+      "fileMatch": ["lego.json"],
+      "url": "https://json.schemastore.org/lego.json",
+      "versions": {
+        "1.0": "https://json.schemastore.org/lego.json"
+      }
     },
     {
       "name": "lerna.json",

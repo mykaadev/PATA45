@@ -3,14 +3,13 @@ class HealthSystem
 {
 public:
 
-	/*
-	HealthSystem(Properties* Properties);
+	HealthSystem();
 
 
 	void SetMaxHealth();
 	void CurrentHealth();
 	void GetDamage();
 	void Death();
-	*/
+
 };
 

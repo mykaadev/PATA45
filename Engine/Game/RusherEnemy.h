@@ -3,5 +3,6 @@
 class RusherEnemy :
     public BaseEnemy
 {
+
 };
 

@@ -18,6 +18,8 @@ Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
 	canShoot = true;
+	currentHealth = maxHealth;
+	fSpeed = 5.0f;
 }
 
 
@@ -27,14 +29,13 @@ void Player::Init()
 	SetupBody();
 	SetAnimationState(Idle, 0);
 
-	fSpeed = 5.0f;
 
-	currentHealth = maxHealth;
 }
 
 Player::~Player()
 {
     delete m_Animation;
+	World::GetInstance()->Destroy(m_Body);
 }
 
 
@@ -121,6 +122,7 @@ void Player::SetOriginPoint()
 	m_Origin->Y = m_Body->GetPosition().y -  m_Height / 2;
 }
 
+
 // animation states according the input
 void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue)
 {
@@ -145,6 +147,7 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	{
 		m_Animation->SetProperties("Explosion", 1, 0, 3, 100, false);
 	}
+
 }
 
 void Player::Shooting()
@@ -178,8 +181,7 @@ void Player::DeathAnimation()
 {
 	// play animation 
 	SetAnimationState(Dead, InputHandler::GetInstance()->GetAxisKeys().X);
-	m_Body->World();
-
+	
 }
 
 void Player::Clean()

@@ -42,13 +42,11 @@ private:
 	void HealthHandler(int damage);
 	void DeathAnimation();
 
-	bool bIdle, bMovingRight, bMovingLeft, canShoot;
+	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
 	float fSpeed;
 	int maxHealth = 100;
 	int currentHealth = 100;
 	
-
-
 	b2Body* m_Body;
 	std::vector <GameObject*> myBullets;
 

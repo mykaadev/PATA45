@@ -3,6 +3,10 @@
 class EnemyBullet : public Character
 {
 public:
-	int damage = 15;
+
+	int damage;
+
+
+private:
 };
 

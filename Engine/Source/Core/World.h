@@ -22,6 +22,7 @@ public:
 
 	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back((GameObject*)Object); }
 
+	inline void Destroy(b2Body* body) { m_World->DestroyBody(body);}
 
 private:
 
