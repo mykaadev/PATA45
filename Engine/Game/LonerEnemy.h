@@ -6,6 +6,13 @@
 
 class LonerEnemy : public BaseEnemy
 {
+	LonerEnemy();
 
+	virtual void Init();
+	virtual void Draw();
+	virtual void Update(float deltaTime);
+	virtual void Clean();
+
+	void CheckColision();
 };
 
