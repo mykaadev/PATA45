@@ -27,6 +27,5 @@ private:
 	void SetOriginPoint();
 	b2Body* m_EnemyBody;
 
-	~BaseEnemy();
 };
 

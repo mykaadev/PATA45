@@ -1,5 +1,6 @@
 #pragma once
-#include <Character.h>
+#include "../Source/Objects/Character.h"
+
 class EnemyBullet : public Character
 {
 public:

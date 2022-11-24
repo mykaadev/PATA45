@@ -25,7 +25,7 @@ Player::Player(Properties* props) : Character(props) {
 
 void Player::Init()
 {
-	
+
 	SetupBody();
 	SetAnimationState(Idle, 0);
 
@@ -42,6 +42,8 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
+	__super::Update(deltaTime);
+
 	HandleInput();
 	SetOriginPoint();
 	HealthHandler(currentHealth);
@@ -143,10 +145,12 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 	}
 
-	if (inCurrentAnimationState == Dead && inAxisValue !=0 || inAxisValue == 0)
-	{
-		m_Animation->SetProperties("Explosion", 1, 0, 3, 100, false);
-	}
+
+// 	if (inCurrentAnimationState == Dead && inAxisValue !=0 || inAxisValue == 0)
+// 	{
+// 		m_Animation->SetProperties("Explosion", 1, 0, 3, 100, false);
+// 	}
+
 
 }
 
