@@ -50,6 +50,10 @@ public:
 		
 		float px = properties->X + properties->Width / 2;
 		float py = properties->Y + properties->Height / 2;
+
+// 		float px = properties->X + properties->Width / 2;
+// 		float py = properties->Y + properties->Height / 2;
+
 		m_Origin = new Point(px, py);
 	};
 	

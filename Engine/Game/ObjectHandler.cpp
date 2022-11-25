@@ -8,29 +8,16 @@
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
 
-Player* player = nullptr;
-Bullet* bullet = nullptr;
-
-
-
 ObjectHandler* ObjectHandler::m_Instance = nullptr;
+
+Player* player = nullptr;
 
 
 void ObjectHandler::LoadObjects()
 {
-	/*------------Player--------------*/
+
 	player = new Player(new Properties("Player", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 64, 64, SDL_FLIP_NONE));
 	World::GetInstance()->LoadObjects(player);
-	player->Init();
-
-	/*-----------Bullet-----------------*/
-
-	/*----------Enemies----------------*/
-
-
-
-
-
 
 	Camera::GetInstance()->SetCameraFollowTarget(false);
 	Camera::GetInstance()->SetCameraTarget(player->GetOrigin());

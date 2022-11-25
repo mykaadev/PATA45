@@ -1,5 +1,10 @@
 #include "LonerEnemy.h"
 
+LonerEnemy::LonerEnemy(Properties* props) : BaseEnemy(props)
+{
+
+}
+
 void LonerEnemy::Init()
 {
 	__super::Init();
@@ -22,5 +27,5 @@ void LonerEnemy::Clean()
 
 void LonerEnemy::CheckColision()
 {
-	
+	__super::CheckColision();
 }

@@ -19,17 +19,16 @@ Player::Player(Properties* props) : Character(props) {
 	m_Animation = new Animation();
 	canShoot = true;
 	currentHealth = maxHealth;
-	fSpeed = 5.0f;
+	fSpeed = 100;
 }
 
 
 void Player::Init()
 {
+	__super::Init();
 
 	SetupBody();
 	SetAnimationState(Idle, 0);
-
-
 }
 
 Player::~Player()
@@ -44,8 +43,9 @@ void Player::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
-	HandleInput();
 	SetOriginPoint();
+	Move();
+	HandleInput();
 	HealthHandler(currentHealth);
 	m_Animation->Update(deltaTime);
 }
@@ -62,18 +62,20 @@ void Player::SetupBody()
 	_BodyDef.type = b2_dynamicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
-
+	
 	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
 	b2PolygonShape _boxShape;
-	_boxShape.SetAsBox(1.0f, 1.0f);
+	_boxShape.SetAsBox(m_Width/2, m_Height/2);
 	
 	b2FixtureDef _fixtureDef;
 	_fixtureDef.shape = &_boxShape;
-	_fixtureDef.density = 1.0f;
+	_fixtureDef.density = 0.1f;
 	_fixtureDef.friction = 0.3f;
+
 	b2Fixture* _Fixture;
 	_Fixture = m_Body->CreateFixture(&_fixtureDef);
+	
 }
 
 
@@ -94,34 +96,21 @@ void Player::HandleInput()
 		SetAnimationState(Idle, InputHandler::GetInstance()->GetAxisKeys().X);
 	}	
 
-	m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeys().X * fSpeed, InputHandler::GetInstance()->GetAxisKeys().Y * -fSpeed));
-
-	// Input shooting
 
 
-	// At the second bullet the engine crashes
 	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
-
-	
-		canShoot = false;
-		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
-		myBullets.push_back((GameObject*)bullet);
-		World::GetInstance()->LoadObjects(myBullets[myBullets.size() - 1]);
-		myBullets[myBullets.size() - 1]->Init();
-		myBullets.push_back((GameObject*)bullet);
-
-		
+		FireGun();
 	}
 
 }
 
-// position
+
 void Player::SetOriginPoint()
 {
-	m_Origin->X = m_Body->GetPosition().x + m_Width / 2;
-	m_Origin->Y = m_Body->GetPosition().y -  m_Height / 2;
+	m_Origin->X = m_Body->GetPosition().x;
+	m_Origin->Y = m_Body->GetPosition().y;
 }
 
 
@@ -144,49 +133,43 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	{
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 	}
-
-
-// 	if (inCurrentAnimationState == Dead && inAxisValue !=0 || inAxisValue == 0)
-// 	{
-// 		m_Animation->SetProperties("Explosion", 1, 0, 3, 100, false);
-// 	}
-
-
 }
 
-void Player::Shooting()
+void Player::Move()
 {
-
-
-// 	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 1, 16, 16, SDL_FLIP_NONE));
-// 	myBullets.push_back((GameObject*)bullet);
-// 	myBullets[myBullets.size()-1]->Init();
-// 	World::GetInstance()->LoadObjects(myBullets[myBullets.size()-1]);
-// 
-// 		Object->Update(deltaTime);
-
+	m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeys().X * fSpeed, InputHandler::GetInstance()->GetAxisKeys().Y * -fSpeed));
 }
 
-// Health Part
+void Player::FireGun()
+{
+	canShoot = false;
+
+	Bullet* bullet = nullptr;
+
+	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 33, 16, 16, SDL_FLIP_NONE));
+
+	World::GetInstance()->LoadObjects(bullet);
+}
+
+
 void Player::HealthHandler(int damage)
 {
-	
 	isDead = false;
 	maxHealth -= damage;
 
-	if (currentHealth == 0)
+	if (currentHealth <= 0)
 	{
 		DeathAnimation();
 		isDead = true;
 	}
 }
 
+
 void Player::DeathAnimation()
 {
-	// play animation 
-	SetAnimationState(Dead, InputHandler::GetInstance()->GetAxisKeys().X);
-	
+	SetAnimationState(Dead, 0);	
 }
+
 
 void Player::Clean()
 {

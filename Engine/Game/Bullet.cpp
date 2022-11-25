@@ -1,5 +1,6 @@
 #include "Bullet.h"
 #include "World.h"
+#include "TextureManager.h"
 
 Bullet::Bullet(Properties* props) : Character(props) {
 
@@ -10,22 +11,30 @@ void Bullet::Init()
 {
 	SetupBody();
 	SetAnimationState(travelling, 0);
+	m_Body->ApplyLinearImpulse(b2Vec2(0.0f, -1000.0f), m_Body->GetPosition(), true);
 }
 
 void Bullet::Draw()
 {
-	m_Animation->Draw(m_BulletBody->GetPosition().x, m_BulletBody->GetPosition().y, m_Width, m_Height);
+	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
 void Bullet::Update(float deltaTime)
 {
+	__super::Update(deltaTime);
+
 	SetOriginPoint();
+	if (m_Body->GetPosition().y < 50.0f )
+	{
+		Clean();
+	}
+
 	m_Animation->Update(deltaTime);
 }
 
 void Bullet::Clean()
 {
-
+	
 }
 
 
@@ -36,13 +45,12 @@ void Bullet::SetupBody()
 	_BodyDef.type = b2_dynamicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
-	//speed
-	_BodyDef.linearVelocity(2.f);
+
 	//is bullet
 	_BodyDef.bullet= true;
 
 
-	m_BulletBody = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
+	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
 	b2PolygonShape _boxShape;
 	_boxShape.SetAsBox(1.0f, 1.0f);
@@ -52,15 +60,17 @@ void Bullet::SetupBody()
 	_fixtureDef.density = 1.0f;
 	_fixtureDef.friction = 0.3f;
 	b2Fixture* _Fixture;
-	_Fixture = m_BulletBody->CreateFixture(&_fixtureDef);
+	_Fixture = m_Body->CreateFixture(&_fixtureDef);
+
+
 }
 
 
 void Bullet::CheckColision()
 {
 	//make the check for collsion
+	m_Body->SetBullet(true);
 
-	m_BulletBody->SetBullet(true);
 }
 
 void Bullet::SetAnimationState(BulletStates inCurrentAnimationState, float inAxisValue)
@@ -73,13 +83,15 @@ void Bullet::SetAnimationState(BulletStates inCurrentAnimationState, float inAxi
 // position
 void Bullet::SetOriginPoint()
 {
-	if (m_BulletBody == nullptr) return;
+	if (m_Body == nullptr) return;
 
-	m_Origin->X = m_BulletBody->GetPosition().x + m_Width / 2;
-	m_Origin->Y = m_BulletBody->GetPosition().y - m_Height / 2;
+	m_Origin->X = m_Body->GetPosition().x + m_Width / 2;
+	m_Origin->Y = m_Body->GetPosition().y - m_Height / 2;
 }
+
 Bullet::~Bullet()
 {
-	
+	delete m_Animation;
+	World::GetInstance()->Destroy(m_Body);
 }
 

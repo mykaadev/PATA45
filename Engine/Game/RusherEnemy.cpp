@@ -1,4 +1,12 @@
 #include "RusherEnemy.h"
+#include "BaseEnemy.h"
+
+
+RusherEnemy::RusherEnemy(Properties* props) : BaseEnemy (props)
+{
+
+}
+
 
 void RusherEnemy::Init()
 {
@@ -22,5 +30,7 @@ void RusherEnemy::Clean()
 
 void RusherEnemy::CheckColision()
 {
+	__super::CheckColision();
 
+	
 }

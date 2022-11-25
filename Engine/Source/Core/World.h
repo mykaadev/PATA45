@@ -20,7 +20,7 @@ public:
 
 	inline b2World* GetWorld() {return m_World.get();}
 
-	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back((GameObject*)Object); }
+	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back((GameObject*)Object); Object->Init(); }
 
 	inline void Destroy(b2Body* body) { m_World->DestroyBody(body);}
 

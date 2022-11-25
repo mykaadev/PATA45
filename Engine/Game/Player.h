@@ -23,7 +23,6 @@ class Player : public Character
 public:
 
 	Player(Properties* props);
-	Bullet* bullet;
 	HealthSystem* health;
 	EnemyBullet* enemeyBullet;
 
@@ -38,7 +37,8 @@ private:
 	void HandleInput();
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
-	void Shooting();
+	void Move();
+	void FireGun();
 	void HealthHandler(int damage);
 	void DeathAnimation();
 
@@ -48,7 +48,7 @@ private:
 	int currentHealth = 100;
 	
 	b2Body* m_Body;
-	std::vector <GameObject*> myBullets;
+	std::vector <Character*> myBullets;
 
 	
 

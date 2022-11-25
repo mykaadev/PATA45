@@ -12,20 +12,21 @@ class BaseEnemy : public Character
 
 public:
 
-	BaseEnemy(Properties* Properties);
+	BaseEnemy(Properties* props);
 
 	virtual void Init();
 	virtual void Draw();
 	virtual void Update(float deltaTime);
 	virtual void Clean();
-	void CheckColision();
+	virtual void CheckColision();
 
 private:
 
 	void SetupBody();
 	void SetAnimationState(EnemyState inCurrentAnimationState, float inAxisValue);
 	void SetOriginPoint();
-	b2Body* m_EnemyBody;
+	b2Body* m_Body;
+
 
 };
 

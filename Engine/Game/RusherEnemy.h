@@ -3,13 +3,17 @@
 
 class RusherEnemy : public BaseEnemy
 {
-	RusherEnemy();
+public:
 
+	RusherEnemy(Properties* props);
 	virtual void Init();
 	virtual void Draw();
 	virtual void Update(float deltaTime);
 	virtual void Clean();
 
-	void CheckColision();
+	virtual void CheckColision();
+
+	RusherEnemy();
+	//~RusherEnemy();
 };
 

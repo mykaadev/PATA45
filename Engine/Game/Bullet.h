@@ -28,9 +28,7 @@ private:
 	void SetupBody();
 	void SetAnimationState(BulletStates inCurrentAnimationState, float inAxisValue);
 	void SetOriginPoint();
-	b2Body* m_BulletBody;
+	b2Body* m_Body;
 
 	~Bullet();
-
-
 };
