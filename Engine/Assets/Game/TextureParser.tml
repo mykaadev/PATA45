@@ -16,8 +16,8 @@
 	
 	
 	
-    <texture id="HorizontalEnemyLoner" source="../Assets/Game/Textures/LonerA.bmp"/>
-    <texture id="VerticalEnemyRusher" source="../Assets/Game/Textures/rusher.bmp"/>
+    <texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
+    <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>
     <texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/> 
   
 	

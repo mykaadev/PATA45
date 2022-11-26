@@ -18,6 +18,11 @@ void LonerEnemy::Draw()
 void LonerEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
+
+	m_Animation->SetProperties("Loner", 1, 0, 16,50, true);
+
+	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.0f));
+
 }
 
 void LonerEnemy::Clean()

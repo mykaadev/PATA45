@@ -13,7 +13,7 @@ public:
 
 	virtual void CheckColision();
 
+	bool m_GoingRight;
 	RusherEnemy();
-	//~RusherEnemy();
 };
 

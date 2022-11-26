@@ -20,7 +20,7 @@ public:
 	virtual void Clean();
 	virtual void CheckColision();
 
-private:
+
 
 	void SetupBody();
 	void SetAnimationState(EnemyState inCurrentAnimationState, float inAxisValue);

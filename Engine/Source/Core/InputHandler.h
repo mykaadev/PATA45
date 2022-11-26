@@ -18,12 +18,6 @@ public:
 	//Listens for KeysPressed
 	bool GetKeyDown(SDL_Scancode inKey);
 
-	//Returns a vector from a default 2d axis
-	Vector2 GetAxisKeys();
-	float xValue;
-	float yValue;
-	
-
 private:
 
 	InputHandler();
@@ -32,10 +26,14 @@ private:
 
 	void KeyUp();
 	void KeyDown();
+	void GetAxis();
+
 
 	void CheckForGamepadCompatibility();
-
+	SDL_GameController* m_Controller;
 	const Uint8* m_KeyStates;
+
+	~InputHandler();
 	
 
 };

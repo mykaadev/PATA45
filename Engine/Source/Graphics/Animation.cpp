@@ -27,35 +27,37 @@ void Animation::SetProperties(std::string textureID, int spriteRow, int starting
 }
 
 
-
 void Animation::Update(float deltaTime)
 {
-	
-	if ( !m_Loop && m_FrameCount != 0 && m_FrameCounter > 0)
+	if (!m_Loop)
 	{
-		if (m_SpriteFrame == m_FrameCount-1)
+		if (m_FrameCount != 0 && m_FrameCounter > 0)
+		{
+			if (m_SpriteFrame == m_FrameCount - 1)
+			{
+				m_SpriteFrame = m_EndFrame;
+			}
+			else
+			{
+				m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
+			}
+		}
+
+		if (m_FrameCounter == 0)
 		{
 			m_SpriteFrame = m_EndFrame;
 		}
-		else
-		{
-			m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-		}
 	}
-
-	if (!m_Loop && m_FrameCounter == 0)
-	{
-		m_SpriteFrame = m_EndFrame;
-	}
+	
 
 	if (m_Loop)
 	{
-		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-	}
-	
-	if (m_FrameCount == 0)
-	{
-		m_SpriteFrame = m_StartingFrame;
+		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;		
+
+		if (m_FrameCount == 0)
+		{
+			m_SpriteFrame = m_StartingFrame;
+		}
 	}
 }
 

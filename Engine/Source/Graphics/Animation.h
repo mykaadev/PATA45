@@ -3,6 +3,7 @@
 #include "sdl.h"
 #include <string>
 
+
 class Animation
 {
 public:

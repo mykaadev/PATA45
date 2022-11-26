@@ -9,10 +9,13 @@ InputHandler* InputHandler::m_Instance = nullptr;
 InputHandler::InputHandler()
 {
 	m_KeyStates = SDL_GetKeyboardState(nullptr);
+	CheckForGamepadCompatibility();
+
 }
 
 void InputHandler::Listen()
 {
+
 	SDL_Event event;
 
 	while (SDL_PollEvent(&event))
@@ -21,7 +24,14 @@ void InputHandler::Listen()
 		{
 			case SDL_QUIT: Engine::GetInstance()->Quit(); break;
 			case SDL_KEYDOWN: KeyDown(); break;
-			case SDL_KEYUP: KeyUp(); break;
+			case SDL_KEYUP: KeyUp();  break;
+			case SDL_JOYAXISMOTION:  
+				if (event.jaxis.value < 0 || event.jaxis.value > 0)
+				{
+					std::cout << event.jaxis.value << std::endl;
+				}
+
+
 		}		
 	}
 }
@@ -37,45 +47,6 @@ bool InputHandler::GetKeyDown(SDL_Scancode inKey)
 }
 
 
-Vector2 InputHandler::GetAxisKeys()
-{
-	
-	if (GetKeyDown(SDL_SCANCODE_D) || GetKeyDown(SDL_SCANCODE_RIGHT))
-	{
-		xValue = 1.0f;
-	}
-
-	if (GetKeyDown(SDL_SCANCODE_A) || GetKeyDown(SDL_SCANCODE_LEFT))
-	{
-		xValue = -1.0f;
-	}
-
-	if (!GetKeyDown(SDL_SCANCODE_D) && !GetKeyDown(SDL_SCANCODE_RIGHT) && !GetKeyDown(SDL_SCANCODE_A) && !GetKeyDown(SDL_SCANCODE_LEFT))
-	{
-		xValue = 0.0f;
-	}
-
-
-	if (GetKeyDown(SDL_SCANCODE_W) || GetKeyDown(SDL_SCANCODE_UP))
-	{
-		yValue = 1.0f;
-	}
-
-	if (GetKeyDown(SDL_SCANCODE_S) || GetKeyDown(SDL_SCANCODE_DOWN))
-	{
-		yValue = -1.0f;
-	}
-
-
-	if (!GetKeyDown(SDL_SCANCODE_S) && !GetKeyDown(SDL_SCANCODE_DOWN) && !GetKeyDown(SDL_SCANCODE_W) && !GetKeyDown(SDL_SCANCODE_UP))
-	{
-		yValue = 0.0f;
-	}
-
-
-	return Vector2(xValue, yValue);
-}
-
 void InputHandler::KeyUp()
 {
 	m_KeyStates = SDL_GetKeyboardState(nullptr);
@@ -89,13 +60,25 @@ void InputHandler::KeyDown()
 
 void InputHandler::CheckForGamepadCompatibility()
 {
-	std::cout << SDL_NumJoysticks() << std::endl;
+	
+	if (SDL_Init(SDL_INIT_GAMECONTROLLER) < 0)
+	{
+		std::cout << "ERROR: GamePad failed to initialize" << std::endl;
+	}
+	if (SDL_NumJoysticks() < 1)
+	{
+		std::cout << "Warning: No Gamepad detected" << std::endl;
+	}
+	else
+	{
+		m_Controller = SDL_GameControllerOpen(0);
+	}
 
 	SDL_Joystick* joystick = SDL_JoystickOpen(0);
 
 	if (joystick == NULL)
 	{
-		std::cout << "Unable to use Gamepad " << SDL_GetError() << std::endl;
+		std::cout << "Unable to use Gamepad: " << SDL_GetError() << std::endl;
 	}
 	else
 	{
@@ -105,6 +88,14 @@ void InputHandler::CheckForGamepadCompatibility()
 		std::cout << "Num Track balls: " << SDL_JoystickNumBalls(joystick) << std::endl;
 		std::cout << "Num Hats: " << SDL_JoystickNumHats(joystick) << std::endl;
 	}
+
 	SDL_JoystickClose(joystick);
+}
+
+InputHandler::~InputHandler()
+{
+	delete m_KeyStates;
+	delete m_Controller;
+	delete m_Instance;
 }
 

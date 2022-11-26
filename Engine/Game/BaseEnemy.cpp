@@ -50,9 +50,10 @@ void BaseEnemy::CheckColision()
 void BaseEnemy::SetupBody()
 {
 	b2BodyDef _BodyDef;
-	_BodyDef.type = b2_dynamicBody;
+	_BodyDef.type = b2_kinematicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
+	_BodyDef.fixedRotation = true;
 
 	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
@@ -61,8 +62,8 @@ void BaseEnemy::SetupBody()
 
 	b2FixtureDef _fixtureDef;
 	_fixtureDef.shape = &_boxShape;
-	_fixtureDef.density = 0.1f;
-	_fixtureDef.friction = 0.3f;
+	_fixtureDef.density = 100.0f;
+	_fixtureDef.friction = 1.0f;
 
 	b2Fixture* _Fixture;
 	_Fixture = m_Body->CreateFixture(&_fixtureDef);

@@ -80,7 +80,6 @@ void TextureManager::Draw(std::string inID, int x, int y, int width, int height,
 
 void TextureManager::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
 	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
 
 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
@@ -100,7 +99,6 @@ void TextureManager::DrawTile(std::string inTilesetID, int tileSize, int x, int 
 
 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, tileSize, tileSize };
 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);
-
 }
 
 

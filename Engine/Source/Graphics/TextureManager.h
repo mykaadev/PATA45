@@ -3,6 +3,16 @@
 #include "SDL.h"
 #include <map>
 
+enum SortingLayers
+{
+	BaseBackground,
+	Background,
+	MiddleGround,
+	Foreground,
+	UI
+};
+
+
 class TextureManager
 {
 public:
@@ -22,6 +32,7 @@ private:
 	static TextureManager* m_Instance;
 
 	std::map<std::string, SDL_Texture*> m_TextureMap;
+
 
 };
 

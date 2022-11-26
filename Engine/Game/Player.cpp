@@ -6,14 +6,6 @@
 #include "World.h"
 
 
-/*
-* Create a void for shooting and input in hold  done/ not input - done
-* 
-* Create an component for gun (with bullet class inside and render sprite ) fire rate 0.1  - with bug
-* 
-* Health system is local but almost finished 
-* 
-*/
 Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
@@ -38,21 +30,16 @@ Player::~Player()
 }
 
 
-
 void Player::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
+	BindAxisAndActions();
 	SetOriginPoint();
 	Move();
-	HandleInput();
-	HealthHandler(currentHealth);
-	m_Animation->Update(deltaTime);
-}
+	TakeDamage(currentHealth);
 
-void Player::Draw()
-{
-	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
+	m_Animation->Update(deltaTime);
 }
 
 
@@ -62,7 +49,8 @@ void Player::SetupBody()
 	_BodyDef.type = b2_dynamicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
-	
+	_BodyDef.fixedRotation = true;
+
 	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
 	b2PolygonShape _boxShape;
@@ -79,24 +67,53 @@ void Player::SetupBody()
 }
 
 
-void Player::HandleInput()
+void Player::BindAxisAndActions()
 {
-	if (InputHandler::GetInstance()->GetAxisKeys().X == 0 && InputHandler::GetInstance()->GetAxisKeys().Y == 0)
+#pragma region MovementXAxis
+
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_A) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_LEFT))
 	{
-		SetAnimationState(Idle, InputHandler::GetInstance()->GetAxisKeys().X);
-	}
-	
-	if (InputHandler::GetInstance()->GetAxisKeys().X < 0 || InputHandler::GetInstance()->GetAxisKeys().X > 0)
-	{
- 		SetAnimationState(MovingX, InputHandler::GetInstance()->GetAxisKeys().X);
+		m_MoveAxis.X = -1;
 	}
 
-	if (InputHandler::GetInstance()->GetAxisKeys().Y < 0 || InputHandler::GetInstance()->GetAxisKeys().Y > 0)
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_D) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_RIGHT))
 	{
-		SetAnimationState(Idle, InputHandler::GetInstance()->GetAxisKeys().X);
-	}	
+		m_MoveAxis.X = 1;
+	}
 
+#pragma endregion 
 
+#pragma region DeadZone
+
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_D) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_RIGHT) && 
+		!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_A) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_LEFT))
+	{
+		m_MoveAxis.X = 0.0f;
+	}
+
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_S) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_DOWN) && 
+		!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_W) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_UP))
+	{
+		m_MoveAxis.Y = 0.0f;
+	}
+
+#pragma endregion
+
+#pragma region MovementYAxis
+
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_W) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_UP))
+	{
+		m_MoveAxis.Y = 1.0f;
+	}
+
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_S) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_DOWN))
+	{
+		m_MoveAxis.Y = -1.0f;
+	}
+
+#pragma endregion
+
+#pragma region FireGun
 
 	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
@@ -104,6 +121,35 @@ void Player::HandleInput()
 		FireGun();
 	}
 
+#pragma endregion
+}
+
+
+void Player::Move()
+{
+	if (m_MoveAxis.X == 0 && m_MoveAxis.Y == 0)
+	{
+		SetAnimationState(Idle, m_MoveAxis.X);
+	}
+
+	if (m_MoveAxis.X < 0 || m_MoveAxis.X > 0)
+	{
+		SetAnimationState(MovingX, m_MoveAxis.X);
+	}
+
+	m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
+}
+
+
+void Player::FireGun()
+{
+	canShoot = false;
+
+	Bullet* bullet = nullptr;
+
+	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 33, 16, 16, SDL_FLIP_NONE));
+
+	World::GetInstance()->LoadObjects(bullet);
 }
 
 
@@ -114,12 +160,11 @@ void Player::SetOriginPoint()
 }
 
 
-// animation states according the input
 void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue)
 {
 
 	if (inCurrentAnimationState == Idle && inAxisValue == 0)
-	{
+{
 		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 50, true);
 	}
 
@@ -135,39 +180,22 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	}
 }
 
-void Player::Move()
+
+void Player::TakeDamage(int inDamage)
 {
-	m_Body->SetLinearVelocity(b2Vec2(InputHandler::GetInstance()->GetAxisKeys().X * fSpeed, InputHandler::GetInstance()->GetAxisKeys().Y * -fSpeed));
-}
-
-void Player::FireGun()
-{
-	canShoot = false;
-
-	Bullet* bullet = nullptr;
-
-	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 33, 16, 16, SDL_FLIP_NONE));
-
-	World::GetInstance()->LoadObjects(bullet);
-}
-
-
-void Player::HealthHandler(int damage)
-{
-	isDead = false;
-	maxHealth -= damage;
+	currentHealth -= inDamage;
 
 	if (currentHealth <= 0)
 	{
-		DeathAnimation();
 		isDead = true;
+		SetAnimationState(Dead, 0);
 	}
 }
 
 
-void Player::DeathAnimation()
+void Player::Draw()
 {
-	SetAnimationState(Dead, 0);	
+	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
 

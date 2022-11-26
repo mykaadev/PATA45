@@ -34,13 +34,12 @@ public:
 private:
 
 	void SetupBody();
-	void HandleInput();
+	void BindAxisAndActions();
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Move();
 	void FireGun();
-	void HealthHandler(int damage);
-	void DeathAnimation();
+	void TakeDamage(int inDamage);
 
 	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
 	float fSpeed;
@@ -50,7 +49,7 @@ private:
 	b2Body* m_Body;
 	std::vector <Character*> myBullets;
 
-	
+	Vector2 m_MoveAxis;
 
 	~Player();
 };
