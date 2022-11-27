@@ -62,6 +62,7 @@ public:
 	virtual void Update(float deltaTime) {  };
 	virtual void Clean() = 0;
 
+
 	inline Point* GetOrigin() { return m_Origin; }
 
 	~GameObject() 

@@ -6,7 +6,9 @@ class IObject
 /*
 *    IObject
 *    |--GameObject
-*    |----Character
+*    |----WorldObject
+*    |-------Character
+*
 *
 *	 A simple interface to help building the ECS system	 
 *
@@ -17,6 +19,7 @@ public:
 	virtual void Draw() = 0;
 	virtual void Update(float deltaTime) = 0;
 	virtual void Clean() = 0;
+
 
 	virtual ~IObject() {};
 };

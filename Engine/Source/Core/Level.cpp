@@ -12,6 +12,6 @@ void Level::Update()
 {
 	for (unsigned int i = 0; i < m_LevelLayers.size(); ++i)
 	{
-			m_LevelLayers[i]->Update();
+		m_LevelLayers[i]->Update();
 	}
 }

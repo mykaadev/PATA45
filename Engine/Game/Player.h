@@ -30,7 +30,10 @@ public:
 	virtual void Draw(); 
 	virtual void Update(float deltaTime);
 	virtual void Clean();
+	virtual void CheckCollision(GameObject* otherGameObject);
 
+
+	void TakeDamage(int inDamage);
 private:
 
 	void SetupBody();
@@ -39,7 +42,7 @@ private:
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Move();
 	void FireGun();
-	void TakeDamage(int inDamage);
+	
 
 	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
 	float fSpeed;

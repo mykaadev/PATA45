@@ -10,8 +10,9 @@ Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
 	canShoot = true;
+	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 100;
+	fSpeed = 3.0f;
 }
 
 
@@ -26,7 +27,6 @@ void Player::Init()
 Player::~Player()
 {
     delete m_Animation;
-	World::GetInstance()->Destroy(m_Body);
 }
 
 
@@ -37,7 +37,6 @@ void Player::Update(float deltaTime)
 	BindAxisAndActions();
 	SetOriginPoint();
 	Move();
-	TakeDamage(currentHealth);
 
 	m_Animation->Update(deltaTime);
 }
@@ -58,6 +57,7 @@ void Player::SetupBody()
 	
 	b2FixtureDef _fixtureDef;
 	_fixtureDef.shape = &_boxShape;
+	_fixtureDef.userData.pointer = (uintptr_t) this;
 	_fixtureDef.density = 0.1f;
 	_fixtureDef.friction = 0.3f;
 
@@ -147,7 +147,7 @@ void Player::FireGun()
 
 	Bullet* bullet = nullptr;
 
-	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 33, 16, 16, SDL_FLIP_NONE));
+	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
 
 	World::GetInstance()->LoadObjects(bullet);
 }
@@ -189,6 +189,8 @@ void Player::TakeDamage(int inDamage)
 	{
 		isDead = true;
 		SetAnimationState(Dead, 0);
+		World::GetInstance()->DestroyGameObject(this, m_Body);
+
 	}
 }
 
@@ -202,5 +204,10 @@ void Player::Draw()
 void Player::Clean()
 {
     TextureManager::GetInstance()->Clean();
+}
+
+void Player::CheckCollision(GameObject* otherGameObject)
+{
+	std::cout << "PLAYER COLIDED with " << ((WorldObject*)otherGameObject)->m_Name << std::endl;
 }
 

@@ -6,7 +6,8 @@
 #include "Level.h"
 #include "..\Objects\GameObject.h"
 
-class World
+class World : public b2ContactListener
+
 {
 public:
 
@@ -22,13 +23,20 @@ public:
 
 	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back((GameObject*)Object); Object->Init(); }
 
-	inline void Destroy(b2Body* body) { m_World->DestroyBody(body);}
+
+ 	void DestroyGameObject(GameObject* inObject, b2Body* body = nullptr);
+	inline void NewBodyPendingKill(b2Body* body) { BodiesPendingKill.push_back(body);}
+	void CleanPendingKills();
+
+	void BeginContact(b2Contact* contact);
 
 private:
 
 	static World* m_Instance;
 	std::unique_ptr<b2World> m_World;
 	std::vector <GameObject*> GameObjectLoaded;
+	std::vector <b2Body*> BodiesPendingKill;
+
 	Level* m_Level;
 
 	World();

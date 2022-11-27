@@ -10,11 +10,15 @@ public:
 
 	LonerEnemy(Properties* props);
 
-	virtual void Init();
-	virtual void Draw();
-	virtual void Update(float deltaTime);
-	virtual void Clean();
-	virtual void CheckColision();
+	void Init() override;
+	void Draw() override;
+	void Update(float deltaTime) override;
+	void Clean() override;
+	void CheckCollision(GameObject* otherGameObject) override;
+	void TakeDamage(int inDamage) override;
 
+
+	int m_CurrentHealth;
+	int m_MaxHealth;
 };
 

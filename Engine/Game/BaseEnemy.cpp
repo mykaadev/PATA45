@@ -7,6 +7,8 @@
 BaseEnemy::BaseEnemy(Properties* props) : Character(props)
 {
 	m_Animation = new Animation();
+
+
 }
 
 void BaseEnemy::Init()
@@ -21,17 +23,12 @@ void BaseEnemy::Draw()
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
-void Move()
-{
-
-}
 
 void BaseEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
 	SetOriginPoint();
-	Move();
 	m_Animation->Update(deltaTime);
 
 }
@@ -39,10 +36,15 @@ void BaseEnemy::Update(float deltaTime)
 void BaseEnemy::Clean()
 {
 	delete m_Animation;
-	World::GetInstance()->Destroy(m_Body);
 }
 
+
 void BaseEnemy::CheckColision()
+{
+
+}
+
+void BaseEnemy::TakeDamage(int inDamage)
 {
 
 }
@@ -54,6 +56,8 @@ void BaseEnemy::SetupBody()
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
 	_BodyDef.fixedRotation = true;
+	_BodyDef.bullet = true;
+
 
 	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
@@ -62,8 +66,10 @@ void BaseEnemy::SetupBody()
 
 	b2FixtureDef _fixtureDef;
 	_fixtureDef.shape = &_boxShape;
-	_fixtureDef.density = 100.0f;
-	_fixtureDef.friction = 1.0f;
+	_fixtureDef.density = 1.0f;
+	_fixtureDef.isSensor = true;
+	_fixtureDef.userData.pointer = (uintptr_t)this;
+
 
 	b2Fixture* _Fixture;
 	_Fixture = m_Body->CreateFixture(&_fixtureDef);

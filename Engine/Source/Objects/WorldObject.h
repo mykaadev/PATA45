@@ -16,7 +16,6 @@ public:
 	virtual void Update(float deltaTime) { __super::Update(deltaTime); };
 	virtual void Clean() = 0;
 
-protected:
 	std::string m_Name;
 };
 

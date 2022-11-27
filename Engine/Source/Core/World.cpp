@@ -4,6 +4,10 @@
 #include "..\..\Game\ObjectHandler.h"
 #include "LevelParser.h"
 #include "..\Components\Camera.h"
+#include <iostream>
+#include "..\..\Game\Bullet.h"
+#include "..\..\Game\Player.h"
+#include "..\..\Game\RusherEnemy.h"
 
 World* World::m_Instance = nullptr;
 
@@ -26,6 +30,7 @@ void World::SetupWorld()
 
 	ObjectHandler::GetInstance()->LoadObjects();
 
+	m_World->SetContactListener(this);
 
 	//REMOVE THIS
 	// 
@@ -65,20 +70,12 @@ void World::SetupWorld()
 
 void World::HandlePhysics(float deltaTime)
 {
-	// Instruct the world to perform a single step of simulation.
-	// It is generally best to keep the time step and iterations fixed.
-
-	m_World->Step(deltaTime, 6, 2);
-	//std::cout << "step" << std::endl;
-
-
-// 	b2Vec2 position = playerBody->GetPosition();
-// 	float angle = playerBody->GetAngle();
-// 	printf("%4.2f %4.2f %4.2f\n", position.x, position.y, angle);
+	m_World->Step(deltaTime, 8, 4);
 }
 
 void World::Update(float deltaTime)
 {
+
 	HandlePhysics(deltaTime);
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
@@ -88,11 +85,60 @@ void World::Update(float deltaTime)
 
 	Camera::GetInstance()->Update(deltaTime);
 	m_Level->Update();
+
+	CleanPendingKills();
+
 }
 
 void World::Render()
 {
-	for (auto Object : GameObjectLoaded) { Object->Draw(); }
+
+	for (int i = 0; i < GameObjectLoaded.size(); ++i)
+	{
+		GameObjectLoaded[i]->Draw();
+	}
 
 	m_Level->Render();
+}
+
+void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
+{
+
+	if (body != nullptr) { NewBodyPendingKill(body); }
+
+	auto it = std::find(GameObjectLoaded.begin(), GameObjectLoaded.end(), inObject);
+
+	if (it != GameObjectLoaded.end())
+	{
+		// calculating the index of inObject
+		int index = it - GameObjectLoaded.begin();
+		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
+	}
+	else 
+	{
+		std::cout << "ERROR: FAILED TO FIND OBJECT TO DESTROY" << std::endl;
+	}
+}
+
+void World::CleanPendingKills()
+{
+	while (BodiesPendingKill.size() > 0)
+	{
+		if (BodiesPendingKill[0] != nullptr) { m_World->DestroyBody(BodiesPendingKill[0]); }
+		BodiesPendingKill.erase(BodiesPendingKill.begin());
+	}
+	
+}
+
+void World::BeginContact(b2Contact* contact)
+{
+		
+	GameObject* bodyA = ((GameObject*)contact->GetFixtureA()->GetUserData().pointer);
+	GameObject* bodyB = ((GameObject*)contact->GetFixtureB()->GetUserData().pointer);
+
+	if (bodyA != nullptr && bodyB != nullptr)
+	{
+		((Character*)bodyB)->CheckCollision((GameObject*)bodyA);
+	}
+
 }

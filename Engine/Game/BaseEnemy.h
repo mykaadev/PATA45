@@ -1,6 +1,7 @@
 #pragma once
 #include <box2d.h>
-#include <Character.h>
+#include "../Objects/Character.h"
+
 
 
 enum EnemyState {
@@ -19,14 +20,16 @@ public:
 	virtual void Update(float deltaTime);
 	virtual void Clean();
 	virtual void CheckColision();
-
-
+	virtual void TakeDamage(int inDamage);
 
 	void SetupBody();
 	void SetAnimationState(EnemyState inCurrentAnimationState, float inAxisValue);
 	void SetOriginPoint();
+
+	inline b2Body* GetBody() { return m_Body; }
+
 	b2Body* m_Body;
 
-
+	
 };
 
