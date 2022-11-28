@@ -71,7 +71,7 @@ void TextureManager::Draw(std::string inID, int x, int y, int width, int height,
 {
 	SDL_Rect srcRect = { 0, 0, width, height};
 
-	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
+	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio	;
 
 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);

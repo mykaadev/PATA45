@@ -96,12 +96,10 @@ void Bullet::Clean()
 
 void Bullet::CheckCollision(GameObject* otherGameObject)
 {
-	
-	if ((BaseEnemy*)otherGameObject)
+	if (dynamic_cast<BaseEnemy*>(otherGameObject))
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
 	}
-
 	Clean();
 
 }

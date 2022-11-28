@@ -64,6 +64,7 @@ void RusherEnemy::TakeDamage(int inDamage)
 {
 
 	m_CurrentHealth -= inDamage;
+	m_Animation->SetProperties("", 1, 0, 24, 50, true);
 
 	std::cout << "RUSHER " << m_CurrentHealth << std::endl;
 
