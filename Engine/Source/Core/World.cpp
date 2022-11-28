@@ -82,7 +82,7 @@ void World::SetupWorld()
 
 void World::HandlePhysics(float deltaTime)
 {  
-	m_World->Step(deltaTime, 6, 2);
+	m_World->Step(deltaTime, 8, 4);
 }
 
 #pragma endregion
@@ -93,12 +93,8 @@ void World::HandlePhysics(float deltaTime)
 
 void World::Update(float deltaTime)
 {
-<<<<<<< Updated upstream
-	CleanPendingKills();
-
-=======
->>>>>>> Stashed changes
 	HandlePhysics(deltaTime);
+
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
@@ -106,14 +102,10 @@ void World::Update(float deltaTime)
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
-<<<<<<< Updated upstream
 
-	m_Level->Update();
-=======
 	m_Level->Update();
 
 	CleanPendingKills();
->>>>>>> Stashed changes
 }
 
 
@@ -181,7 +173,9 @@ void World::BeginContact(b2Contact* contact)
 
 	if (bodyA != nullptr && bodyB != nullptr)
 	{
-		((Character*)bodyB)->CheckCollision((GameObject*)bodyA);
+		((Character*)bodyB)->CheckCollision(((GameObject*)bodyA));
+		((Character*)bodyA)->CheckCollision(((GameObject*)bodyB));
+
 	}
 }
 

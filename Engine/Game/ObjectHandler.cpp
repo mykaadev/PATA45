@@ -8,6 +8,8 @@
 #include "RusherEnemy.h"
 #include "TextureManager.h"
 #include "Background.h"
+#include "EngineTime.h"
+#include "EnemySpawner.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
@@ -16,8 +18,6 @@ ObjectHandler* ObjectHandler::m_Instance = nullptr;
 
 Player* player = nullptr;
 
-LonerEnemy* loner = nullptr;
-RusherEnemy* rusher = nullptr;
 Background* galaxy = nullptr;
 Background* galaxy1 = nullptr;
 
@@ -34,20 +34,7 @@ void ObjectHandler::LoadObjects()
 	player = new Player(new Properties("Player", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 64, 64, SDL_FLIP_NONE));
 	World::GetInstance()->LoadObjects(player);
 
-
-	
-		for (int i = 1; i <= 8; ++i)
-		{
-			loner = new LonerEnemy(new Properties("Loner", i * 100, i * -50, 64, 64, SDL_FLIP_NONE));
-			World::GetInstance()->LoadObjects(loner);
-		}
-
-		for (int i = 1; i <= 8; ++i)
-		{
-			rusher = new RusherEnemy(new Properties("Rusher", i * 100, i * -50, 64, 32, SDL_FLIP_NONE));
-			World::GetInstance()->LoadObjects(rusher);
-		}
-
+	EnemySpawner::GetInstance()->Init();
 
 	Camera::GetInstance()->SetCameraFollowTarget(false);
 	Camera::GetInstance()->SetCameraTarget(player->GetOrigin());

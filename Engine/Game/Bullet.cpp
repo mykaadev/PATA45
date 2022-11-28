@@ -16,7 +16,7 @@ void Bullet::Init()
 {
 	SetupBody();
 	SetAnimationState(travelling, 0);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, -20.0f));
+	m_Body->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
 
 }
 
@@ -106,12 +106,14 @@ void Bullet::Clean()
 
 void Bullet::CheckCollision(GameObject* otherGameObject)
 {
-	if (dynamic_cast<Bullet*>(otherGameObject)) return;
-	if (dynamic_cast<Player*>(otherGameObject)) return;
-
+	
 	if (dynamic_cast<BaseEnemy*>(otherGameObject))
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
+	}
+	else
+	{
+		return;
 	}
 	m_IsDead = true;
 }

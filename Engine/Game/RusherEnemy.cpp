@@ -29,9 +29,10 @@ void RusherEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 	m_Animation->Update(deltaTime);
+	SetOriginPoint();
 
 	//Handle Movement
-	m_Body->SetLinearVelocity(b2Vec2(0.f, 0.5f));
+	m_Body->SetLinearVelocity(b2Vec2(0.f, 0.8f));
 
 	//Handle Out of Screen Destroy
 	if (m_Body->GetPosition().y > 700.0f && !m_IsDead)
@@ -63,6 +64,12 @@ void RusherEnemy::TakeDamage(int inDamage)
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 	}
+}
+
+void RusherEnemy::SetOriginPoint()
+{
+	m_Origin->X = m_Body->GetPosition().x;
+	m_Origin->Y = m_Body->GetPosition().y;
 }
 
 void RusherEnemy::Clean()

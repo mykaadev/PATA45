@@ -2,8 +2,6 @@
 #include "World.h"
 
 
-
-
 LonerEnemy::LonerEnemy(Properties* props) : BaseEnemy(props)
 {
 	m_GoingRight = true;
@@ -34,11 +32,12 @@ void LonerEnemy::Update(float deltaTime)
 
 	m_Animation->Update(deltaTime);
 
+	SetOriginPoint();
 
 	//Handle Movement
 	if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(1.5f, 0.2f));
+		m_Body->SetLinearVelocity(b2Vec2(1.5f, 0.4f));
 	}
 
 	if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
@@ -48,7 +47,7 @@ void LonerEnemy::Update(float deltaTime)
 
 	if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(-1.5f, 0.2f));
+		m_Body->SetLinearVelocity(b2Vec2(-1.5f, 0.4f));
 	}
 
 	if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)
@@ -87,6 +86,13 @@ void LonerEnemy::TakeDamage(int inDamage)
 
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
 	}
+}
+
+void LonerEnemy::SetOriginPoint()
+{
+	m_Origin->X = m_Body->GetPosition().x;
+	m_Origin->Y = m_Body->GetPosition().y;
+
 }
 
 void LonerEnemy::Clean()

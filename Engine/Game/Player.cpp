@@ -13,7 +13,7 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 10.0f;
+	fSpeed = 1.5f;
 }
 
 
@@ -72,6 +72,7 @@ void Player::SetupBody()
 
 void Player::BindAxisAndActions()
 {
+
 #pragma region MovementXAxis
 
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_A) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_LEFT))
@@ -125,6 +126,7 @@ void Player::BindAxisAndActions()
 	}
 
 #pragma endregion
+
 }
 
 

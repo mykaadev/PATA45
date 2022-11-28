@@ -27,9 +27,6 @@ void BaseEnemy::Draw()
 void BaseEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
-
-	SetOriginPoint();
-
 }
 
 void BaseEnemy::Clean()
@@ -81,8 +78,6 @@ void BaseEnemy::SetAnimationState(EnemyState inCurrentAnimationState, float inAx
 
 void BaseEnemy::SetOriginPoint()
 {
-	m_Origin->X = m_Body->GetPosition().x;
-	m_Origin->Y = m_Body->GetPosition().y;
 }
 
 

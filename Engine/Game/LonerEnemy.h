@@ -17,7 +17,7 @@ public:
 	void CheckCollision(GameObject* otherGameObject) override;
 	void TakeDamage(int inDamage) override;
 
-
+	void SetOriginPoint();
 	int m_CurrentHealth;
 	int m_MaxHealth;
 private:

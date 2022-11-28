@@ -30,8 +30,6 @@ void InputHandler::Listen()
 				{
 					std::cout << event.jaxis.value << std::endl;
 				}
-
-
 		}		
 	}
 }
