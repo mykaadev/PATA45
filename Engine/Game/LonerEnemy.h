@@ -9,7 +9,7 @@ class LonerEnemy : public BaseEnemy
 public:
 
 	LonerEnemy(Properties* props);
-
+	
 	void Init() override;
 	void Draw() override;
 	void Update(float deltaTime) override;

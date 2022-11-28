@@ -28,6 +28,8 @@ public:
 		return id;
 	}
 
+
+
 	inline void RemoveTimer(TimerID id)
 	{
 		SDL_RemoveTimer(id);
@@ -47,5 +49,6 @@ private:
 	float m_DeltaTime;
 	float m_LastTime;
 
+public:
 };
 

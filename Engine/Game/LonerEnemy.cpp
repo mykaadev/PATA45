@@ -1,5 +1,22 @@
 #include "LonerEnemy.h"
 #include "World.h"
+#include "EnemyBullet.h"
+#include "EngineTime.h"
+#include <iostream>
+
+
+
+Uint32 Fire(Uint32 interval, void* data)
+{
+	EnemyBullet* bullet = nullptr;
+	bullet = new EnemyBullet(new Properties("EnemyBullet", ((LonerEnemy*)data)->m_Body->GetPosition().x, 
+		((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
+	
+	World::GetInstance()->LoadObjects(bullet);
+
+
+	return interval;
+}
 
 
 LonerEnemy::LonerEnemy(Properties* props) : BaseEnemy(props)
@@ -9,12 +26,18 @@ LonerEnemy::LonerEnemy(Properties* props) : BaseEnemy(props)
 	m_MaxHealth = { 1 };
 
 	m_CurrentHealth = m_MaxHealth;
+
+	
 }
 
 
 void LonerEnemy::Init()
 {
 	__super::Init();
+
+
+
+	EngineTime::GetInstance()->StartTimer(5000, Fire, (LonerEnemy*)this);
 
 	//Handle Animations
 	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);

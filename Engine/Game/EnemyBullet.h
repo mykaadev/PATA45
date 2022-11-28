@@ -1,15 +1,12 @@
 #pragma once
-
-#include "../Objects/Character.h"
+#include "../Source/Objects/Character.h"
 #include "box2d.h"
 #include "World.h"
 
-
-class Bullet : public Character
+class EnemyBullet : public Character
 {
 public:
-
-	Bullet(Properties* props);
+	EnemyBullet(Properties* props);
 
 	virtual void Init();
 	virtual void Draw();
@@ -17,13 +14,12 @@ public:
 	virtual void Clean();
 	virtual void CheckCollision(GameObject* otherGameObject);
 
-private:
 	void SetupBody();
 	void SetOriginPoint();
 
 	int m_damageAmount;
 	b2Body* m_Body;
 	bool m_IsDead;
-	~Bullet();
+	~EnemyBullet();
 };
 

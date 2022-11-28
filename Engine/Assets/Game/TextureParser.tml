@@ -11,8 +11,10 @@
     <texture id="BulletOne" source="../Assets/Game/Textures/missileOne.bmp"/>
     <texture id="BulletTwo" source="../Assets/Game/Textures/missileTwo.bmp"/>
     <texture id="BulletThree" source="../Assets/Game/Textures/missileThree.bmp"/>
-	
-	 <texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
+	<texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/>
+
+
+	<texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
 	 <texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
 	
     <texture id="Galaxy" source="../Assets/Game/Textures/galaxy.bmp"/> 

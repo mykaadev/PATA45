@@ -1,34 +1,32 @@
-#include "Bullet.h"
-#include "World.h"
-#include "TextureManager.h"
-#include "BaseEnemy.h"
+#include "EnemyBullet.h"
 #include "Player.h"
-#include "RusherEnemy.h"
 
-Bullet::Bullet(Properties* props) : Character(props) {
+
+EnemyBullet::EnemyBullet(Properties* props) : Character(props) {
 
 	m_Animation = new Animation();
-	m_damageAmount = { 1 };
+	m_damageAmount = { 0 };  // TESTING PURPOSES
 
 }
 
-void Bullet::Init()
+void EnemyBullet::Init()
 {
 	SetupBody();
-	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
+	m_Animation->SetProperties("EnemyBullet", 1, 0, 2, 100, true);
+	m_Body->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
+	//FIND AN LONER AND GET HIS POSITION SO WE CAN SET IT
 }
 
 
 
-void Bullet::SetupBody()
+void EnemyBullet::SetupBody()
 {
 	b2BodyDef _BodyDef;
 	_BodyDef.type = b2_dynamicBody;
 	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
 	_BodyDef.gravityScale = 0.0f;
 	_BodyDef.fixedRotation = true;
-	_BodyDef.bullet= true;
+	_BodyDef.bullet = true;
 
 	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
@@ -48,15 +46,17 @@ void Bullet::SetupBody()
 
 
 
-void Bullet::Update(float deltaTime)
+void EnemyBullet::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
+
+	std::cout << " asdsadas" << std::endl;
 
 	m_Animation->Update(deltaTime);
 
 	SetOriginPoint();
 
-	if (m_Body->GetPosition().y < 10.0f )
+	if (m_Body->GetPosition().y > 900.0f)
 	{
 		m_IsDead = true;
 	}
@@ -75,13 +75,13 @@ void Bullet::Update(float deltaTime)
 }
 
 
-void Bullet::Draw()
+void EnemyBullet::Draw()
 {
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
 
-void Bullet::SetOriginPoint()
+void EnemyBullet::SetOriginPoint()
 {
 	if (m_Body == nullptr) return;
 
@@ -90,17 +90,17 @@ void Bullet::SetOriginPoint()
 }
 
 
-void Bullet::Clean()
+void EnemyBullet::Clean()
 {
 	World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
-void Bullet::CheckCollision(GameObject* otherGameObject)
+void EnemyBullet::CheckCollision(GameObject* otherGameObject)
 {
-	
-	if (dynamic_cast<BaseEnemy*>(otherGameObject))
+
+	if (dynamic_cast<Player*>(otherGameObject))
 	{
-		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
+		((Player*)otherGameObject)->TakeDamage(m_damageAmount);
 	}
 	else
 	{
@@ -110,7 +110,7 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 }
 
 
-Bullet::~Bullet()
+EnemyBullet::~EnemyBullet()
 {
 	delete m_Animation;
 }
