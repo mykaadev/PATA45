@@ -21,6 +21,10 @@ World::~World()
 	delete m_Instance;
 }
 
+
+#pragma region SetupWorld
+
+
 void World::SetupWorld()
 {
 	m_Level = LevelParser::GetInstance()->GetLevel("Level0");
@@ -32,8 +36,8 @@ void World::SetupWorld()
 
 	m_World->SetContactListener(this);
 
-	//REMOVE THIS
-	// 
+	///////////////////// REMOVE FROM HERE /////////////////////////
+	//TEMP WORLD BOUNDARIES
 	//top
 	b2BodyDef groundBodyDef;
 	groundBodyDef.position.Set(480.0f, 0.0f);
@@ -66,17 +70,34 @@ void World::SetupWorld()
 	groundbox4.SetAsBox(1.0f, 640.0f);
 	yoh4->CreateFixture(&groundbox4, 0.0f);
 
+	/////////////////// TO HERE ///////////////////////////
+
 }
+
+
+#pragma endregion
+
+
+#pragma region Physics
 
 void World::HandlePhysics(float deltaTime)
 {  
 	m_World->Step(deltaTime, 6, 2);
 }
 
+#pragma endregion
+
+
+#pragma region Update
+
+
 void World::Update(float deltaTime)
 {
+<<<<<<< Updated upstream
 	CleanPendingKills();
 
+=======
+>>>>>>> Stashed changes
 	HandlePhysics(deltaTime);
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
@@ -85,9 +106,21 @@ void World::Update(float deltaTime)
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
+<<<<<<< Updated upstream
 
 	m_Level->Update();
+=======
+	m_Level->Update();
+
+	CleanPendingKills();
+>>>>>>> Stashed changes
 }
+
+
+#pragma endregion
+
+
+#pragma region Render
 
 void World::Render()
 {
@@ -99,6 +132,11 @@ void World::Render()
 
 	m_Level->Render();
 }
+
+#pragma endregion
+
+
+#pragma region ObjectDestruction
 
 void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
 {
@@ -115,7 +153,7 @@ void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
 
 		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
 	}
-	else 
+	else
 	{
 		std::cout << "ERROR: FAILED TO FIND OBJECT TO DESTROY" << std::endl;
 	}
@@ -128,12 +166,16 @@ void World::CleanPendingKills()
 		if (BodiesPendingKill[0] != nullptr) { m_World->DestroyBody(BodiesPendingKill[0]); }
 		BodiesPendingKill.erase(BodiesPendingKill.begin());
 	}
-	
+
 }
+#pragma endregion
+
+
+#pragma region Collisions
+
 
 void World::BeginContact(b2Contact* contact)
 {
-		
 	GameObject* bodyA = ((GameObject*)contact->GetFixtureA()->GetUserData().pointer);
 	GameObject* bodyB = ((GameObject*)contact->GetFixtureB()->GetUserData().pointer);
 
@@ -141,5 +183,7 @@ void World::BeginContact(b2Contact* contact)
 	{
 		((Character*)bodyB)->CheckCollision((GameObject*)bodyA);
 	}
-
 }
+
+
+#pragma endregion

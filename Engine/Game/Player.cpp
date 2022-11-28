@@ -6,6 +6,7 @@
 #include "World.h"
 
 
+
 Player::Player(Properties* props) : Character(props) {
 	
 	m_Animation = new Animation();
@@ -22,6 +23,9 @@ void Player::Init()
 
 	SetupBody();
 	SetAnimationState(Idle, 0);
+
+	
+
 }
 
 Player::~Player()

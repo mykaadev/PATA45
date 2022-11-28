@@ -19,12 +19,6 @@ Core::~Core()
 {
 	delete m_Instance;
 }
-int hours;
-int minutes;
-int seconds;
-
-uint32 Yoh(Uint32 interval, void* param);
-
 
 
 void Core::InitEngine()

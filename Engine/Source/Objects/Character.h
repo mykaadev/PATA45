@@ -1,6 +1,7 @@
 #pragma once
 #include "WorldObject.h"
 #include "../Graphics/Animation.h"
+#include "box2d.h"
 
 
 /*
@@ -25,8 +26,10 @@ public:
 	virtual void Update(float deltaTime) = 0;
 	virtual void Clean() = 0;
 	virtual void CheckCollision(GameObject* otherGameObject) = 0;
-
 	inline Animation* GetAnimation() { return m_Animation; }
+
+	b2Body* m_Body;
+
 protected:
 	Animation* m_Animation;
 };

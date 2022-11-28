@@ -39,7 +39,7 @@ bool Engine::Init()
 	}
 
 
-	m_Window = SDL_CreateWindow("El Engenho Irreal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+	m_Window = SDL_CreateWindow("Engenho Irreal 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
 	
 	if (m_Window == nullptr)
 	{

@@ -21,7 +21,7 @@ public:
 	//Handles inputs
 	void Events();
 
-	//Update Obhects
+	//Update Objects
 	void Update();
 
 	//Renders the Updated Objects
