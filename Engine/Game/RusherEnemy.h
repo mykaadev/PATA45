@@ -13,10 +13,6 @@ public:
 	void CheckCollision(GameObject* otherGameObject) override;
 	void TakeDamage(int inDamage) override;
 
-	bool m_GoingRight;
-	
-
-
 	int m_CurrentHealth;
 	int m_MaxHealth;
 	

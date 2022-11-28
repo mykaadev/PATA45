@@ -130,24 +130,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="CoreGame.cpp" />
-    <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
-    <ClCompile Include="HealthSystem.cpp" />
     <ClCompile Include="LonerEnemy.cpp" />
     <ClCompile Include="ObjectHandler.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RusherEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Background.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="CoreGame.h" />
-    <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemySpawner.h" />
-    <ClInclude Include="HealthSystem.h" />
     <ClInclude Include="LonerEnemy.h" />
     <ClInclude Include="ObjectHandler.h" />
     <ClInclude Include="Player.h" />

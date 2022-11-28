@@ -69,12 +69,13 @@ void World::SetupWorld()
 }
 
 void World::HandlePhysics(float deltaTime)
-{
-	m_World->Step(deltaTime, 8, 4);
+{  
+	m_World->Step(deltaTime, 6, 2);
 }
 
 void World::Update(float deltaTime)
 {
+	CleanPendingKills();
 
 	HandlePhysics(deltaTime);
 
@@ -84,10 +85,8 @@ void World::Update(float deltaTime)
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
+
 	m_Level->Update();
-
-	CleanPendingKills();
-
 }
 
 void World::Render()
@@ -110,8 +109,10 @@ void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
 
 	if (it != GameObjectLoaded.end())
 	{
-		// calculating the index of inObject
 		int index = it - GameObjectLoaded.begin();
+
+		delete GameObjectLoaded[index];
+
 		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
 	}
 	else 

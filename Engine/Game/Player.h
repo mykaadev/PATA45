@@ -2,8 +2,6 @@
 
 #include "../Objects/Character.h"
 #include "Bullet.h"
-#include "HealthSystem.h"
-#include "EnemyBullet.h"
 #include "box2d.h"
 #include <vector>
 
@@ -23,8 +21,6 @@ class Player : public Character
 public:
 
 	Player(Properties* props);
-	HealthSystem* health;
-	EnemyBullet* enemeyBullet;
 
 	virtual void Init();
 	virtual void Draw(); 
@@ -32,8 +28,8 @@ public:
 	virtual void Clean();
 	virtual void CheckCollision(GameObject* otherGameObject);
 
-
 	void TakeDamage(int inDamage);
+
 private:
 
 	void SetupBody();

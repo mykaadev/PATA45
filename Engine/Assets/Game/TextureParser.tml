@@ -15,6 +15,8 @@
 	 <texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
 	 <texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
 	
+    <texture id="Galaxy" source="../Assets/Game/Textures/galaxy.bmp"/> 
+
 	
     <texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
     <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>

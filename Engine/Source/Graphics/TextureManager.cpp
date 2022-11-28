@@ -7,15 +7,6 @@
 
 TextureManager* TextureManager::m_Instance = nullptr;
 
-//Add here Option to draw backgrounds
-// 
-// Add Option to check if the camera is following the player or not
-// 
-// Add Option to check if we imported an PNG or BMP and behave differently in that case
-// 
-//this can be used to create the feeling of the parallax:
-//Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * 0.5f; 
-
 bool TextureManager::Load(std::string inID, std::string inFileName)
 {
 	SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());

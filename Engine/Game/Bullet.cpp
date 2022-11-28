@@ -16,7 +16,7 @@ void Bullet::Init()
 {
 	SetupBody();
 	SetAnimationState(travelling, 0);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, -50.0f));
+	m_Body->SetLinearVelocity(b2Vec2(0.0f, -20.0f));
 
 }
 
@@ -64,6 +64,8 @@ void Bullet::Update(float deltaTime)
 
 	if (m_IsDead)
 	{
+		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+
 		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
 
 		if (GetAnimation()->GetCurrentSprite() >= 10)
@@ -100,11 +102,13 @@ void Bullet::SetOriginPoint()
 void Bullet::Clean()
 {
 	World::GetInstance()->DestroyGameObject(this, m_Body);
-
 }
 
 void Bullet::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<Bullet*>(otherGameObject)) return;
+	if (dynamic_cast<Player*>(otherGameObject)) return;
+
 	if (dynamic_cast<BaseEnemy*>(otherGameObject))
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);

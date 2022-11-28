@@ -5,8 +5,8 @@
 
 enum SortingLayers
 {
-	BaseBackground,
-	Background,
+	Background2,
+	Background1,
 	MiddleGround,
 	Foreground,
 	UI

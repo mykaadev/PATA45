@@ -12,7 +12,7 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 20.0f;
+	fSpeed = 10.0f;
 }
 
 
@@ -137,6 +137,8 @@ void Player::Move()
 	}
 
 	m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
+
+
 }
 
 
@@ -149,6 +151,7 @@ void Player::FireGun()
 	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
 
 	World::GetInstance()->LoadObjects(bullet);
+
 }
 
 
@@ -189,7 +192,6 @@ void Player::TakeDamage(int inDamage)
 		isDead = true;
 		SetAnimationState(Dead, 0);
 		World::GetInstance()->DestroyGameObject(this, m_Body);
-
 	}
 }
 

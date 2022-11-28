@@ -27,9 +27,6 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HealthSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EnemySpawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -42,7 +39,7 @@
     <ClCompile Include="RusherEnemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyBullet.cpp">
+    <ClCompile Include="Background.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,9 +56,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HealthSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EnemySpawner.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -74,7 +68,7 @@
     <ClInclude Include="RusherEnemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyBullet.h">
+    <ClInclude Include="Background.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
