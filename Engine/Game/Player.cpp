@@ -12,7 +12,7 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 3.0f;
+	fSpeed = 20.0f;
 }
 
 
@@ -63,7 +63,6 @@ void Player::SetupBody()
 
 	b2Fixture* _Fixture;
 	_Fixture = m_Body->CreateFixture(&_fixtureDef);
-	
 }
 
 
@@ -185,7 +184,7 @@ void Player::TakeDamage(int inDamage)
 {
 	currentHealth -= inDamage;
 
-	if (currentHealth <= 0)
+	if (currentHealth <= 0 && !isDead)
 	{
 		isDead = true;
 		SetAnimationState(Dead, 0);
@@ -208,6 +207,6 @@ void Player::Clean()
 
 void Player::CheckCollision(GameObject* otherGameObject)
 {
-	std::cout << "PLAYER COLIDED with " << ((WorldObject*)otherGameObject)->m_Name << std::endl;
+	
 }
 

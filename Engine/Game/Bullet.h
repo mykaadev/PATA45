@@ -30,7 +30,7 @@ private:
 
 	int m_damageAmount;
 	b2Body* m_Body;
-
+	bool m_IsDead;
 	~Bullet();
 };
 

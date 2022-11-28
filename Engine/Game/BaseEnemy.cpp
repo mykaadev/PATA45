@@ -29,7 +29,6 @@ void BaseEnemy::Update(float deltaTime)
 	__super::Update(deltaTime);
 
 	SetOriginPoint();
-	m_Animation->Update(deltaTime);
 
 }
 

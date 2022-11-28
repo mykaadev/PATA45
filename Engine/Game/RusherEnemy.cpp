@@ -7,7 +7,7 @@ RusherEnemy::RusherEnemy(Properties* props) : BaseEnemy(props)
 {
 	m_GoingRight = true;
 
-	m_MaxHealth = { 2 };
+	m_MaxHealth = { 5 };
 
 	m_CurrentHealth = m_MaxHealth;
 }
@@ -16,6 +16,9 @@ RusherEnemy::RusherEnemy(Properties* props) : BaseEnemy(props)
 void RusherEnemy::Init()
 { 
 	__super::Init();
+
+	//Handle Animations
+	m_Animation->SetProperties("Rusher", 1, 0, 24, 50, true);
 }
 
 void RusherEnemy::Draw()
@@ -27,9 +30,9 @@ void RusherEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
-	//Handle Animations
-	m_Animation->SetProperties("Rusher", 1, 0, 24, 50, true);
+	m_Animation->Update(deltaTime);
 
+	
 	//Handle Movement
 	if (m_GoingRight && m_Body->GetPosition().x < 900)
 	{
@@ -52,33 +55,37 @@ void RusherEnemy::Update(float deltaTime)
 	}
 
 	//Handle Out of screen destroy
-	if (m_Body->GetPosition().y > 700.0f)
+	if (m_Body->GetPosition().y > 700.0f && !m_IsDead)
 	{
-		World::GetInstance()->DestroyGameObject(this, m_Body);
+		m_IsDead = true;
 	}
 
+	if (m_IsDead)
+	{
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
+
+		if (GetAnimation()->GetCurrentSprite() >= 10)
+		{
+			Clean();
+		}
+	}
 }
 
 
 void RusherEnemy::TakeDamage(int inDamage)
 {
-
 	m_CurrentHealth -= inDamage;
-	m_Animation->SetProperties("", 1, 0, 24, 50, true);
-
-	std::cout << "RUSHER " << m_CurrentHealth << std::endl;
 
 	if (m_CurrentHealth <= 0)
 	{
-		std::cout << "RUSHER DEAD" << std::endl;
-
-		World::GetInstance()->DestroyGameObject(this, m_Body);
+		m_IsDead = true;
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
 	}
 }
 
 void RusherEnemy::Clean()
 {
-	__super::Clean();
+	World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void RusherEnemy::CheckCollision(GameObject* otherGameObject)

@@ -19,6 +19,9 @@ public:
 	//Sets the properties for this animation 
 	void SetProperties(std::string textureID, int spriteRow, int startingFrame, int frameCount, int animSpeed, bool loop = true, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
+	inline int GetCurrentSprite() { return m_SpriteFrame; }
+	inline void SetCurrentSprite(int val) { m_SpriteFrame = val; }
+
 private:
 
 	int m_SpriteRow;

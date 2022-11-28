@@ -20,5 +20,7 @@ public:
 
 	int m_CurrentHealth;
 	int m_MaxHealth;
+private:
+	bool m_IsDead;
 };
 

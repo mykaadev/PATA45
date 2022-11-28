@@ -12,8 +12,8 @@
     <texture id="BulletTwo" source="../Assets/Game/Textures/missileTwo.bmp"/>
     <texture id="BulletThree" source="../Assets/Game/Textures/missileThree.bmp"/>
 	
-	 <texture id="Explosion" source="../Assets/Game/Textures/explode64.bmp"/>
-	
+	 <texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
+	 <texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
 	
 	
     <texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>

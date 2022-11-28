@@ -26,7 +26,7 @@ public:
 	virtual void Clean() = 0;
 	virtual void CheckCollision(GameObject* otherGameObject) = 0;
 
-
+	inline Animation* GetAnimation() { return m_Animation; }
 protected:
 	Animation* m_Animation;
 };

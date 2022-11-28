@@ -1,7 +1,7 @@
 
 
 const int TARGET_FPS = 60;
-const float TARGEET_DELTATIME = 1.5f;
+const float TARGET_DELTATIME = 1.5f;
 
 
 class EngineTime
