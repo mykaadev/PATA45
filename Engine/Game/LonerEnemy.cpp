@@ -37,7 +37,7 @@ void LonerEnemy::Init()
 
 
 
-	EngineTime::GetInstance()->StartTimer(5000, Fire, (LonerEnemy*)this);
+	myTimerID = EngineTime::GetInstance()->StartTimer(5000, Fire, (LonerEnemy*)this);
 
 	//Handle Animations
 	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);
@@ -120,6 +120,7 @@ void LonerEnemy::SetOriginPoint()
 
 void LonerEnemy::Clean()
 {
+	EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 

@@ -50,13 +50,11 @@ void EnemyBullet::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
-	std::cout << " asdsadas" << std::endl;
-
 	m_Animation->Update(deltaTime);
 
 	SetOriginPoint();
 
-	if (m_Body->GetPosition().y > 900.0f)
+	if (m_Body->GetPosition().y >= 640.0f)
 	{
 		m_IsDead = true;
 	}

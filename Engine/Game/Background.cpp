@@ -28,7 +28,7 @@ void Background::Update(float deltaTime)
 
 	if (m_Body->GetPosition().y >= m_DefaultPos.y + m_Height)
 	{
-		m_Body->SetTransform(b2Vec2(m_DefaultPos.x, m_DefaultPos.y), m_Body->GetAngle());
+		m_Body->SetTransform(b2Vec2(m_DefaultPos.x, m_DefaultPos.y + 1), m_Body->GetAngle());
 	}
 }
 

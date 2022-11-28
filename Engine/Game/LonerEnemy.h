@@ -17,6 +17,8 @@ public:
 	void CheckCollision(GameObject* otherGameObject) override;
 	void TakeDamage(int inDamage) override;
 
+	SDL_TimerID myTimerID;
+
 	void SetOriginPoint();
 	int m_CurrentHealth;
 	int m_MaxHealth;
