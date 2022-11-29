@@ -73,7 +73,6 @@ void Player::SetupBody()
 void Player::BindAxisAndActions()
 {
 
-#pragma region MovementXAxis
 
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_A) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_LEFT))
 	{
@@ -85,9 +84,6 @@ void Player::BindAxisAndActions()
 		m_MoveAxis.X = 1;
 	}
 
-#pragma endregion 
-
-#pragma region DeadZone
 
 	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_D) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_RIGHT) && 
 		!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_A) && !InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_LEFT))
@@ -101,9 +97,6 @@ void Player::BindAxisAndActions()
 		m_MoveAxis.Y = 0.0f;
 	}
 
-#pragma endregion
-
-#pragma region MovementYAxis
 
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_W) || InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_UP))
 	{
@@ -115,17 +108,12 @@ void Player::BindAxisAndActions()
 		m_MoveAxis.Y = -1.0f;
 	}
 
-#pragma endregion
-
-#pragma region FireGun
 
 	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
 		FireGun();
 	}
-
-#pragma endregion
 
 }
 
