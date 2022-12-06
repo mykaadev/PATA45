@@ -80,36 +80,28 @@ void World::SetupWorld()
 #pragma endregion
 
 
-#pragma region Physics
-
-void World::HandlePhysics(float deltaTime)
-{  
-	m_World->Step(deltaTime, 6, 2);
-}
-
-#pragma endregion
-
 
 #pragma region Update
 
 
 void World::Update(float deltaTime)
 {
-	DestroyPendingKillObjects();
 
-	CleanPendingKills();
-	
-	HandlePhysics(deltaTime);
+	if (!m_World->IsLocked())
+	{
+		DestroyPendingKillObjects();
+
+		CleanPendingKills();
+	}
+
+	m_World->Step(deltaTime, 6, 2);
+
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
 		if (GameObjectLoaded[i] != nullptr && !dynamic_cast<GameObject*>(GameObjectLoaded[i])->IsPendingKill())
 		{
 			GameObjectLoaded[i]->Update(deltaTime);
-		}
-		else
-		{
-			continue;
 		}
 	}
 
@@ -134,10 +126,6 @@ void World::Render()
 		{
 			GameObjectLoaded[i]->Draw();
 		}
-		else
-		{
-			continue;
-		}
 	}
 
 	m_Level->Render();
@@ -147,27 +135,6 @@ void World::Render()
 
 
 #pragma region ObjectDestruction
-
-// void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
-// {
-// 
-// 	if (body != nullptr) { NewBodyPendingKill(body); }
-// 
-// // 	auto it = std::find(GameObjectLoaded.begin(), GameObjectLoaded.end(), inObject);
-// // 
-// // 	if (it != GameObjectLoaded.end())
-// // 	{
-// // 		int index = it - GameObjectLoaded.begin();
-// // 
-// // 		delete GameObjectLoaded[index];
-// // 
-// // 		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
-// // 	}
-// // 	else
-// // 	{
-// // 		std::cout << "ERROR: FAILED TO FIND OBJECT TO DESTROY" << std::endl;
-// // 	}
-// }
 
 
 void World::DestroyPendingKillObjects()
@@ -186,16 +153,15 @@ void World::DestroyPendingKillObjects()
 
 void World::CleanPendingKills()
 {
-	for (unsigned int i = 0; i < BodiesPendingKill.size(); ++i) {
-		m_World->DestroyBody(BodiesPendingKill[i]);
-		BodiesPendingKill.erase(BodiesPendingKill.begin() + i);
-	}
-	BodiesPendingKill.clear();
-	/*while (BodiesPendingKill.size() > 0)
-	{
-		if (BodiesPendingKill[0] != nullptr) { m_World->DestroyBody(BodiesPendingKill[0]); }
-		BodiesPendingKill.erase(BodiesPendingKill.begin());
-	}*/
+
+		for (unsigned int i = 0; i < BodiesPendingKill.size(); ++i) {
+
+			m_World->DestroyBody(BodiesPendingKill[i]);
+
+			BodiesPendingKill.erase(BodiesPendingKill.begin() + i);
+
+		}
+		BodiesPendingKill.clear();
 
 }
 #pragma endregion

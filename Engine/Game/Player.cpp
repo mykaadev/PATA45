@@ -123,12 +123,12 @@ void Player::BindAxisAndActions()
 	}
 
 
-	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) 
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F)) 
 	{ 
 		canShoot = true; 
 		EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	}
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F) && canShoot)
 	{
 		Player::FireGun();
 		myTimerID = EngineTime::GetInstance()->StartTimer(200, HoldingFire, (Player*)this);
@@ -153,20 +153,21 @@ void Player::Move()
 
 	m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
 
-
 }
 
 
 void Player::FireGun()
 {
-	canShoot = false;
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		canShoot = false;
 
-	Bullet* bullet = nullptr;
+		Bullet* bullet = nullptr;
 
-	bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
+		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
 
-	World::GetInstance()->LoadObjects(bullet);
-
+		World::GetInstance()->LoadObjects(bullet);
+	}
 }
 
 

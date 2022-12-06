@@ -8,15 +8,19 @@
 
 Uint32 Fire(Uint32 interval, void* data)
 {
+
+	if (!World::GetInstance()->GetWorld()->IsLocked()) {
+
 	EnemyBullet* bullet = nullptr;
 	bullet = new EnemyBullet(new Properties("EnemyBullet", 
 		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x, 
 		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
 	
 	World::GetInstance()->LoadObjects(bullet);
-
+	}
 
 	return interval;
+
 }
 
 
@@ -36,7 +40,7 @@ void LonerEnemy::Init()
 {
 	__super::Init();
 
-	myTimerID = EngineTime::GetInstance()->StartTimer(5000, Fire, (LonerEnemy*)this);
+	myTimerID = EngineTime::GetInstance()->StartTimer((rand() % (5000 - 1000 + 1) + 1000), Fire, (LonerEnemy*)this);
 
 	//Handle Animations
 	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);

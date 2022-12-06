@@ -24,6 +24,7 @@ Background* galaxy1 = nullptr;
 
 void ObjectHandler::LoadObjects()
 {
+	if (World::GetInstance()->GetWorld()->IsLocked()) { return; }
 
 	galaxy = new Background(new Properties("Galaxy", SCREEN_WIDTH / 2, SCREEN_HEIGHT/2, 960, 640, SDL_FLIP_NONE));
 	World::GetInstance()->LoadObjects(galaxy);
