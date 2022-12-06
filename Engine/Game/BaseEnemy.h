@@ -28,7 +28,6 @@ public:
 
 	inline b2Body* GetBody() { return m_Body; }
 
-	b2Body* m_Body;
 
 	
 };

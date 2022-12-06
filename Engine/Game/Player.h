@@ -47,8 +47,6 @@ private:
 	int maxHealth = 100;
 	int currentHealth = 100;
 	
-	b2Body* m_Body;
-	std::vector <Character*> myBullets;
 
 	Vector2 m_MoveAxis;
 

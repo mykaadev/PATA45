@@ -74,8 +74,8 @@ void RusherEnemy::SetOriginPoint()
 
 void RusherEnemy::Clean()
 {
-
-	World::GetInstance()->DestroyGameObject(this, m_Body);
+	m_PendingKill = true;
+	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void RusherEnemy::CheckCollision(GameObject* otherGameObject)

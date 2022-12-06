@@ -25,7 +25,7 @@ void Bullet::Init()
 
 void Bullet::SetupBody()
 {
-	
+		
 		b2BodyDef _BodyDef;
 		_BodyDef.type = b2_dynamicBody;
 		_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
@@ -47,6 +47,7 @@ void Bullet::SetupBody()
 		b2Fixture* _Fixture;
 
 		_Fixture = m_Body->CreateFixture(&_fixtureDef);
+
 }
 
 
@@ -102,13 +103,15 @@ void Bullet::SetOriginPoint()
 
 void Bullet::Clean()
 {
-	World::GetInstance()->DestroyGameObject(this, m_Body);
+	m_PendingKill = true;
+	//World::GetInstance()->DestroyGameObject(this, m_Body);
+	
 }
 
 void Bullet::CheckCollision(GameObject* otherGameObject)
 {
 	
-	if (dynamic_cast<BaseEnemy*>(otherGameObject))
+	if (dynamic_cast<BaseEnemy*>(otherGameObject) && !m_PendingKill)
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
 	}

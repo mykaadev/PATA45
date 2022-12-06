@@ -24,7 +24,6 @@ private:
 
 	int m_damageAmount;
 public:
-	b2Body* m_Body;
 private:
 	bool m_IsDead;
 	~Bullet();

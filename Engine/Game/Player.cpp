@@ -30,7 +30,7 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 1.5f;
+	fSpeed = 2.0f;
 }
 
 
@@ -40,9 +40,6 @@ void Player::Init()
 
 	SetupBody();
 	SetAnimationState(Idle, 0);
-
-	
-
 }
 
 Player::~Player()
@@ -126,12 +123,12 @@ void Player::BindAxisAndActions()
 	}
 
 
-	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) 
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F)) 
 	{ 
 		canShoot = true; 
 		EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	}
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F) && canShoot)
 	{
 		Player::FireGun();
 		myTimerID = EngineTime::GetInstance()->StartTimer(200, HoldingFire, (Player*)this);
@@ -209,7 +206,8 @@ void Player::TakeDamage(int inDamage)
 	{
 		isDead = true;
 		SetAnimationState(Dead, 0);
-		World::GetInstance()->DestroyGameObject(this, m_Body);
+		//World::GetInstance()->DestroyGameObject(this, m_Body);
+		m_PendingKill = true;
 	}
 }
 

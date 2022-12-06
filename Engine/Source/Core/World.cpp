@@ -22,6 +22,8 @@ World::~World()
 }
 
 
+
+
 #pragma region SetupWorld
 
 
@@ -82,7 +84,7 @@ void World::SetupWorld()
 
 void World::HandlePhysics(float deltaTime)
 {  
-	m_World->Step(deltaTime, 8, 4);
+	m_World->Step(deltaTime, 6, 2);
 }
 
 #pragma endregion
@@ -93,12 +95,15 @@ void World::HandlePhysics(float deltaTime)
 
 void World::Update(float deltaTime)
 {
-	HandlePhysics(deltaTime);
+	DestroyPendingKillObjects();
 
+	CleanPendingKills();
+	
+	HandlePhysics(deltaTime);
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
-		if (GameObjectLoaded[i] != nullptr)
+		if (GameObjectLoaded[i] != nullptr && !dynamic_cast<GameObject*>(GameObjectLoaded[i])->IsPendingKill())
 		{
 			GameObjectLoaded[i]->Update(deltaTime);
 		}
@@ -112,7 +117,6 @@ void World::Update(float deltaTime)
 
 	m_Level->Update();
 
-	CleanPendingKills();
 }
 
 
@@ -126,7 +130,7 @@ void World::Render()
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
-		if (GameObjectLoaded[i] != nullptr)
+		if (GameObjectLoaded[i] != nullptr && !dynamic_cast<GameObject*>(GameObjectLoaded[i])->IsPendingKill())
 		{
 			GameObjectLoaded[i]->Draw();
 		}
@@ -144,34 +148,54 @@ void World::Render()
 
 #pragma region ObjectDestruction
 
-void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
+// void World::DestroyGameObject(GameObject* inObject, b2Body* body /*= nullptr*/)
+// {
+// 
+// 	if (body != nullptr) { NewBodyPendingKill(body); }
+// 
+// // 	auto it = std::find(GameObjectLoaded.begin(), GameObjectLoaded.end(), inObject);
+// // 
+// // 	if (it != GameObjectLoaded.end())
+// // 	{
+// // 		int index = it - GameObjectLoaded.begin();
+// // 
+// // 		delete GameObjectLoaded[index];
+// // 
+// // 		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
+// // 	}
+// // 	else
+// // 	{
+// // 		std::cout << "ERROR: FAILED TO FIND OBJECT TO DESTROY" << std::endl;
+// // 	}
+// }
+
+
+void World::DestroyPendingKillObjects()
 {
-
-	if (body != nullptr) { NewBodyPendingKill(body); }
-
-	auto it = std::find(GameObjectLoaded.begin(), GameObjectLoaded.end(), inObject);
-
-	if (it != GameObjectLoaded.end())
+	for (unsigned int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
-		int index = it - GameObjectLoaded.begin();
-
-		delete GameObjectLoaded[index];
-
-		GameObjectLoaded.erase(GameObjectLoaded.begin() + index);
-	}
-	else
-	{
-		std::cout << "ERROR: FAILED TO FIND OBJECT TO DESTROY" << std::endl;
+		if (dynamic_cast<GameObject*>(GameObjectLoaded[i])->IsPendingKill())
+		{
+			NewBodyPendingKill(dynamic_cast<GameObject*>(GameObjectLoaded[i])->GetBody());
+			GameObjectLoaded.erase(GameObjectLoaded.begin() + i);
+		}
 	}
 }
 
+
+
 void World::CleanPendingKills()
 {
-	while (BodiesPendingKill.size() > 0)
+	for (unsigned int i = 0; i < BodiesPendingKill.size(); ++i) {
+		m_World->DestroyBody(BodiesPendingKill[i]);
+		BodiesPendingKill.erase(BodiesPendingKill.begin() + i);
+	}
+	BodiesPendingKill.clear();
+	/*while (BodiesPendingKill.size() > 0)
 	{
 		if (BodiesPendingKill[0] != nullptr) { m_World->DestroyBody(BodiesPendingKill[0]); }
 		BodiesPendingKill.erase(BodiesPendingKill.begin());
-	}
+	}*/
 
 }
 #pragma endregion

@@ -1,6 +1,7 @@
 #pragma once
 #include "IObject.h"
 #include "sdl.h"
+#include "box2d.h"
 #include "../Physics/Transform.h"
 #include "../Physics/Point.h"
 
@@ -78,4 +79,11 @@ protected:
 	int m_Height;
 	std::string m_TextureID;
 	SDL_RendererFlip m_Flip;
+public:
+	b2Body* m_Body;
+	b2Body* GetBody() { return m_Body; };
+	bool m_PendingKill;
+	
+public:
+	bool IsPendingKill() { return m_PendingKill; }
 };

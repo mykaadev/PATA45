@@ -9,8 +9,9 @@
 Uint32 Fire(Uint32 interval, void* data)
 {
 	EnemyBullet* bullet = nullptr;
-	bullet = new EnemyBullet(new Properties("EnemyBullet", ((LonerEnemy*)data)->m_Body->GetPosition().x, 
-		((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
+	bullet = new EnemyBullet(new Properties("EnemyBullet", 
+		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x, 
+		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
 	
 	World::GetInstance()->LoadObjects(bullet);
 
@@ -119,7 +120,8 @@ void LonerEnemy::SetOriginPoint()
 void LonerEnemy::Clean()
 {
 	EngineTime::GetInstance()->RemoveTimer(myTimerID);
-	World::GetInstance()->DestroyGameObject(this, m_Body);
+	m_PendingKill = true;
+	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void LonerEnemy::CheckCollision(GameObject* otherGameObject)

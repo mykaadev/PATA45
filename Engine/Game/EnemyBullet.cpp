@@ -90,7 +90,8 @@ void EnemyBullet::SetOriginPoint()
 
 void EnemyBullet::Clean()
 {
-	World::GetInstance()->DestroyGameObject(this, m_Body);
+	m_PendingKill = true;
+	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void EnemyBullet::CheckCollision(GameObject* otherGameObject)

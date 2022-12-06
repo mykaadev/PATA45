@@ -24,8 +24,8 @@ public:
 	inline void LoadObjects(GameObject* Object) { GameObjectLoaded.push_back((GameObject*)Object); Object->Init(); }
 
 
- 	void DestroyGameObject(GameObject* inObject, b2Body* body = nullptr);
-	inline void NewBodyPendingKill(b2Body* body) { BodiesPendingKill.push_back(body);}
+ 	//void DestroyGameObject(GameObject* inObject, b2Body* body = nullptr);
+	inline void NewBodyPendingKill(b2Body* body) { BodiesPendingKill.push_back(body); }
 	void CleanPendingKills();
 
 	void BeginContact(b2Contact* contact);
@@ -37,10 +37,13 @@ private:
 	std::vector <GameObject*> GameObjectLoaded;
 	std::vector <b2Body*> BodiesPendingKill;
 
+
 	Level* m_Level;
 
 	World();
 	~World();
 
 
+	void DestroyPendingKillObjects();
+	void GatherPendingObjects();
 };
