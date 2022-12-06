@@ -24,29 +24,26 @@ void Bullet::Init()
 
 
 void Bullet::SetupBody()
-{
-		
-		b2BodyDef _BodyDef;
-		_BodyDef.type = b2_dynamicBody;
-		_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
-		_BodyDef.gravityScale = 0.0f;
-		_BodyDef.fixedRotation = true;
-		_BodyDef.bullet = true;
+{	
+	b2BodyDef _BodyDef;
+	_BodyDef.type = b2_dynamicBody;
+	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
+	_BodyDef.gravityScale = 0.0f;
+	_BodyDef.fixedRotation = true;
+	_BodyDef.bullet = true;
+	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
-		m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
+	b2PolygonShape _boxShape;
+	_boxShape.SetAsBox(m_Width / 2 - 4, m_Height / 2 - 4);
 
-		b2PolygonShape _boxShape;
-		_boxShape.SetAsBox(m_Width / 2 - 4, m_Height / 2 - 4);
-
-		b2FixtureDef _fixtureDef;
-		_fixtureDef.shape = &_boxShape;
-		_fixtureDef.isSensor = true;
-		_fixtureDef.userData.pointer = (uintptr_t)this;
+	b2FixtureDef _fixtureDef;
+	_fixtureDef.shape = &_boxShape;
+	_fixtureDef.isSensor = true;
+	_fixtureDef.userData.pointer = (uintptr_t)this;
 
 
-		b2Fixture* _Fixture;
-
-		_Fixture = m_Body->CreateFixture(&_fixtureDef);
+	b2Fixture* _Fixture;
+	_Fixture = m_Body->CreateFixture(&_fixtureDef);
 
 }
 

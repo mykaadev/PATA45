@@ -123,12 +123,12 @@ void Player::BindAxisAndActions()
 	}
 
 
-	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F)) 
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) 
 	{ 
 		canShoot = true; 
 		EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	}
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F) && canShoot)
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
 		Player::FireGun();
 		myTimerID = EngineTime::GetInstance()->StartTimer(200, HoldingFire, (Player*)this);
