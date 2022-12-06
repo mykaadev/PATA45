@@ -98,7 +98,14 @@ void World::Update(float deltaTime)
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
-		GameObjectLoaded[i]->Update(deltaTime);
+		if (GameObjectLoaded[i] != nullptr)
+		{
+			GameObjectLoaded[i]->Update(deltaTime);
+		}
+		else
+		{
+			continue;
+		}
 	}
 
 	Camera::GetInstance()->Update(deltaTime);
@@ -119,7 +126,14 @@ void World::Render()
 
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
-		GameObjectLoaded[i]->Draw();
+		if (GameObjectLoaded[i] != nullptr)
+		{
+			GameObjectLoaded[i]->Draw();
+		}
+		else
+		{
+			continue;
+		}
 	}
 
 	m_Level->Render();

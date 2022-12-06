@@ -37,8 +37,10 @@ private:
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Move();
+public:
 	void FireGun();
-	
+private:
+	SDL_TimerID myTimerID;
 
 	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
 	float fSpeed;

@@ -14,7 +14,9 @@ Bullet::Bullet(Properties* props) : Character(props) {
 
 void Bullet::Init()
 {
-	SetupBody();
+	if (m_Body == nullptr) { SetupBody(); }
+
+	if (m_Body == nullptr) { return; }
 	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
 	m_Body->SetLinearVelocity(b2Vec2(0.0f, -2.0f));
 }
@@ -23,40 +25,36 @@ void Bullet::Init()
 
 void Bullet::SetupBody()
 {
-	b2BodyDef _BodyDef;
-	_BodyDef.type = b2_dynamicBody;
-	_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
-	_BodyDef.gravityScale = 0.0f;
-	_BodyDef.fixedRotation = true;
-	_BodyDef.bullet= true;
+	
+		b2BodyDef _BodyDef;
+		_BodyDef.type = b2_dynamicBody;
+		_BodyDef.position.Set(m_Transform->X, m_Transform->Y);
+		_BodyDef.gravityScale = 0.0f;
+		_BodyDef.fixedRotation = true;
+		_BodyDef.bullet = true;
 
-	m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
+		m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
-	b2PolygonShape _boxShape;
-	_boxShape.SetAsBox(m_Width / 2 - 4, m_Height / 2 - 4);
+		b2PolygonShape _boxShape;
+		_boxShape.SetAsBox(m_Width / 2 - 4, m_Height / 2 - 4);
 
-	b2FixtureDef _fixtureDef;
-	_fixtureDef.shape = &_boxShape;
-	_fixtureDef.isSensor = true;
-	_fixtureDef.userData.pointer = (uintptr_t)this;
+		b2FixtureDef _fixtureDef;
+		_fixtureDef.shape = &_boxShape;
+		_fixtureDef.isSensor = true;
+		_fixtureDef.userData.pointer = (uintptr_t)this;
 
 
-	b2Fixture* _Fixture;
+		b2Fixture* _Fixture;
 
-	_Fixture = m_Body->CreateFixture(&_fixtureDef);
+		_Fixture = m_Body->CreateFixture(&_fixtureDef);
 }
 
 
 
-void Bullet::Update(float deltaTime)
+void Bullet::CheckIfIsOutOfBounds()
 {
-	__super::Update(deltaTime);
-
-	m_Animation->Update(deltaTime);
-
-	SetOriginPoint();
-
-	if (m_Body->GetPosition().y < 10.0f )
+	if (m_Body == nullptr) { return;	}
+	if (m_Body->GetPosition().y < 10.0f)
 	{
 		m_IsDead = true;
 	}
@@ -74,9 +72,21 @@ void Bullet::Update(float deltaTime)
 	}
 }
 
+void Bullet::Update(float deltaTime)
+{
+	__super::Update(deltaTime);
+
+	m_Animation->Update(deltaTime);
+
+	SetOriginPoint();
+
+	CheckIfIsOutOfBounds();
+}
+
 
 void Bullet::Draw()
 {
+	if (m_Body == nullptr) { return; }
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
@@ -106,6 +116,7 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 	{
 		return;
 	}
+
 	m_IsDead = true;
 }
 

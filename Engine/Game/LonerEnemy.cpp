@@ -35,8 +35,6 @@ void LonerEnemy::Init()
 {
 	__super::Init();
 
-
-
 	myTimerID = EngineTime::GetInstance()->StartTimer(5000, Fire, (LonerEnemy*)this);
 
 	//Handle Animations

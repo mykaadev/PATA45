@@ -20,9 +20,12 @@ public:
 private:
 	void SetupBody();
 	void SetOriginPoint();
+	void CheckIfIsOutOfBounds();
 
 	int m_damageAmount;
+public:
 	b2Body* m_Body;
+private:
 	bool m_IsDead;
 	~Bullet();
 };

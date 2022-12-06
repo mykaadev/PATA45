@@ -4,8 +4,25 @@
 #include "../Core/InputHandler.h"
 #include "box2d.h"
 #include "World.h"
+#include "EngineTime.h"
 
 
+
+Uint32 HoldingFire(Uint32 interval, void* data)
+{
+
+	// 	Bullet* bullet = nullptr;
+	// 	bullet = new Bullet(new Properties("Bullet", ((Bullet*)data)->m_Body->GetPosition().x,
+	// 		((Bullet*)data)->m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
+
+	Player* player = nullptr;
+	((Player*)data)->FireGun();
+	//	World::GetInstance()->LoadObjects(bullet);
+
+
+	return interval;
+
+}
 
 Player::Player(Properties* props) : Character(props) {
 	
@@ -109,13 +126,20 @@ void Player::BindAxisAndActions()
 	}
 
 
-	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) { canShoot = true; }
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) 
+	{ 
+		canShoot = true; 
+		EngineTime::GetInstance()->RemoveTimer(myTimerID);
+	}
 	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
-		FireGun();
+		Player::FireGun();
+		myTimerID = EngineTime::GetInstance()->StartTimer(200, HoldingFire, (Player*)this);
+		canShoot = false;
 	}
 
 }
+
 
 
 void Player::Move()
