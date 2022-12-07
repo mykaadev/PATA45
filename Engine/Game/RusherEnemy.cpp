@@ -32,7 +32,7 @@ void RusherEnemy::Update(float deltaTime)
 	SetOriginPoint();
 
 	//Handle Movement
-	m_Body->SetLinearVelocity(b2Vec2(0.f, 0.8f));
+	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 
 	//Handle Out of Screen Destroy
 	if (m_Body->GetPosition().y > 700.0f && !m_IsDead)
@@ -68,6 +68,10 @@ void RusherEnemy::TakeDamage(int inDamage)
 
 void RusherEnemy::SetOriginPoint()
 {
+	if (m_Body == nullptr)
+	{
+		return;
+	}
 	m_Origin->X = m_Body->GetPosition().x;
 	m_Origin->Y = m_Body->GetPosition().y;
 }

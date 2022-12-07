@@ -30,7 +30,7 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 2.0f;
+	fSpeed = 5.0f;
 }
 
 
@@ -76,8 +76,8 @@ void Player::SetupBody()
 	b2FixtureDef _fixtureDef;
 	_fixtureDef.shape = &_boxShape;
 	_fixtureDef.userData.pointer = (uintptr_t) this;
-	_fixtureDef.density = 0.1f;
-	_fixtureDef.friction = 0.3f;
+	_fixtureDef.density = 0.01f;
+	_fixtureDef.friction = 0.01f;
 
 	b2Fixture* _Fixture;
 	_Fixture = m_Body->CreateFixture(&_fixtureDef);
@@ -152,7 +152,6 @@ void Player::Move()
 	}
 
 	m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
-
 }
 
 
@@ -164,7 +163,7 @@ void Player::FireGun()
 
 		Bullet* bullet = nullptr;
 
-		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
+		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 32, 16, 16, SDL_FLIP_NONE));
 
 		World::GetInstance()->LoadObjects(bullet);
 	}

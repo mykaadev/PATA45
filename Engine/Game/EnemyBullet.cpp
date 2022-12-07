@@ -13,8 +13,7 @@ void EnemyBullet::Init()
 {
 	SetupBody();
 	m_Animation->SetProperties("EnemyBullet", 1, 0, 2, 100, true);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, 2.0f));
-	//FIND AN LONER AND GET HIS POSITION SO WE CAN SET IT
+	m_Body->SetLinearVelocity(b2Vec2(0.0f, 3.0f));
 }
 
 
@@ -62,6 +61,8 @@ void EnemyBullet::Update(float deltaTime)
 	m_Animation->Update(deltaTime);
 
 	SetOriginPoint();
+
+	if (m_Body == nullptr) return;
 
 	if (m_Body->GetPosition().y >= 640.0f)
 	{

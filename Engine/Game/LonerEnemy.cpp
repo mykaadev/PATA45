@@ -63,7 +63,7 @@ void LonerEnemy::Update(float deltaTime)
 	//Handle Movement
 	if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(1.5f, 0.4f));
+		m_Body->SetLinearVelocity(b2Vec2(2.0f, 1.0f));
 	}
 
 	if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
@@ -73,7 +73,8 @@ void LonerEnemy::Update(float deltaTime)
 
 	if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(-1.5f, 0.4f));
+		m_Body->SetLinearVelocity(b2Vec2(-2.0f, 1.0f));
+
 	}
 
 	if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)

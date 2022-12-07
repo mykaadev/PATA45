@@ -17,10 +17,13 @@
 	<texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
 	 <texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
 	
-    <texture id="Galaxy" source="../Assets/Game/Textures/galaxy.bmp"/> 
+    <texture id="Galaxy" source="../Assets/Game/Textures/galaxy.bmp"/>
+	<texture id="BackgroundProps1" source="../Assets/Game/Textures/BackgroundProps1.bmp"/>
+	<texture id="BackgroundProps2" source="../Assets/Game/Textures/BackgroundProps2.bmp"/>
+	<texture id="BackgroundProps3" source="../Assets/Game/Textures/BackgroundProps3.bmp"/>
 
-	
-    <texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
+
+	<texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
     <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>
     <texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/> 
   
