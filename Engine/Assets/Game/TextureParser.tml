@@ -22,6 +22,8 @@
 	<texture id="BackgroundProps2" source="../Assets/Game/Textures/BackgroundProps2.bmp"/>
 	<texture id="BackgroundProps3" source="../Assets/Game/Textures/BackgroundProps3.bmp"/>
 
+	<texture id="Companion" source="../Assets/Game/Textures/Companion.bmp"/>
+
 
 	<texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
     <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>

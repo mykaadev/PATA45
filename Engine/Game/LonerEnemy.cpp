@@ -11,12 +11,13 @@ Uint32 Fire(Uint32 interval, void* data)
 
 	if (!World::GetInstance()->GetWorld()->IsLocked()) {
 
-	EnemyBullet* bullet = nullptr;
-	bullet = new EnemyBullet(new Properties("EnemyBullet", 
-		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x, 
-		dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
+		EnemyBullet* bullet = nullptr;
+
+		bullet = new EnemyBullet(new Properties("EnemyBullet", 
+				dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x, 
+				dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
 	
-	World::GetInstance()->LoadObjects(bullet);
+		World::GetInstance()->LoadObjects(bullet);
 	}
 
 	return interval;
@@ -31,8 +32,6 @@ LonerEnemy::LonerEnemy(Properties* props) : BaseEnemy(props)
 	m_MaxHealth = { 1 };
 
 	m_CurrentHealth = m_MaxHealth;
-
-	
 }
 
 
@@ -42,9 +41,7 @@ void LonerEnemy::Init()
 
 	myTimerID = EngineTime::GetInstance()->StartTimer((rand() % (5000 - 1000 + 1) + 1000), Fire, (LonerEnemy*)this);
 
-	//Handle Animations
 	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);
-
 }
 
 void LonerEnemy::Draw()
@@ -56,49 +53,56 @@ void LonerEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
-	m_Animation->Update(deltaTime);
 
 	SetOriginPoint();
 
-	//Handle Movement
-	if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
+	if (!m_IsDead && m_Body != nullptr)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(2.0f, 1.0f));
+		if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
+		{
+			m_Body->SetLinearVelocity(b2Vec2(2.0f, 1.0f));
+		}
+
+		if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
+		{
+			m_GoingRight = false;
+		}
+
+		if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
+		{
+			m_Body->SetLinearVelocity(b2Vec2(-2.0f, 1.0f));
+
+		}
+
+		if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)
+		{
+			m_GoingRight = true;
+		}
+
+		//Handle Out of screen destroy
+		if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
+		{
+			m_IsDead = true;
+			if (!World::GetInstance()->GetWorld()->IsLocked())
+			{
+				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			}
+			m_Animation->SetCurrentSprite(0);
+			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+
+		}
 	}
-
-	if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
-	{
-		m_GoingRight = false;
-	}
-
-	if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
-	{
-		m_Body->SetLinearVelocity(b2Vec2(-2.0f, 1.0f));
-
-	}
-
-	if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)
-	{
-		m_GoingRight = true;
-	}
-
-	//Handle Out of screen destroy
-	if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
-	{
-		m_IsDead = true;
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-
-	}
-
+	
 	if (m_IsDead)
 	{
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
-
 		if (GetAnimation()->GetCurrentSprite() >= 10)
 		{
 			Clean();
 		}
 	}
+
+	m_Animation->Update(deltaTime);
+
 }
 
 
@@ -109,9 +113,12 @@ void LonerEnemy::TakeDamage(int inDamage)
 	if (m_CurrentHealth <= 0)
 	{
 		m_IsDead = true;
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
+		if (!World::GetInstance()->GetWorld()->IsLocked())
+		{
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		}
+		m_Animation->SetCurrentSprite(0);
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 	}
 }
 
@@ -126,7 +133,6 @@ void LonerEnemy::Clean()
 {
 	EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	m_PendingKill = true;
-	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void LonerEnemy::CheckCollision(GameObject* otherGameObject)

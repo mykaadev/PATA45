@@ -27,8 +27,8 @@ public:
 	void SetOriginPoint();
 
 	inline b2Body* GetBody() { return m_Body; }
-
-
+	inline bool GetIsDead() { return m_IsDead; }
 	
+	bool m_IsDead;
 };
 

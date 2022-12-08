@@ -17,6 +17,7 @@ void RusherEnemy::Init()
 
 	//Handle Animations
 	m_Animation->SetProperties("Rusher", 1, 0, 24, 50, true);
+	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 
 }
 
@@ -28,29 +29,31 @@ void RusherEnemy::Draw()
 void RusherEnemy::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
-	m_Animation->Update(deltaTime);
+
 	SetOriginPoint();
 
-	//Handle Movement
-	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
-
-	//Handle Out of Screen Destroy
-	if (m_Body->GetPosition().y > 700.0f && !m_IsDead)
+	if (m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
 	{
 		m_IsDead = true;
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		m_Height = m_Width;
+		if (!World::GetInstance()->GetWorld()->IsLocked())
+		{
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		}
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		m_Animation->SetCurrentSprite(0);
 
 	}
 
 	if (m_IsDead)
 	{
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
-
 		if (GetAnimation()->GetCurrentSprite() >= 10)
 		{
 			Clean();
 		}
 	}
+
+	m_Animation->Update(deltaTime);
 
 }
 
@@ -61,8 +64,13 @@ void RusherEnemy::TakeDamage(int inDamage)
 	if (m_CurrentHealth <= 0 && !m_IsDead)
 	{
 		m_IsDead = true;
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
+		m_Height = m_Width;
+		if (!World::GetInstance()->GetWorld()->IsLocked())
+		{
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		}
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		m_Animation->SetCurrentSprite(0);
 	}
 }
 
@@ -72,6 +80,7 @@ void RusherEnemy::SetOriginPoint()
 	{
 		return;
 	}
+
 	m_Origin->X = m_Body->GetPosition().x;
 	m_Origin->Y = m_Body->GetPosition().y;
 }

@@ -4,6 +4,7 @@
 #include "Bullet.h"
 #include "box2d.h"
 #include <vector>
+#include "Companion.h"
 
 // custom player game side 
 
@@ -29,7 +30,7 @@ public:
 	virtual void CheckCollision(GameObject* otherGameObject);
 
 	void TakeDamage(int inDamage);
-
+	void AddPowerUp();
 private:
 
 	void SetupBody();
@@ -37,8 +38,13 @@ private:
 	void SetOriginPoint();
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Move();
+
+	void SpawnFirstCompanion();
+	void SpawnSecondCompanion();
+
 public:
 	void FireGun();
+
 private:
 	SDL_TimerID myTimerID;
 
@@ -46,8 +52,15 @@ private:
 	float fSpeed;
 	int maxHealth = 100;
 	int currentHealth = 100;
+	int m_PowerLevel;
+	int m_MaxPowerLevel;
 	
-
+	Companion* FirstCompanion;
+	b2Vec2 firstCompanionPosition;
+	Companion* SecondCompanion;
+	b2Vec2 secondCompanionPosition;
+	float fireRate;
+	
 	Vector2 m_MoveAxis;
 
 	~Player();

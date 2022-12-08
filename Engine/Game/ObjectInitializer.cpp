@@ -1,4 +1,4 @@
-#include "ObjectHandler.h"
+#include "ObjectInitializer.h"
 #include "Player.h"
 #include "Bullet.h"
 #include "Camera.h"
@@ -15,7 +15,7 @@
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
 
-ObjectHandler* ObjectHandler::m_Instance = nullptr;
+ObjectInitializer* ObjectInitializer::m_Instance = nullptr;
 
 Player* player = nullptr;
 
@@ -24,7 +24,7 @@ Background* galaxy1 = nullptr;
 
 
 
-void ObjectHandler::LoadObjects()
+void ObjectInitializer::LoadObjects()
 {
 	if (World::GetInstance()->GetWorld()->IsLocked()) { return; }
 

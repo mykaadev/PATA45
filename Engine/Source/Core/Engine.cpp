@@ -7,7 +7,7 @@
 #include "LevelParser.h"
 #include <iostream>
 #include "../Components/Camera.h"
-#include "../../Game/ObjectHandler.h"
+#include "../../Game/ObjectInitializer.h"
 #include "../../Game/Player.h"
 #include "World.h"
 

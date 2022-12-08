@@ -5,6 +5,7 @@
 #include "box2d.h"
 #include "World.h"
 #include "EngineTime.h"
+#include "Companion.h"
 
 
 
@@ -30,7 +31,9 @@ Player::Player(Properties* props) : Character(props) {
 	canShoot = true;
 	maxHealth = 3;
 	currentHealth = maxHealth;
-	fSpeed = 5.0f;
+	fSpeed = 2.0f;
+	fireRate = 300.0f;
+	m_MaxPowerLevel = 3;
 }
 
 
@@ -55,6 +58,18 @@ void Player::Update(float deltaTime)
 	BindAxisAndActions();
 	SetOriginPoint();
 	Move();
+
+	if (FirstCompanion != nullptr)
+	{
+		firstCompanionPosition = b2Vec2(m_Body->GetPosition().x + 50, m_Body->GetPosition().y - 10);
+		dynamic_cast<Companion*>(FirstCompanion)->SetPosition(firstCompanionPosition, 0.15f);
+	}
+
+	if (SecondCompanion != nullptr)
+	{
+		secondCompanionPosition = b2Vec2(m_Body->GetPosition().x - 50, m_Body->GetPosition().y - 10);
+		dynamic_cast<Companion*>(SecondCompanion)->SetPosition(secondCompanionPosition, 0.15f);
+	}
 
 	m_Animation->Update(deltaTime);
 }
@@ -123,18 +138,27 @@ void Player::BindAxisAndActions()
 	}
 
 
-	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F)) 
+	if (!InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE)) 
 	{ 
 		canShoot = true; 
 		EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	}
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_F) && canShoot)
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_SPACE) && canShoot)
 	{
-		Player::FireGun();
-		myTimerID = EngineTime::GetInstance()->StartTimer(200, HoldingFire, (Player*)this);
 		canShoot = false;
+		FireGun();
+		myTimerID = EngineTime::GetInstance()->StartTimer(fireRate, HoldingFire, (Player*)this);
+
 	}
 
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_P))
+	{
+		SpawnFirstCompanion();
+	}
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_O))
+	{
+		SpawnSecondCompanion();
+	}
 }
 
 
@@ -155,17 +179,50 @@ void Player::Move()
 }
 
 
+void Player::SpawnFirstCompanion()
+{
+	if (FirstCompanion == nullptr)
+	{
+		FirstCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x + 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(FirstCompanion);
+	}
+	
+}
+
+void Player::SpawnSecondCompanion()
+{
+	if (SecondCompanion == nullptr)
+	{
+		SecondCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x - 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(SecondCompanion);
+	}
+}
+
 void Player::FireGun()
 {
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		canShoot = false;
-
 		Bullet* bullet = nullptr;
-
 		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 32, 16, 16, SDL_FLIP_NONE));
-
 		World::GetInstance()->LoadObjects(bullet);
+
+		if (FirstCompanion != nullptr)
+		{
+			Bullet* bullet = nullptr;
+			b2Vec2 ShootPosition = dynamic_cast<Companion*>(FirstCompanion)->GetBody()->GetPosition();
+			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
+			World::GetInstance()->LoadObjects(bullet);
+		}
+
+		if (SecondCompanion != nullptr)
+		{
+			Bullet* bullet = nullptr;
+			b2Vec2 ShootPosition = dynamic_cast<Companion*>(SecondCompanion)->GetBody()->GetPosition();
+			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
+			World::GetInstance()->LoadObjects(bullet);
+		}
+
 	}
 }
 
@@ -188,12 +245,14 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 	if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
 		m_Animation->SetProperties("ShipRight", 1, 0, 3, 100, false);
+
 	}
 
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
+
 	}
 }
 
@@ -211,6 +270,20 @@ void Player::TakeDamage(int inDamage)
 	}
 }
 
+
+void Player::AddPowerUp()
+{
+	if (m_PowerLevel <= m_MaxPowerLevel)
+	{
+		++m_PowerLevel;
+		if (m_PowerLevel == 1) { SpawnFirstCompanion();	fireRate = 200.0f; }
+		if (m_PowerLevel == 2) { SpawnSecondCompanion(); fireRate = 50.0f; }
+	}
+	else
+	{
+		m_PowerLevel = m_MaxPowerLevel;
+	}
+}
 
 void Player::Draw()
 {

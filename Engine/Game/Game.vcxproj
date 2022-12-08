@@ -134,11 +134,12 @@
     <ClCompile Include="BackgroundProps.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Companion.cpp" />
     <ClCompile Include="CoreGame.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="LonerEnemy.cpp" />
-    <ClCompile Include="ObjectHandler.cpp" />
+    <ClCompile Include="ObjectInitializer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RusherEnemy.cpp" />
   </ItemGroup>
@@ -147,11 +148,12 @@
     <ClInclude Include="BackgroundProps.h" />
     <ClInclude Include="BaseEnemy.h" />
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Companion.h" />
     <ClInclude Include="CoreGame.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="LonerEnemy.h" />
-    <ClInclude Include="ObjectHandler.h" />
+    <ClInclude Include="ObjectInitializer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RusherEnemy.h" />
   </ItemGroup>

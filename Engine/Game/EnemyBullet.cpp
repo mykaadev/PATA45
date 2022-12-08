@@ -85,6 +85,7 @@ void EnemyBullet::Update(float deltaTime)
 
 void EnemyBullet::Draw()
 {
+	if (m_Body == nullptr) { return; }
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 

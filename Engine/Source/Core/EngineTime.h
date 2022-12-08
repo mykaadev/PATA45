@@ -2,8 +2,8 @@
 #include <vector>
 #include <iostream>
 
-const int TARGET_FPS = 120;
-const float TARGET_DELTATIME = 3.0f;
+const int TARGET_FPS = 60;
+const float TARGET_DELTATIME = 1.5f;
 using TimerID = SDL_TimerID;
 using T_Callback = SDL_TimerCallback;
 

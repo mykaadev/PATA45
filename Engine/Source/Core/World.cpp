@@ -1,7 +1,7 @@
 #include "World.h"
 #include <iostream>
 #include "box2d.h"
-#include "..\..\Game\ObjectHandler.h"
+#include "..\..\Game\ObjectInitializer.h"
 #include "LevelParser.h"
 #include "..\Components\Camera.h"
 #include <iostream>
@@ -34,10 +34,10 @@ void World::SetupWorld()
 	b2Vec2 gravity(0.0f, 0.0f);
 	m_World = std::make_unique<b2World>(gravity);
 
-	ObjectHandler::GetInstance()->LoadObjects();
+	ObjectInitializer::GetInstance()->LoadObjects();
 
 	m_World->SetContactListener(this);
-
+	
 	///////////////////// REMOVE FROM HERE /////////////////////////
 	//TEMP WORLD BOUNDARIES
 	//top

@@ -1,29 +1,28 @@
-#include "Bullet.h"
+#include "Companion.h"
 #include "World.h"
 #include "TextureManager.h"
 #include "BaseEnemy.h"
 #include "Player.h"
 #include "RusherEnemy.h"
 
-Bullet::Bullet(Properties* props) : Character(props) {
+Companion::Companion(Properties* props) : Character(props) {
 
 	m_Animation = new Animation();
 	m_damageAmount = { 1 };
 
 }
 
-void Bullet::Init()
+void Companion::Init()
 {
 	if (m_Body == nullptr) { SetupBody(); }
 
 	if (m_Body == nullptr) { return; }
-	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, -3.0f));
+	m_Animation->SetProperties("Companion", 1, 0, 16, 100, true);
 }
 
 
 
-void Bullet::SetupBody()
+void Companion::SetupBody()
 {	
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
@@ -35,44 +34,24 @@ void Bullet::SetupBody()
 		_BodyDef.bullet = true;
 		m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
-
 		b2PolygonShape _boxShape;
-		_boxShape.SetAsBox(m_Width / 2 - 4, m_Height / 2 - 4);
+		_boxShape.SetAsBox(m_Width / 2, m_Height / 2);
 
 		b2FixtureDef _fixtureDef;
 		_fixtureDef.shape = &_boxShape;
 		_fixtureDef.isSensor = true;
 		_fixtureDef.userData.pointer = (uintptr_t)this;
-		_fixtureDef.density = 0.01f;
-		_fixtureDef.friction = 0.01f;
+
 
 		b2Fixture* _Fixture;
-		
 		_Fixture = m_Body->CreateFixture(&_fixtureDef);
 	}
 }
 
 
 
-void Bullet::CheckIfIsOutOfBounds()
-{
-	if (m_Body == nullptr) { return;	}
-	if (m_Body->GetPosition().y < 10.0f)
-	{
-		m_IsDead = true;
-	}
 
-	if (m_IsDead)
-	{
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-
-		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
-
-		if (GetAnimation()->GetCurrentSprite() >= 10) { Clean(); }
-	}
-}
-
-void Bullet::Update(float deltaTime)
+void Companion::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
@@ -80,18 +59,17 @@ void Bullet::Update(float deltaTime)
 
 	SetOriginPoint();
 
-	CheckIfIsOutOfBounds();
 }
 
 
-void Bullet::Draw()
+void Companion::Draw()
 {
 	if (m_Body == nullptr) { return; }
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
 
-void Bullet::SetOriginPoint()
+void Companion::SetOriginPoint()
 {
 	if (m_Body == nullptr) return;
 
@@ -100,27 +78,27 @@ void Bullet::SetOriginPoint()
 }
 
 
-void Bullet::Clean()
+void Companion::SetPosition(b2Vec2 inPlayerPosition, float interpSpeed)
+{
+	vDesiredPosition.x = m_Origin->X += (inPlayerPosition.x - m_Body->GetPosition().x) * interpSpeed;
+	vDesiredPosition.y = m_Origin->Y += (inPlayerPosition.y - m_Body->GetPosition().y) * interpSpeed;
+
+	m_Body->SetTransform(vDesiredPosition, m_Body->GetAngle());
+}
+
+void Companion::Clean()
 {
 	m_PendingKill = true;
-	//World::GetInstance()->DestroyGameObject(this, m_Body);
 	
 }
 
-void Bullet::CheckCollision(GameObject* otherGameObject)
+void Companion::CheckCollision(GameObject* otherGameObject)
 {
-	
-	if (dynamic_cast<BaseEnemy*>(otherGameObject) && !m_PendingKill && !dynamic_cast<BaseEnemy*>(otherGameObject)->GetIsDead())
-	{
-		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
-		m_IsDead = true;
-	}
-
 
 }
 
 
-Bullet::~Bullet()
+Companion::~Companion()
 {
 	delete m_Animation;
 }

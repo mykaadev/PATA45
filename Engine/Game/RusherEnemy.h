@@ -17,7 +17,6 @@ public:
 	int m_MaxHealth;
 	
 	RusherEnemy();
-private:
-	bool m_IsDead;
+
 };
 
