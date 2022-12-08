@@ -52,5 +52,7 @@ private:
 	SDL_Renderer* m_Renderer;
 	SDL_GLContext m_GLContext;
 
+
+
 };
 

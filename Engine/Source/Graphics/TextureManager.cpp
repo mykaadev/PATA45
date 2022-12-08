@@ -4,6 +4,10 @@
 #include "tinyxml.h"
 #include <iostream>
 #include <string>
+#include "glad/glad.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 TextureManager* TextureManager::m_Instance = nullptr;
 
@@ -18,6 +22,7 @@ bool TextureManager::Load(std::string inID, std::string inFileName)
 	
 	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
 
+
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
 	if (texture == nullptr)
 	{
@@ -25,8 +30,8 @@ bool TextureManager::Load(std::string inID, std::string inFileName)
 		return false;
 	}
 
-
 	m_TextureMap[inID] = texture;
+	
 
 	return true;
 }
@@ -60,24 +65,31 @@ bool TextureManager::ParseTextures(std::string source)
 
 void TextureManager::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-	SDL_Rect srcRect = { 0, 0, width, height};
+	
 
-	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio	;
+	///  DO NOT DELETE THIS SINCE THIS IS WORKING PROPERLY  ///
+// 	SDL_Rect srcRect = { 0, 0, width, height};
+// 
+// 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
+// 
+// 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
+//	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 
-	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
-	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 }
 
 
 void TextureManager::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
 
-	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
 
-	SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
-
-	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+/// DO NOT DELETE THIS
+// 	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
+// 
+// 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+// 
+// 	SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
+// 
+// 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 }
 
 
