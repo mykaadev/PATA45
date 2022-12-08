@@ -10,6 +10,7 @@
 #include "../../Game/ObjectInitializer.h"
 #include "../../Game/Player.h"
 #include "World.h"
+#include "glad/glad.h"
 
 Engine* Engine::m_Instance = nullptr;
 
@@ -32,6 +33,9 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
+
+
+
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		SDL_Log("Failed to Initialize SDL: %s", SDL_GetError());
@@ -39,11 +43,25 @@ bool Engine::Init()
 	}
 
 
-	m_Window = SDL_CreateWindow("Engenho Irreal 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
-	
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+	m_Window = SDL_CreateWindow("PATA45", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
+
+
 	if (m_Window == nullptr)
 	{
 		SDL_Log("Failed to Create Window: %s", SDL_GetError());
+		return m_bIsRunning = false;
+	}
+
+	m_GLContext = SDL_GL_CreateContext(m_Window);
+
+	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
+	{
+		std::cout << "Failed to initialize GLAD" << std::endl;
 		return m_bIsRunning = false;
 	}
 
@@ -104,6 +122,7 @@ bool Engine::Clean()
 {
 	TextureManager::GetInstance()->Clean();
 	SDL_DestroyRenderer(m_Renderer);
+	SDL_GL_DeleteContext(m_GLContext);
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 

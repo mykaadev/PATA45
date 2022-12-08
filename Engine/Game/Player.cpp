@@ -248,7 +248,6 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 	}
 
-
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
 		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
