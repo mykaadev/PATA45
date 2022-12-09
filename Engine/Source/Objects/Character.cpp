@@ -1,6 +1,6 @@
 #include "Character.h"
 #include "SDL.h"
-#include "../Graphics/TextureManager.h"
+#include "../Graphics/Renderer.h"
 #include "WorldObject.h"
 #include "../Core/InputHandler.h"
 #include <iostream>
@@ -42,5 +42,5 @@ void Character::Update(float deltaTime)
 
 void Character::Clean()
 {
-    TextureManager::GetInstance()->Clean();
+    Renderer::GetInstance()->Clean();
 }

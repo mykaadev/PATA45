@@ -153,7 +153,7 @@
     <ClInclude Include="..\Source\Core\World.h" />
     <ClInclude Include="..\Source\Graphics\Animation.h" />
     <ClInclude Include="..\Source\Graphics\Layer.h" />
-    <ClInclude Include="..\Source\Graphics\TextureManager.h" />
+    <ClInclude Include="..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\Source\Graphics\TileLayer.h" />
     <ClInclude Include="..\Source\Objects\Character.h" />
     <ClInclude Include="..\Source\Objects\GameObject.h" />
@@ -178,9 +178,14 @@
     <ClCompile Include="..\Source\Core\World.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\Graphics\Animation.cpp" />
-    <ClCompile Include="..\Source\Graphics\TextureManager.cpp" />
+    <ClCompile Include="..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Game\Levels\Level0.tmx" />
+    <None Include="..\Assets\Game\TextureParser.tml" />
+    <None Include="..\Source\Graphics\Basic.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

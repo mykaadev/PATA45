@@ -1,7 +1,7 @@
 #include "Engine.h"
 #include <iostream>
 #include "SDL.h"
-#include "../Graphics/TextureManager.h"
+#include "../Graphics/Renderer.h"
 #include "../Core/InputHandler.h"
 #include "EngineTime.h"
 #include "LevelParser.h"
@@ -33,9 +33,6 @@ Engine::~Engine()
 
 bool Engine::Init()
 {
-
-
-
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
 		SDL_Log("Failed to Initialize SDL: %s", SDL_GetError());
@@ -80,10 +77,14 @@ bool Engine::Init()
 		return m_bIsRunning = false;
 	}
 
-	TextureManager::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
+	Renderer::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
 
+	//Renderer::GetInstance()->InitOpenGL();
+	
 	return m_bIsRunning = true;
 }
+
+
 
 
 void Engine::Events()
@@ -95,20 +96,26 @@ void Engine::Events()
 void Engine::Update()
 {
 	float deltaTime = EngineTime::GetInstance()->GetDeltaTime();
+
+	///REMOVE THIS FROM HERE
+	Renderer::GetInstance()->InitOpenGL();
+
 	World::GetInstance()->Update(deltaTime);
+
 }
 
 void Engine::Renders()
 {
-
 	SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
 	SDL_RenderClear(m_Renderer);
 
-	TextureManager::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
+	Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
 
 	World::GetInstance()->Render();
 
 	SDL_RenderPresent(m_Renderer);
+	SDL_GL_SwapWindow(m_Window);
+
 }
 
 
@@ -119,7 +126,7 @@ void Engine::Quit()
 
 bool Engine::Clean()
 {
-	TextureManager::GetInstance()->Clean();
+	Renderer::GetInstance()->Clean();
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_GL_DeleteContext(m_GLContext);
 	SDL_DestroyWindow(m_Window);

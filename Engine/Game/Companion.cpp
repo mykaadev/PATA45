@@ -1,6 +1,6 @@
 #include "Companion.h"
 #include "World.h"
-#include "TextureManager.h"
+#include "Renderer.h"
 #include "BaseEnemy.h"
 #include "Player.h"
 #include "RusherEnemy.h"

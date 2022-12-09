@@ -1,5 +1,5 @@
 #include "TileLayer.h"
-#include "TextureManager.h"
+#include "Renderer.h"
 TileLayer::TileLayer(int tileSize, int rowCount, int colCount, TileMap tileMap, TilesetList tilesetList) : 
 	
 	m_TileSize (tileSize),  
@@ -11,7 +11,7 @@ TileLayer::TileLayer(int tileSize, int rowCount, int colCount, TileMap tileMap, 
 	
 	for (unsigned int i = 0; i < m_TilesetList.size(); ++i)
 	{
-		TextureManager::GetInstance()->Load(m_TilesetList[i].tileName, "../Assets/Game/Levels/" + m_TilesetList[i].tileSource);
+		Renderer::GetInstance()->Load(m_TilesetList[i].tileName, "../Assets/Game/Levels/" + m_TilesetList[i].tileSource);
 
 	}
 
@@ -56,7 +56,7 @@ void TileLayer::Render()
 					_tileCol = _tileset.colCount - 1;
 				}
 
-				TextureManager::GetInstance()->DrawTile(_tileset.tileName, _tileset.tileSize,
+				Renderer::GetInstance()->DrawTile(_tileset.tileName, _tileset.tileSize,
 							j * _tileset.tileSize, i * _tileset.tileSize, _tileRow, _tileCol);
 
 

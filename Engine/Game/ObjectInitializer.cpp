@@ -6,7 +6,7 @@
 #include "World.h"
 #include "LonerEnemy.h"
 #include "RusherEnemy.h"
-#include "TextureManager.h"
+#include "Renderer.h"
 #include "Background.h"
 #include "EngineTime.h"
 #include "EnemySpawner.h"

@@ -1,5 +1,5 @@
 #include "Animation.h"
-#include "TextureManager.h"
+#include "Renderer.h"
 #include <iostream>
 
 Animation::Animation()
@@ -63,5 +63,5 @@ void Animation::Update(float deltaTime)
 
 void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight)
 {
-	TextureManager::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+	Renderer::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
 }

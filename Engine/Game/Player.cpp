@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Bullet.h"
-#include "../Graphics/TextureManager.h"
+#include "../Graphics/Renderer.h"
 #include "../Core/InputHandler.h"
 #include "box2d.h"
 #include "World.h"
@@ -292,7 +292,7 @@ void Player::Draw()
 
 void Player::Clean()
 {
-    TextureManager::GetInstance()->Clean();
+    Renderer::GetInstance()->Clean();
 }
 
 void Player::CheckCollision(GameObject* otherGameObject)

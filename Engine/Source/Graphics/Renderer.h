@@ -13,10 +13,14 @@ enum SortingLayers
 };
 
 
-class TextureManager
+class Renderer
 {
 public:
-	static TextureManager* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new TextureManager(); }
+	static Renderer* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new Renderer(); }
+	void InitOpenGL();
+	unsigned int shader;
+	unsigned int buffer;
+	unsigned int ibo;
 
 	bool Load(std::string inID, std::string inFileName);
 	bool ParseTextures(std::string source);
@@ -28,9 +32,9 @@ public:
 	void DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 private:
-	TextureManager() {};
-	static TextureManager* m_Instance;
-
+	Renderer() {};
+	static Renderer* m_Instance;
+	
 	std::map<std::string, SDL_Texture*> m_TextureMap;
 
 

@@ -1,7 +1,7 @@
 #include "BaseEnemy.h"
 #include "World.h"
 #include "Animation.h"
-#include "TextureManager.h"
+#include "Renderer.h"
 #include "World.h"
 
 BaseEnemy::BaseEnemy(Properties* props) : Character(props)

@@ -36,7 +36,7 @@
     <ClInclude Include="..\Source\Objects\Character.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\Source\Graphics\TextureManager.h">
+    <ClInclude Include="..\Source\Graphics\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\Graphics\Animation.h">
@@ -83,7 +83,7 @@
     <ClCompile Include="..\Source\Core\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\Source\Graphics\TextureManager.cpp">
+    <ClCompile Include="..\Source\Graphics\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\Source\Objects\Character.cpp">
@@ -131,5 +131,10 @@
     <ClCompile Include="..\Source\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Assets\Game\TextureParser.tml" />
+    <None Include="..\Assets\Game\Levels\Level0.tmx" />
+    <None Include="..\Source\Graphics\Basic.shader" />
   </ItemGroup>
 </Project>
