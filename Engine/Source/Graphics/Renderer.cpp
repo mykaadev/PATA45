@@ -7,20 +7,17 @@
 #include <fstream>
 #include <sstream>
 #include "glad/glad.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 
-//introduce a breakpoint if something goes wrong - ONLY WORKING IN MS VC
-#define ASSERT(x) if (!(x)) __debugbreak();
-
-//Clears and Checks for errors
-#define GLCall(x) GLClearError(); x; ASSERT(GLLogCall(#x,__FILE__, __LINE__))
-
-static void GLClearError()
+void GLClearError()
 {
 	while (glGetError() != GL_NO_ERROR);
 }
 
-static bool GLLogCall(const char* function, const char* file, int line)
+
+bool GLLogCall(const char* function, const char* file, int line)
 {
 	while (GLenum error = glGetError())
 	{
@@ -32,13 +29,61 @@ static bool GLLogCall(const char* function, const char* file, int line)
 }
 
 
-struct ShaderProgramSource
+void Renderer::InitOpenGL()
 {
-	std::string VertexSource;
-	std::string FragmentSource;
-};
+	float positions[] = {
+		-0.5f, -0.5f,
+		 0.5f, -0.5f,
+		 0.5f,  0.5f,
+		-0.5f,  0.5f
+	};
 
-static ShaderProgramSource ParseShader(const std::string& filePath)
+	unsigned int indices[] = {
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	GLCall(glGenVertexArrays(1, &vao));
+	GLCall(glBindVertexArray(vao));
+
+	_VB = new VertexBuffer(positions, 4 * 2 * sizeof(float));
+	
+	GLCall(glEnableVertexAttribArray(0));
+	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+
+	_IB = new IndexBuffer(indices, 6);
+
+	ShaderProgramSource source = ParseShader("../Source/Graphics/Basic.shader");
+
+	shader = CreateShader(source.VertexSource, source.FragmentSource);
+
+	GLCall(glUseProgram(shader));
+
+	GLCall(int location = glGetUniformLocation(shader, "u_Color"));
+	ASSERT(location != -1);
+	GLCall(glUniform4f(location, 0.4f, 0.3f, 0.8f, 1.0f));
+
+
+	GLCall(glBindVertexArray(0));
+	GLCall(glUseProgram(0));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
+void Renderer::OpenGLLoop()
+{
+	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+
+	GLCall(glUseProgram(shader));	
+	GLCall(glBindVertexArray(vao));
+
+	_IB->Bind();
+	
+	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+}
+
+
+ShaderProgramSource Renderer::ParseShader(const std::string& filePath)
 {
 	std::ifstream stream(filePath);
 	if (stream.fail())
@@ -77,11 +122,25 @@ static ShaderProgramSource ParseShader(const std::string& filePath)
 }
 
 
+unsigned int Renderer::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
+{
+	unsigned int program = glCreateProgram();
+	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+
+	GLCall(glAttachShader(program, vs));
+	GLCall(glAttachShader(program, fs));
+	GLCall(glLinkProgram(program));
+	GLCall(glValidateProgram(program));
+
+	GLCall(glDeleteShader(vs));
+	GLCall(glDeleteShader(fs));
+
+	return program;
+}
 
 
-
-
-static unsigned int CompileShader(unsigned int type, const std::string& source)
+unsigned int Renderer::CompileShader(unsigned int type, const std::string& source)
 {
 	unsigned int id = glCreateShader(type);
 	const char* src = source.c_str();
@@ -107,123 +166,13 @@ static unsigned int CompileShader(unsigned int type, const std::string& source)
 }
 
 
-static unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader)
-{
-	unsigned int program = glCreateProgram();
-	unsigned int vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
-	unsigned int fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
 
-	GLCall(glAttachShader(program, vs));
-	GLCall(glAttachShader(program, fs));
-	GLCall(glLinkProgram(program));
-	GLCall(glValidateProgram(program));
-
-	GLCall(glDeleteShader(vs));
-	GLCall(glDeleteShader(fs));
-
-	return program;
-}
-
-
-static void OPENGL()
-{
-	float positions[] = {
-		
-		0.5f, 0.5f, 
-		0.5f, -0.5f, 
-		-0.5f, -0.5f, 
-		-0.5f, 0.5f
-	};
-
-	unsigned int indices[] = {
-		0,1,2,
-		2,3,0
-	};
-
-	unsigned int _buffer;
-	GLCall(glGenBuffers(1, &_buffer));
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, _buffer));
-	GLCall(glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW));
-
-// 	GLCall(glEnableVertexAttribArray(0));
-// 	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-
-	unsigned int _ibo;
-	GLCall(glGenBuffers(1, &_ibo));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo));
-	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW));
-
-	
-
-	ShaderProgramSource source = ParseShader("../Source/Graphics/Basic.shader");
-
-	unsigned int _shader = CreateShader(source.VertexSource, source.FragmentSource);
-
-	GLCall(glUseProgram(_shader));
-
-	GLCall(int location = glGetUniformLocation(_shader, "u_Color"));
-	ASSERT(location != -1);
-	GLCall(glUniform4f(location, 0.2f, 0.3f, 0.8f, 1.0f));
-
-
-	GLCall(glUseProgram(0)); 
-	GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-
-	bool yep = true;
-
-	while (yep)
-	{
-		GLCall(glUseProgram(_shader));
-		GLCall(glBindBuffer(GL_ARRAY_BUFFER, _buffer));
-
-// 		GLCall(glEnableVertexAttribArray(0));
-// 		GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-
-		GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo));
-		GLCall(glClear(GL_COLOR_BUFFER_BIT));
-		GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-	}
-
-}
 
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
 Renderer* Renderer::m_Instance = nullptr;
-
-void Renderer::InitOpenGL()
-{
-	OPENGL();
-}
-
-bool Renderer::Load(std::string inID, std::string inFileName)
-{
-	SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
-	if (surface == nullptr)
-	{
-		SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
-		return false;
-	}
-
-	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
-
-
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
-	if (texture == nullptr)
-	{
-		SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
-		return false;
-	}
-
-	m_TextureMap[inID] = texture;
-
-	return true;
-}
-
-
-
 
 
 bool Renderer::ParseTextures(std::string source)
@@ -254,10 +203,34 @@ bool Renderer::ParseTextures(std::string source)
 
 
 
+bool Renderer::Load(std::string inID, std::string inFileName)
+{
+	SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
+	if (surface == nullptr)
+	{
+		SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
+		return false;
+	}
+
+	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
+
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
+	if (texture == nullptr)
+	{
+		SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
+		return false;
+	}
+
+	m_TextureMap[inID] = texture;
+
+	return true;
+}
+
+
+
 void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
-	
 
 	/// LEGACY SDL RENDERING  ///
 // 	SDL_Rect srcRect = { 0, 0, width, height};
@@ -272,7 +245,6 @@ void Renderer::Draw(std::string inID, int x, int y, int width, int height, float
 
 void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
 
 	/// LEGACY SDL RENDERING  ///
 // 	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
@@ -289,6 +261,7 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 
 void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
+
 	/// LEGACY SDL RENDERING  ///
 	SDL_Rect srcRect = { tileSize * frame, tileSize * row, tileSize, tileSize };
 
@@ -317,6 +290,11 @@ void Renderer::Clean()
 	}
 
 	m_TextureMap.clear();
+
+	GLCall(glDeleteProgram(shader));
+	delete(_VB);
+	delete(_IB);
+
 }
 
 

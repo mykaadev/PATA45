@@ -152,9 +152,11 @@
     <ClInclude Include="..\Source\Core\EngineTime.h" />
     <ClInclude Include="..\Source\Core\World.h" />
     <ClInclude Include="..\Source\Graphics\Animation.h" />
+    <ClInclude Include="..\Source\Graphics\IndexBuffer.h" />
     <ClInclude Include="..\Source\Graphics\Layer.h" />
     <ClInclude Include="..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\Source\Graphics\TileLayer.h" />
+    <ClInclude Include="..\Source\Graphics\VertexBuffer.h" />
     <ClInclude Include="..\Source\Objects\Character.h" />
     <ClInclude Include="..\Source\Objects\GameObject.h" />
     <ClInclude Include="..\Source\Objects\IObject.h" />
@@ -178,8 +180,10 @@
     <ClCompile Include="..\Source\Core\World.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\Graphics\Animation.cpp" />
+    <ClCompile Include="..\Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
+    <ClCompile Include="..\Source\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
   </ItemGroup>
   <ItemGroup>

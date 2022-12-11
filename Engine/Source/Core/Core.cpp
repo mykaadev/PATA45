@@ -26,8 +26,6 @@ void Core::InitEngine()
  	Engine::GetInstance()->Init();
 	World::GetInstance()->SetupWorld();
 	
-	
-
 	while (Engine::GetInstance()->IsRunning())
 	{
 		Engine::GetInstance()->Events();

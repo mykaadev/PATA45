@@ -2,6 +2,8 @@
 #include <string>
 #include "SDL.h"
 #include <map>
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
 
 enum SortingLayers
 {
@@ -13,14 +15,48 @@ enum SortingLayers
 };
 
 
+
+struct ShaderProgramSource
+{
+	std::string VertexSource;
+	std::string FragmentSource;
+};
+
+//Introduce a breakpoint if something goes wrong - ONLY WORKING IN MS VC
+#define ASSERT(x) if (!(x)) __debugbreak();
+
+//Clears and Checks for errors
+#define GLCall(x) GLClearError(); x; ASSERT(GLLogCall(#x,__FILE__, __LINE__))
+
+
+void GLClearError();
+bool GLLogCall(const char* function, const char* file, int line);
+
+
 class Renderer
 {
 public:
+	
 	static Renderer* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new Renderer(); }
+
+#pragma region OPENGL Rendering
+	
 	void InitOpenGL();
+	void OpenGLLoop();
+
+	ShaderProgramSource ParseShader(const std::string& filePath);
+	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+	unsigned int CompileShader(unsigned int type, const std::string& source);
+
+	
 	unsigned int shader;
-	unsigned int buffer;
-	unsigned int ibo;
+	unsigned int vao;
+	IndexBuffer* _IB;
+	VertexBuffer* _VB;
+	
+#pragma endregion
+
+#pragma region Legacy SDL Rendering
 
 	bool Load(std::string inID, std::string inFileName);
 	bool ParseTextures(std::string source);
@@ -32,10 +68,12 @@ public:
 	void DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 private:
-	Renderer() {};
+	Renderer() { };
 	static Renderer* m_Instance;
-	
+
 	std::map<std::string, SDL_Texture*> m_TextureMap;
+
+#pragma endregion
 
 
 };

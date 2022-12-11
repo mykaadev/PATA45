@@ -41,7 +41,7 @@ bool Engine::Init()
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
 
 	m_Window = SDL_CreateWindow("PATA45", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_OPENGL);
@@ -79,7 +79,7 @@ bool Engine::Init()
 
 	Renderer::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
 
-	//Renderer::GetInstance()->InitOpenGL();
+	Renderer::GetInstance()->InitOpenGL();
 	
 	return m_bIsRunning = true;
 }
@@ -96,25 +96,24 @@ void Engine::Events()
 void Engine::Update()
 {
 	float deltaTime = EngineTime::GetInstance()->GetDeltaTime();
-
-	///REMOVE THIS FROM HERE
-	Renderer::GetInstance()->InitOpenGL();
-
 	World::GetInstance()->Update(deltaTime);
-
 }
 
 void Engine::Renders()
 {
-	SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
-	SDL_RenderClear(m_Renderer);
+	//SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
 
-	Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
+	//SDL_RenderClear(m_Renderer);
+
+	//Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
 
 	World::GetInstance()->Render();
 
-	SDL_RenderPresent(m_Renderer);
+	//SDL_RenderPresent(m_Renderer);
+
 	SDL_GL_SwapWindow(m_Window);
+
+	Renderer::GetInstance()->OpenGLLoop();
 
 }
 
