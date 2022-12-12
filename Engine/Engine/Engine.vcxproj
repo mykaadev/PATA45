@@ -120,7 +120,7 @@
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;box2d.lib;</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>$(SolutionDir)Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libraries;$(SolutionDir)Dependencies;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
@@ -156,7 +156,9 @@
     <ClInclude Include="..\Source\Graphics\Layer.h" />
     <ClInclude Include="..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\Source\Graphics\TileLayer.h" />
+    <ClInclude Include="..\Source\Graphics\VertexArray.h" />
     <ClInclude Include="..\Source\Graphics\VertexBuffer.h" />
+    <ClInclude Include="..\Source\Graphics\VertexBufferLayout.h" />
     <ClInclude Include="..\Source\Objects\Character.h" />
     <ClInclude Include="..\Source\Objects\GameObject.h" />
     <ClInclude Include="..\Source\Objects\IObject.h" />
@@ -183,6 +185,7 @@
     <ClCompile Include="..\Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
+    <ClCompile Include="..\Source\Graphics\VertexArray.cpp" />
     <ClCompile Include="..\Source\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
   </ItemGroup>

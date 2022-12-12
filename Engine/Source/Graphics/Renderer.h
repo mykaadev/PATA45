@@ -4,6 +4,7 @@
 #include <map>
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 enum SortingLayers
 {
@@ -49,11 +50,13 @@ public:
 	unsigned int CompileShader(unsigned int type, const std::string& source);
 
 	
-	unsigned int shader;
-	unsigned int vao;
-	IndexBuffer* _IB;
-	VertexBuffer* _VB;
+	unsigned int m_Shader;
+	unsigned int m_VAO;
+	VertexArray* m_VA;
+	IndexBuffer* m_IB;
+	VertexBuffer* m_VB;
 	
+	inline VertexBuffer* GetVB() { return m_VB; }
 #pragma endregion
 
 #pragma region Legacy SDL Rendering

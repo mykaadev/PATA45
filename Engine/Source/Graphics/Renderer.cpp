@@ -43,26 +43,24 @@ void Renderer::InitOpenGL()
 		2, 3, 0
 	};
 
-	GLCall(glGenVertexArrays(1, &vao));
-	GLCall(glBindVertexArray(vao));
+	GLCall(glGenVertexArrays(1, &m_VAO));
+	GLCall(glBindVertexArray(m_VAO));
 
-	_VB = new VertexBuffer(positions, 4 * 2 * sizeof(float));
-	
-	GLCall(glEnableVertexAttribArray(0));
-	GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
-
-	_IB = new IndexBuffer(indices, 6);
+	m_VB = new VertexBuffer(positions, 4 * 2 * sizeof(float));
+	VertexBufferLayout layout;
+	layout.Push<float>(2);
+	m_VA->AddBuffer(*m_VB, layout);
+	m_IB = new IndexBuffer(indices, 6);
 
 	ShaderProgramSource source = ParseShader("../Source/Graphics/Basic.shader");
 
-	shader = CreateShader(source.VertexSource, source.FragmentSource);
+	m_Shader = CreateShader(source.VertexSource, source.FragmentSource);
 
-	GLCall(glUseProgram(shader));
+	GLCall(glUseProgram(m_Shader));
 
-	GLCall(int location = glGetUniformLocation(shader, "u_Color"));
+	GLCall(int location = glGetUniformLocation(m_Shader, "u_Color"));
 	ASSERT(location != -1);
 	GLCall(glUniform4f(location, 0.4f, 0.3f, 0.8f, 1.0f));
-
 
 	GLCall(glBindVertexArray(0));
 	GLCall(glUseProgram(0));
@@ -74,10 +72,10 @@ void Renderer::OpenGLLoop()
 {
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-	GLCall(glUseProgram(shader));	
-	GLCall(glBindVertexArray(vao));
-
-	_IB->Bind();
+	GLCall(glUseProgram(m_Shader));	
+	GLCall(glBindVertexArray(m_VAO));
+	m_VA->Bind();
+	m_IB->Bind();
 	
 	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 }
@@ -291,9 +289,9 @@ void Renderer::Clean()
 
 	m_TextureMap.clear();
 
-	GLCall(glDeleteProgram(shader));
-	delete(_VB);
-	delete(_IB);
+	GLCall(glDeleteProgram(m_Shader));
+	delete(m_VB);
+	delete(m_IB);
 
 }
 
