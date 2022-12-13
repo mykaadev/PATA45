@@ -5,6 +5,7 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "VertexArray.h"
+#include "Shader.h"
 
 enum SortingLayers
 {
@@ -15,13 +16,6 @@ enum SortingLayers
 	UI
 };
 
-
-
-struct ShaderProgramSource
-{
-	std::string VertexSource;
-	std::string FragmentSource;
-};
 
 //Introduce a breakpoint if something goes wrong - ONLY WORKING IN MS VC
 #define ASSERT(x) if (!(x)) __debugbreak();
@@ -45,12 +39,7 @@ public:
 	void InitOpenGL();
 	void OpenGLLoop();
 
-	ShaderProgramSource ParseShader(const std::string& filePath);
-	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
-	unsigned int CompileShader(unsigned int type, const std::string& source);
-
-	
-	unsigned int m_Shader;
+	Shader* m_Shader;
 	unsigned int m_VAO;
 	VertexArray* m_VA;
 	IndexBuffer* m_IB;
