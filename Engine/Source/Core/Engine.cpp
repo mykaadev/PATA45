@@ -100,20 +100,17 @@ void Engine::Update()
 }
 
 void Engine::Renders()
-{
-	//SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
-
-	//SDL_RenderClear(m_Renderer);
-
-	//Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
-
+{ 
+	///LEGACY SDL RENDERING
+	SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);	
+	SDL_RenderClear(m_Renderer);
+	Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
 	World::GetInstance()->Render();
+	SDL_RenderPresent(m_Renderer);
 
-	//SDL_RenderPresent(m_Renderer);
-
-	SDL_GL_SwapWindow(m_Window);
-
-	Renderer::GetInstance()->OpenGLLoop();
+	///OPEN GL RENDERING
+// 	Renderer::GetInstance()->OpenGLLoop();
+// 	SDL_GL_SwapWindow(m_Window);
 
 }
 

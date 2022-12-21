@@ -10,6 +10,8 @@
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "Shader.h"
+#include "glm.hpp"
+#include "gtc/matrix_transform.hpp"
 
 
 void GLClearError()
@@ -33,10 +35,10 @@ bool GLLogCall(const char* function, const char* file, int line)
 void Renderer::InitOpenGL()
 {
 	float positions[] = {
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
+		100.0f, 100.0f, 0.0f, 0.0f,
+		200.0f, 100.0f, 1.0f, 0.0f,
+		200.0f,  200.0f, 1.0f, 1.0f,
+		100.0f,  200.0f, 0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
@@ -44,12 +46,16 @@ void Renderer::InitOpenGL()
 		2, 3, 0
 	};
 
+	GLCall(glEnable(GL_BLEND));
+	GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
 	GLCall(glGenVertexArrays(1, &m_VAO));
 	GLCall(glBindVertexArray(m_VAO));
 
-	m_VB = new VertexBuffer(positions, 4 * 2 * sizeof(float));
+	m_VB = new VertexBuffer(positions, 4 * 4 * sizeof(float));
 
 	VertexBufferLayout layout;
+	layout.Push<float>(2);
 	layout.Push<float>(2);
 
 	m_VA = new VertexArray();
@@ -57,9 +63,21 @@ void Renderer::InitOpenGL()
 
 	m_IB = new IndexBuffer(indices, 6);
 
+
+	glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 640.0f, -1.0f, 1.0f);
+//	glm::vec4 vp(100.0f, 100.0f, 0.0f, 1.0f);
+	glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+	glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+	glm::mat4 mvp = proj * view * model;
+
 	m_Shader = new Shader("../Source/Graphics/Basic.shader");
 	m_Shader->Bind();
-	m_Shader->SetUniform4f("u_Color", 0.4f, 0.3f, 0.8f, 1.0f);
+	m_Shader->SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+	m_Shader->SetUniformMat4f("u_MVP", mvp);
+
+	Texture texture("../Assets/Engine/wm.png");
+	texture.Bind();
+	m_Shader->SetUniform1i("u_Texture", 0);
 
 	m_VA->Unbind();
 	m_VB->Unbind();
@@ -69,14 +87,25 @@ void Renderer::InitOpenGL()
 
 void Renderer::OpenGLLoop()
 {
-	GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
+	GLClear();
 	m_Shader->Bind();	
-	//GLCall(glBindVertexArray(m_VAO));
+	GLDraw(m_VA, m_IB, m_Shader);
+}
+
+
+void Renderer::GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader)
+{
+	m_Shader->Bind();
 	m_VA->Bind();
 	m_IB->Bind();
-	
-	GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
+	GLCall(glDrawElements(GL_TRIANGLES, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
+}
+
+
+void Renderer::GLClear()
+{
+	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+
 }
 
 
@@ -125,7 +154,6 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 
 	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
 
-
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
 	if (texture == nullptr)
 	{
@@ -142,15 +170,14 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 
 void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
+	
 	/// LEGACY SDL RENDERING  ///
-// 	SDL_Rect srcRect = { 0, 0, width, height};
-// 
-// 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
-// 
-// 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
-//	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+	SDL_Rect srcRect = { 0, 0, width, height};
 
+	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
+
+	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
+	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 }
 
 
@@ -158,13 +185,13 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 {
 
 	/// LEGACY SDL RENDERING  ///
-// 	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
-// 
-// 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
-// 
-// 	SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
-// 
-// 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+	SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
+
+	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+
+	SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
+
+	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 
 }
 

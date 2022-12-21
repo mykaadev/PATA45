@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Source\Components;$(SolutionDir)Source\Core;$(SolutionDir)Source\Graphics;$(SolutionDir)Source\Objects;$(SolutionDir)Source\Physics;$(SolutionDir)Dependencies\SDL2;$(SolutionDir)Dependencies\BOX2D;$(SolutionDir)Dependencies\TINYXML;$(SolutionDir)DEPENDENCIES\GLAD;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Source\Components;$(SolutionDir)Source\Core;$(SolutionDir)Source\Graphics;$(SolutionDir)Source\Objects;$(SolutionDir)Source\Physics;$(SolutionDir)Dependencies\SDL2;$(SolutionDir)Dependencies\BOX2D;$(SolutionDir)Dependencies\TINYXML;$(SolutionDir)DEPENDENCIES\GLM;$(SolutionDir)DEPENDENCIES\GLAD;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

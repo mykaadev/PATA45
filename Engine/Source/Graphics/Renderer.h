@@ -6,6 +6,7 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 #include "Shader.h"
+#include "Texture.h"
 
 enum SortingLayers
 {
@@ -46,6 +47,9 @@ public:
 	VertexBuffer* m_VB;
 	
 	inline VertexBuffer* GetVB() { return m_VB; }
+	void GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader);
+	void GLClear();
+
 #pragma endregion
 
 #pragma region Legacy SDL Rendering

@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SDL2;$(SolutionDir)Dependencies\BOX2D;$(SolutionDir)Dependencies\TINYXML;$(SolutionDir)Dependencies\GLAD;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\SDL2;$(SolutionDir)Dependencies\BOX2D;$(SolutionDir)Dependencies\GLM;$(SolutionDir)Dependencies\TINYXML;$(SolutionDir)Dependencies\GLAD;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -156,6 +156,8 @@
     <ClInclude Include="..\Source\Graphics\Layer.h" />
     <ClInclude Include="..\Source\Graphics\Renderer.h" />
     <ClInclude Include="..\Source\Graphics\Shader.h" />
+    <ClInclude Include="..\Source\Graphics\stb_image.h" />
+    <ClInclude Include="..\Source\Graphics\Texture.h" />
     <ClInclude Include="..\Source\Graphics\TileLayer.h" />
     <ClInclude Include="..\Source\Graphics\VertexArray.h" />
     <ClInclude Include="..\Source\Graphics\VertexBuffer.h" />
@@ -186,6 +188,8 @@
     <ClCompile Include="..\Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="..\Source\Graphics\Renderer.cpp" />
     <ClCompile Include="..\Source\Graphics\Shader.cpp" />
+    <ClCompile Include="..\Source\Graphics\stb_image.cpp" />
+    <ClCompile Include="..\Source\Graphics\Texture.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
     <ClCompile Include="..\Source\Graphics\VertexArray.cpp" />
     <ClCompile Include="..\Source\Graphics\VertexBuffer.cpp" />
