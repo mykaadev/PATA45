@@ -2,6 +2,8 @@
 <textures>
 	
 	<texture id="EngineLogo" source="../Assets/Engine/EngineLogo.bmp"/>
+	<texture id="ScreenTest" source="../Assets/Engine/TEST.png"/>
+	<texture id="Mykaa" source="../Assets/Engine/wm.png"/>
 	
 	<texture id="ShipIdle" source="../Assets/Game/Textures/ShipIdle.bmp"/>
     <texture id="ShipLeft" source="../Assets/Game/Textures/ShipTurningLeft.bmp"/>
@@ -28,6 +30,7 @@
 	<texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
     <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>
     <texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/> 
+	
   
 	
 	

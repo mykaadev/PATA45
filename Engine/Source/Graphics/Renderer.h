@@ -29,6 +29,13 @@ void GLClearError();
 bool GLLogCall(const char* function, const char* file, int line);
 
 
+
+struct VertexData {
+	std::vector<float> positions;
+	std::vector<unsigned int> indices;
+};
+
+
 class Renderer
 {
 public:
@@ -36,20 +43,28 @@ public:
 	static Renderer* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new Renderer(); }
 
 #pragma region OPENGL Rendering
+
+	void GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader);
+	void GLClear();
 	
 	void InitOpenGL();
+	void AddVertexData(const std::string& id, const std::vector<float>& positions, const std::vector<unsigned int>& indices);
 	void OpenGLLoop();
+
+	//GLuint VAO, VBO, EBO, shaderProgram;
 
 	Shader* m_Shader;
 	unsigned int m_VAO;
 	VertexArray* m_VA;
 	IndexBuffer* m_IB;
 	VertexBuffer* m_VB;
-	
 	inline VertexBuffer* GetVB() { return m_VB; }
-	void GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader);
-	void GLClear();
 
+	std::map<SDL_Texture*, GLuint> m_GLTextureMap;
+	std::map<std::string, std::string> m_TextureMapPath;
+	std::map<std::string, VertexData> m_VertexData;
+
+	
 #pragma endregion
 
 #pragma region Legacy SDL Rendering
@@ -62,15 +77,16 @@ public:
 	void Draw(std::string inID, int x, int y, int width, int height, float xScale = 1.0f, float yScale = 1.0f, float lagRatio = 0.5f, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip = SDL_FLIP_NONE);
-
 private:
 	Renderer() { };
 	static Renderer* m_Instance;
 
 	std::map<std::string, SDL_Texture*> m_TextureMap;
 
+
 #pragma endregion
 
 
 };
+
 

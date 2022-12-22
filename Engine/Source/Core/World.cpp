@@ -183,5 +183,4 @@ void World::BeginContact(b2Contact* contact)
 	}
 }
 
-
 #pragma endregion
