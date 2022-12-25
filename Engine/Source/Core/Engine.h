@@ -37,6 +37,7 @@ public:
 
 	inline bool IsRunning() { return m_bIsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }
+	inline bool UseLegacyRenderer() { return useLegacyRenderer;}
 
 
 private:
@@ -44,7 +45,7 @@ private:
 	Engine();;
 	~Engine();
 
-
+	bool useLegacyRenderer;
 	bool m_bIsRunning;
 	static Engine* m_Instance;
 

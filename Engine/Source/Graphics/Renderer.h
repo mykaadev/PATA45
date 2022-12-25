@@ -81,6 +81,7 @@ private:
 	Renderer() { };
 	static Renderer* m_Instance;
 
+
 	std::map<std::string, SDL_Texture*> m_TextureMap;
 
 

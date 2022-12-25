@@ -22,6 +22,9 @@ Engine::Engine()
 	m_Renderer = nullptr;
 
 	m_bIsRunning = false;
+
+	useLegacyRenderer = true;
+
 }
 
 Engine::~Engine()
@@ -102,9 +105,8 @@ void Engine::Update()
 
 void Engine::Renders()
 { 
-	bool useLegacyRendering = false;
 
-	if (useLegacyRendering)
+	if (useLegacyRenderer)
 	{
 		///LEGACY SDL RENDERING
 		SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
@@ -119,7 +121,7 @@ void Engine::Renders()
 		Renderer::GetInstance()->Draw("Mykaa", 960/2, 640/2, 100, 100, 1, 1, 1.0f);
 		//Renderer::GetInstance()->Draw("ScreenTest", 960 / 2, 640 / 2, 960, 640, 1, 1, 0.5f);
 		///UNCOMMENT THIS TO CHECK THE ANIMATIONS
-		//World::GetInstance()->Render();
+		World::GetInstance()->Render();
 		Renderer::GetInstance()->OpenGLLoop();
 
 	 	SDL_GL_SwapWindow(m_Window);
