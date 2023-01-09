@@ -118,10 +118,9 @@ void Engine::Renders()
 	else
 	{
 		///OPEN GL RENDERING
+		Renderer::GetInstance()->Draw("ScreenTest", 960 / 2, 640 / 2, 960, 640, 1, 1, 0.5f);
 		Renderer::GetInstance()->Draw("Mykaa", 960/2, 640/2, 100, 100, 1, 1, 1.0f);
-		//Renderer::GetInstance()->Draw("ScreenTest", 960 / 2, 640 / 2, 960, 640, 1, 1, 0.5f);
-		///UNCOMMENT THIS TO CHECK THE ANIMATIONS
-		World::GetInstance()->Render();
+		//World::GetInstance()->Render();    ///UNCOMMENT THIS TO CHECK THE ANIMATIONS
 		Renderer::GetInstance()->OpenGLLoop();
 
 	 	SDL_GL_SwapWindow(m_Window);
