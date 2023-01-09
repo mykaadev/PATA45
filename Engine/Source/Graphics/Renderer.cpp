@@ -335,18 +335,27 @@ void Renderer::Drop(std::string inID)
 
 void Renderer::Clean()
 {
-	std::map<std::string, SDL_Texture*>::iterator i;
 	
-// 	for (i = m_TextureMap.begin(); i != m_TextureMap.end(); ++i)
-// 	{
-// 		SDL_DestroyTexture(i->second);
-// 	}
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		std::map<std::string, SDL_Texture*>::iterator i;
 
-	m_TextureMap.clear();
+		 for (i = m_TextureMap.begin(); i != m_TextureMap.end(); ++i)
+ 		 {
+ 			SDL_DestroyTexture(i->second);
+ 		 }
 
-	//GLCall(glDeleteProgram(m_Shader));
-	//delete(m_VB);
-	//delete(m_IB);
+		m_TextureMap.clear();
+	}
+	else
+	{
+			//GLCall(glDeleteProgram(m_Shader));
+			delete(m_VB);
+			delete(m_IB);
+	}
+
+
+	
 
 }
 
