@@ -1,35 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <textures>
 	
+	<!-- Test -->
 	<texture id="EngineLogo" source="../Assets/Engine/EngineLogo.bmp"/>
 	<texture id="ScreenTest" source="../Assets/Engine/TEST.png"/>
 	<texture id="Mykaa" source="../Assets/Engine/wm.png"/>
 	
+	<!-- Ship -->	
 	<texture id="ShipIdle" source="../Assets/Game/Textures/ShipIdle.bmp"/>
     <texture id="ShipLeft" source="../Assets/Game/Textures/ShipTurningLeft.bmp"/>
     <texture id="ShipRight" source="../Assets/Game/Textures/ShipTurningRight.bmp"/>
 	
-	
+	<!-- Bullets -->
     <texture id="BulletOne" source="../Assets/Game/Textures/missileOne.bmp"/>
     <texture id="BulletTwo" source="../Assets/Game/Textures/missileTwo.bmp"/>
     <texture id="BulletThree" source="../Assets/Game/Textures/missileThree.bmp"/>
 	<texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/>
 
-
+	<!-- Explosiona -->
 	<texture id="Explosion" source="../Assets/Game/Textures/Explosion16.bmp"/>
-	 <texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
+	<texture id="ExplosionMob" source="../Assets/Game/Textures/Explosion64.bmp"/>
 	
+	<!-- Background -->
     <texture id="Galaxy" source="../Assets/Game/Textures/galaxy.bmp"/>
 	<texture id="BackgroundProps1" source="../Assets/Game/Textures/BackgroundProps1.bmp"/>
 	<texture id="BackgroundProps2" source="../Assets/Game/Textures/BackgroundProps2.bmp"/>
 	<texture id="BackgroundProps3" source="../Assets/Game/Textures/BackgroundProps3.bmp"/>
 
+	<!-- Companion -->
 	<texture id="Companion" source="../Assets/Game/Textures/Companion.bmp"/>
 
-
+	<!-- Enemies -->
 	<texture id="Loner" source="../Assets/Game/Textures/Loner.bmp"/>
     <texture id="Rusher" source="../Assets/Game/Textures/Rusher.bmp"/>
     <texture id="EnemyBullet" source="../Assets/Game/Textures/EnemyBullet.bmp"/> 
+
+
+	<!-- Stone Asteroid -->
+	<texture id="Stone" source="../Assets/Game/Textures/Stone.bmp"/> 
+	<texture id="StoneMedium" source="../Assets/Game/Textures/StoneMedium.bmp"/> 
+	<texture id="StoneSmall" source="../Assets/Game/Textures/StoneSmall.bmp"/> 
+	
+	<!-- Metal Asteroid -->
+	<texture id="Metal" source="../Assets/Game/Textures/Metal.bmp"/> 
+	<texture id="MetalMedium" source="../Assets/Game/Textures/MetalMedium.bmp"/>
+	<texture id="MetalSmall" source="../Assets/Game/Textures/MetalSmall.bmp"/>
+
+
+
 		
     
 </textures>	

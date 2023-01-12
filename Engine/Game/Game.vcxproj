@@ -130,6 +130,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseAsteroid.cpp" />
+    <ClCompile Include="AsteroidSpawner.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BackgroundProps.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
@@ -139,11 +141,15 @@
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="LonerEnemy.cpp" />
+    <ClCompile Include="MetalAsteroid.cpp" />
     <ClCompile Include="ObjectInitializer.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RusherEnemy.cpp" />
+    <ClCompile Include="StoneAsteroid.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseAsteroid.h" />
+    <ClInclude Include="AsteroidSpawner.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="BackgroundProps.h" />
     <ClInclude Include="BaseEnemy.h" />
@@ -153,9 +159,11 @@
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="LonerEnemy.h" />
+    <ClInclude Include="MetalAsteroid.h" />
     <ClInclude Include="ObjectInitializer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RusherEnemy.h" />
+    <ClInclude Include="StoneAsteroid.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
