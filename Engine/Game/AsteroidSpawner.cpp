@@ -14,10 +14,17 @@ Uint32 SpawnMetalAsteroids(Uint32 interval, void* data) {
 	{
 		MetalAsteroid* asteroid = nullptr;
 
+		asteroid->SpawnAsteroid();
+		asteroid = new MetalAsteroid(new Properties("Metal", (rand() % (840 - 160 + 1) + 160), -100, 64, 64, SDL_FLIP_NONE),);
+		World::GetInstance()->LoadObjects(asteroid);
+
 		//asteroid = new MetalAsteroid(new Properties("Asteroid"))
 	}
+	return interval;
 }
 
+
+/*
 Uint32 SpawnStoneAsteroids(Uint32 interval, void* data) {
 
 	if (!World::GetInstance()->GetWorld()->IsLocked())
@@ -27,11 +34,8 @@ Uint32 SpawnStoneAsteroids(Uint32 interval, void* data) {
 		//stoneAsteroid = new MetalAsteroid(new Properties("Asteroid"))
 	}
 }
+*/
 
-AsteroidSpawner::AsteroidSpawner()
-{
-
-}
 
 AsteroidSpawner::~AsteroidSpawner()
 {
@@ -40,7 +44,6 @@ AsteroidSpawner::~AsteroidSpawner()
 
 void AsteroidSpawner::Init()
 {
-	EngineTime::GetInstance()->StartTimer(2500, SpawnMetalAsteroids(), (void*)"");
-	EngineTime::GetInstance()->StartTimer(3000, SpawnStoneAsteroids(), (void*)"");
-
+	EngineTime::GetInstance()->StartTimer(2500, SpawnMetalAsteroids, (void*)"");
+	/*EngineTime::GetInstance()->StartTimer(3000, SpawnStoneAsteroids(), (void*)"");*/
 }

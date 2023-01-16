@@ -6,7 +6,7 @@
 
 BaseAsteroid::BaseAsteroid(Properties* props) : Character(props)
 {
-	m_Animation = new Animation();
+		m_Animation = new Animation();
 }
 
 void BaseAsteroid::Init()
@@ -32,27 +32,20 @@ void BaseAsteroid::Clean()
 
 void BaseAsteroid::CheckColision()
 {
-	// todo in specific asteroid
+	// todo in specific asteroid type
 }
 
 void BaseAsteroid::TakeDamage(int inDamage)
 {
-/*
-// 	if (size_ != Small)
-// 	{
-// 		health_ -= inDamage;
-// 
-// 		if (health_ <= 0)
-// 		{
-// 			Split();
-// 		}
-// 	}
-*/
+	// todo in the specific asteroid type
 }
 
 void BaseAsteroid::GiveDamage()
 {
+	// todo in the specific asteroid type
 }
+
+void BaseAsteroid::SpawnAsteroid(){}
 
 void BaseAsteroid::SetupBody()
 {
@@ -83,15 +76,17 @@ void BaseAsteroid::SetupBody()
 	}
 }
 
-void BaseAsteroid::SetAnimationState(BaseAsteroid inCurrentAnimationState, float inAxisValue)
+void BaseAsteroid::SetAnimationState(AsteroidSpinning inCurrentAnimationState, float inAxisValue)
 {
+	//Set the animation for them 
 }
 
 void BaseAsteroid::SetOriginPoint()
 {
+	// set the origin point 
 }
 
 void BaseAsteroid::Split()
 {
-	// to eliminate the sprite and sow other in the same position 
+	// to eliminate the sprite and show other in the same position 
 }

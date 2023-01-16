@@ -57,10 +57,10 @@
     <ClCompile Include="BaseAsteroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StoneAsteroid.cpp">
+    <ClCompile Include="MetalAsteroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MetalAsteroid.cpp">
+    <ClCompile Include="StoneAsteroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -107,10 +107,10 @@
     <ClInclude Include="BaseAsteroid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StoneAsteroid.h">
+    <ClInclude Include="MetalAsteroid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MetalAsteroid.h">
+    <ClInclude Include="StoneAsteroid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

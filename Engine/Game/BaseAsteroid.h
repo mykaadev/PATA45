@@ -5,6 +5,11 @@
 
 
 
+enum AsteroidSpinning
+{
+	rotating
+};
+
 class BaseAsteroid: public Character
 {
 
@@ -12,6 +17,7 @@ public:
 
 	BaseAsteroid(Properties* props);
 
+	//
 	enum Size {Big,Medium,Small};
 
 	virtual void Init();
@@ -23,19 +29,22 @@ public:
 	virtual void GiveDamage();
 
 	
-
+	/*Classic stuff */
 	void SetupBody();
-	void SetAnimationState(BaseAsteroid inCurrentAnimationState, float inAxisValue);
+	void SetAnimationState(AsteroidSpinning inCurrentAnimationState, float inAxisValue);
 	void SetOriginPoint();
+	
+	/*For the stone one*/
 	void Split();
+	/*To spawn the astroid*/
+	virtual void SpawnAsteroid();
 
 	inline b2Body* GetBody() { return m_Body; }
 	inline bool GetIsDead() { return m_IsDead; }
 
 
 	bool m_IsDead;
-	Size GetSize() { return size_; }
-	int health_ = 100;
+	int m_health = 100;
 
 protected:
 
