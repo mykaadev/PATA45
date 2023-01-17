@@ -140,7 +140,7 @@ void MetalAsteroid::SpawnAsteroid()
 
 		}
 
-		std::cout << "Chosen Asteroid Value: " << r << std::endl;
+		std::cout << "Chosen Metal Asteroid Value: " << r << std::endl;
 	}
 }
 

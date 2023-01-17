@@ -5,7 +5,7 @@
 class StoneAsteroid : public BaseAsteroid {
 
 public:
-	StoneAsteroid(Properties* props, Size size);
+	StoneAsteroid(Properties* props);
 	void Init() override;
 	void Draw() override;
 	void Update(float deltaTime) override;

@@ -20,33 +20,21 @@ Uint32 StoneSpawn(Uint32 interval, void* data) {
 }
 
 
-StoneAsteroid::StoneAsteroid(Properties* props, Size size) : BaseAsteroid(props)
+StoneAsteroid::StoneAsteroid(Properties* props) : BaseAsteroid(props)
 {
 
 	m_GoingRight = true;
 	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
-
-	switch (size)
-	{
-	case BaseAsteroid::Big:
-		m_Animation->SetProperties("Stone", 1, 0, 25, 50, true);
-
-		break;
-	case BaseAsteroid::Medium:
-		m_Animation->SetProperties("StonelMedium", 1, 0, 24, 50, true);
-
-		break;
-	case BaseAsteroid::Small:
-		m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
-		break;
-	default:
-		break;
-	}
+	r = 0;
+	m_CurrentHealth = m_MaxHealh;
 }
 
 void StoneAsteroid::Init()
 {
 	__super::Init();
+	SetupBody();
+	m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+
 }
 
 void StoneAsteroid::Draw()
@@ -57,7 +45,6 @@ void StoneAsteroid::Draw()
 
 void StoneAsteroid::Update(float deltaTime)
 {
-
 	__super::Update(deltaTime);
 
 	SetOriginPoint();
@@ -69,39 +56,58 @@ void StoneAsteroid::Update(float deltaTime)
 
 void StoneAsteroid::TakeDamage(int damage)
 {
+	m_CurrentHealth -= damage;
 	if (size_ != Small)
 	{
+		//TODO	finishing this part and make the split , check collision and all that
+		// if u got time in the morning see how to make the player life and all that 
 	}
 }
 
+/* Goes to the player and gives damage  */
 void StoneAsteroid::GiveDamage()
 {
 }
 
+/* follows the same logic of the metal Asteroid */
 void StoneAsteroid::SpawnAsteroid()
 {
-	int r = rand() % 3;
-	switch (r) {
-	case 0:
-		size_ = Big;
-		m_Animation->SetProperties("Stone", 1, 0, 25, 50, true);
-		break;
-	case 1:
-		size_ = Medium;
-		m_Animation->SetProperties("StonelMedium", 1, 0, 24, 50, true);
-		break;
-	case 2:
-		size_ = Small;
-		m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
-		break;
 
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		int r = rand() % 3;
+
+		switch (r) {
+		case 0:
+			size_ = Big;
+			m_Animation->SetProperties("Stone", 1, 0, 25, 200, true);
+			// it takes two bullets to kill this stone
+			m_MaxHealh = 2;
+			break;
+		case 1:
+			size_ = Medium;
+			m_Animation->SetProperties("StoneMedium", 1, 0, 24, 200, true);
+			// it takes one bullet to kill this stone
+			m_MaxHealh = 1;
+			break;
+		case 2:
+			size_ = Small;
+			m_Animation->SetProperties("StoneSmall", 1, 0, 16, 200, true);
+			// it takes 1/2 bullet to kill this stone because is the smallest 
+			m_MaxHealh = 0.5;
+			break;
+
+		}
+
+		std::cout << "Chosen Stone Asteroid Value: " << r << std::endl;
 	}
 
 }
 
 void StoneAsteroid::Split()
 {
-
+	// it only splits if the stone is big or medium otherwise this they dont brake
+	// for that you have to check what stone is spawning and compare the values 
 }
 
 
