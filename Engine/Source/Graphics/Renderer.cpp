@@ -117,9 +117,7 @@ void Renderer::GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader)
 void Renderer::GLClear()
 {
 	GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
 }
-
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -159,25 +157,25 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 	if (Engine::GetInstance()->UseLegacyRenderer())
 	{
 		/// LEGACY SDL LOADING
-		 	SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
-		 	if (surface == nullptr)
-		 	{
-		 		SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
-		 		return false;
-		 	}
-		 
-		 	SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
-		 
-		 	SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
-		 	if (texture == nullptr)
-		 	{
-		 		SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
-		 		return false;
-		 	}
-		 
-		 	m_TextureMap[inID] = texture;
-		 	m_TextureMapPath[inID] = inFileName.c_str();
-		 	return true;
+		SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
+		if (surface == nullptr)
+		{
+			SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
+			return false;
+		}
+
+		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
+
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
+		if (texture == nullptr)
+		{
+			SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
+			return false;
+		}
+
+		m_TextureMap[inID] = texture;
+		m_TextureMapPath[inID] = inFileName.c_str();
+		return true;
 	}
 	else
 	{
@@ -280,7 +278,6 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
 
 		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
-
 	}
 	else
 	{
@@ -307,22 +304,20 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		m_IB->Unbind();
 		m_Shader->Unbind();
 	}
-
 }
 
 
 
 void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
 	/// LEGACY SDL RENDERING  ///
 	SDL_Rect srcRect = { tileSize * frame, tileSize * row, tileSize, tileSize };
 
 	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
 
 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, tileSize, tileSize };
-	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);
-	
+
+	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);	
 }
 
 
@@ -335,7 +330,6 @@ void Renderer::Drop(std::string inID)
 
 void Renderer::Clean()
 {
-	
 	if (Engine::GetInstance()->UseLegacyRenderer())
 	{
 		std::map<std::string, SDL_Texture*>::iterator i;
@@ -353,10 +347,6 @@ void Renderer::Clean()
 			delete(m_VB);
 			delete(m_IB);
 	}
-
-
-	
-
 }
 
 

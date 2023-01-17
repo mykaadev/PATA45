@@ -4,19 +4,19 @@
 #include <iostream>
 
 Uint32 StoneSpawn(Uint32 interval, void* data) {
-/*
-	if (!World::GetInstance()->GetWorld()->IsLocked()) {
 
-		EnemyBullet* bullet = nullptr;
+// 	if (!World::GetInstance()->GetWorld()->IsLocked()) {
+// 
+// 		EnemyBullet* bullet = nullptr;
+// 
+// 		bullet = new EnemyBullet(new Properties("EnemyBullet",
+// 			dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x,
+// 			dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
+// 
+// 		World::GetInstance()->LoadObjects(bullet);
+// 	}
 
-		bullet = new EnemyBullet(new Properties("EnemyBullet",
-			dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().x,
-			dynamic_cast<GameObject*>((LonerEnemy*)data)->m_Body->GetPosition().y + 50, 16, 16, SDL_FLIP_NONE));
-
-		World::GetInstance()->LoadObjects(bullet);
-	}
-
-	return interval;*/
+	return interval;
 }
 
 
