@@ -8,6 +8,7 @@ MetalAsteroid::MetalAsteroid(Properties* props, Size size) : BaseAsteroid(props)
 	b_IsIndestructible = true;
 	r = 0;
 	m_GoingRight = true;
+	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 
 	switch (size)
 	{
