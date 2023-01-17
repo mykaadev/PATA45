@@ -11,7 +11,7 @@ public:
 	void Update(float deltaTime) override;
 	void Clean() override;
 	void CheckCollision(GameObject* otherGameObject) override;
-
+	void TakeDamage(int damage) override;
 
 	/* Base Asteroid Part */
 	void GiveDamage();
@@ -21,7 +21,8 @@ public:
 	SDL_TimerID myTimerID;
 
 	void SetOriginPoint();
-	bool b_IsIndestructible;
+	int m_CurrentHealth;
+	int m_MaxHealh;
 	bool m_GoingRight;
 	int r;
 
