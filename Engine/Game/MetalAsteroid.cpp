@@ -37,7 +37,7 @@ void MetalAsteroid::Init()
 
 	SetupBody();
 
-	m_Animation->SetProperties("MetalSmall", 1, 0, 16, 50, true);
+	m_Animation->SetProperties("MetalSmall", 1, 0, 16, 100, true);
 	SpawnAsteroid();
 }
 
@@ -127,20 +127,20 @@ void MetalAsteroid::SpawnAsteroid()
 		switch (r) {
 		case 0:
 			size_ = Big;
-			m_Animation->SetProperties("Metal", 1, 0, 25, 100, true);
+			m_Animation->SetProperties("Metal", 1, 0, 25, 200, true);
 			break;
 		case 1:
 			size_ = Medium;
-			m_Animation->SetProperties("MetalMedium", 1, 0, 24, 100, true);
+			m_Animation->SetProperties("MetalMedium", 1, 0, 24, 200, true);
 			break;
 		case 2:
 			size_ = Small;
-			m_Animation->SetProperties("MetalSmall", 1, 0, 16, 100, true);
+			m_Animation->SetProperties("MetalSmall", 1, 0, 16, 200, true);
 			break;
 
 		}
 
-		std::cout << "Choosen Asteroid Value: " << r << std::endl;
+		std::cout << "Chosen Asteroid Value: " << r << std::endl;
 	}
 }
 
