@@ -15,9 +15,14 @@ void RusherEnemy::Init()
 {
 	__super::Init();
 
-	//Handle Animations
+	SetupBody();
+
 	m_Animation->SetProperties("Rusher", 1, 0, 24, 50, true);
-	m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
+	
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
+	}
 
 }
 
@@ -76,13 +81,13 @@ void RusherEnemy::TakeDamage(int inDamage)
 
 void RusherEnemy::SetOriginPoint()
 {
-	if (m_Body == nullptr)
+	if (m_Body == nullptr) return;
+	
+	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
-		return;
-	}
-
-	m_Origin->X = m_Body->GetPosition().x;
-	m_Origin->Y = m_Body->GetPosition().y;
+		m_Origin->X = m_Body->GetPosition().x;
+		m_Origin->Y = m_Body->GetPosition().y;
+	}	
 }
 
 void RusherEnemy::Clean()

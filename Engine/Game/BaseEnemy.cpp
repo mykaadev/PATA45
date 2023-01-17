@@ -47,6 +47,7 @@ void BaseEnemy::TakeDamage(int inDamage)
 
 void BaseEnemy::SetupBody()
 {
+	if (m_Body != nullptr) return;
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		b2BodyDef _BodyDef;

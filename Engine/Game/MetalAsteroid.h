@@ -7,7 +7,7 @@
 class MetalAsteroid : public BaseAsteroid
 {
 public:
-	MetalAsteroid(Properties* props, Size size);
+	MetalAsteroid(Properties* props);
 	void Init() override;
 	void Draw() override;
 	void Update(float deltaTime) override;

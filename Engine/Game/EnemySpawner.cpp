@@ -14,10 +14,10 @@ Uint32 SpawnLoner(Uint32 interval, void* data)
 {
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
-		LonerEnemy* loner1 = nullptr;
+		LonerEnemy* loner = nullptr;
 
-		loner1 = new LonerEnemy(new Properties("Loner1", (rand() % (840 - 160 + 1) + 160) , -100, 64, 64, SDL_FLIP_NONE));
-		World::GetInstance()->LoadObjects(loner1);
+		loner = new LonerEnemy(new Properties("Loner1", (rand() % (840 - 160 + 1) + 160) , -100, 64, 64, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(loner);
 	}
 
 	return interval;
@@ -29,10 +29,10 @@ Uint32 SpawnRusher(Uint32 interval, void* data)
 
 	if (!World::GetInstance()->GetWorld()->IsLocked()) 
 	{ 
-		RusherEnemy* rusher1 = nullptr;
+		RusherEnemy* rusher = nullptr;
 
-		rusher1 = new RusherEnemy(new Properties("Rusher1", (rand() % (840 - 160 + 1) + 160), 0, 64, 32, SDL_FLIP_NONE));
-		World::GetInstance()->LoadObjects(rusher1);
+		rusher = new RusherEnemy(new Properties("Rusher1", (rand() % (840 - 160 + 1) + 160), 0, 64, 32, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(rusher);
 	}
 
 	return interval;

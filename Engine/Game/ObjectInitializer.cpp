@@ -11,6 +11,7 @@
 #include "EngineTime.h"
 #include "EnemySpawner.h"
 #include "BackgroundProps.h"
+#include "AsteroidSpawner.h"
 
 #define SCREEN_WIDTH 960
 #define SCREEN_HEIGHT 640
@@ -70,6 +71,7 @@ void ObjectInitializer::LoadObjects()
 	World::GetInstance()->LoadObjects(player);
 
 	EnemySpawner::GetInstance()->Init();
+	AsteroidSpawner::GetInstance()->Init();
 
 	Camera::GetInstance()->SetCameraFollowTarget(false);
 	Camera::GetInstance()->SetCameraTarget(player->GetOrigin());

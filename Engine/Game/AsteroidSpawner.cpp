@@ -14,12 +14,10 @@ Uint32 SpawnMetalAsteroids(Uint32 interval, void* data) {
 	{
 		MetalAsteroid* metalAsteroid = nullptr;
 
-		metalAsteroid->SpawnAsteroid();
-		//metalAsteroid = new MetalAsteroid(new Properties("Metal", (rand() % (840 - 160 + 1) + 160), -100, 64, 64, SDL_FLIP_NONE));
+		metalAsteroid = new MetalAsteroid(new Properties("Metal", (rand() % (840 - 160 + 1) + 160), -100, 64, 64, SDL_FLIP_NONE));
 		World::GetInstance()->LoadObjects(metalAsteroid);
-
-		//metalAsteroid = new MetalAsteroid(new Properties("Asteroid"))
 	}
+
 	return interval;
 }
 

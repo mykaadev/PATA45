@@ -39,6 +39,8 @@ void LonerEnemy::Init()
 {
 	__super::Init();
 
+	SetupBody();
+
 	myTimerID = EngineTime::GetInstance()->StartTimer((rand() % (5000 - 1000 + 1) + 1000), Fire, (LonerEnemy*)this);
 
 	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);
@@ -124,9 +126,13 @@ void LonerEnemy::TakeDamage(int inDamage)
 
 void LonerEnemy::SetOriginPoint()
 {
-	m_Origin->X = m_Body->GetPosition().x;
-	m_Origin->Y = m_Body->GetPosition().y;
+	if (m_Body == nullptr) return;
 
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		m_Origin->X = m_Body->GetPosition().x;
+		m_Origin->Y = m_Body->GetPosition().y;
+	}
 }
 
 void LonerEnemy::Clean()

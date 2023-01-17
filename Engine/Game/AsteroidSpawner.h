@@ -15,7 +15,7 @@ public:
 	static AsteroidSpawner* m_Instance;
 
 
-	AsteroidSpawner();
+	AsteroidSpawner() {};
 	~AsteroidSpawner();
 
 	void Init();
