@@ -57,18 +57,21 @@ void StoneAsteroid::Draw()
 
 void StoneAsteroid::Update(float deltaTime)
 {
+
+	__super::Update(deltaTime);
+
+	SetOriginPoint();
+
+	m_Animation->Update(deltaTime);
 }
 
-void StoneAsteroid::Clean()
-{
-}
 
-void StoneAsteroid::CheckCollision(GameObject* otherGameObject)
-{
-}
 
 void StoneAsteroid::TakeDamage(int damage)
 {
+	if (size_ != Small)
+	{
+	}
 }
 
 void StoneAsteroid::GiveDamage()
@@ -77,12 +80,45 @@ void StoneAsteroid::GiveDamage()
 
 void StoneAsteroid::SpawnAsteroid()
 {
+	int r = rand() % 3;
+	switch (r) {
+	case 0:
+		size_ = Big;
+		m_Animation->SetProperties("Stone", 1, 0, 25, 50, true);
+		break;
+	case 1:
+		size_ = Medium;
+		m_Animation->SetProperties("StonelMedium", 1, 0, 24, 50, true);
+		break;
+	case 2:
+		size_ = Small;
+		m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
+		break;
+
+	}
+
 }
 
 void StoneAsteroid::Split()
 {
+
 }
+
+
+
+void StoneAsteroid::Clean()
+{
+	EngineTime::GetInstance()->RemoveTimer(myTimerID);
+	m_PendingKill = true;
+}
+
+void StoneAsteroid::CheckCollision(GameObject* otherGameObject)
+{
+}
+
 
 void StoneAsteroid::SetOriginPoint()
 {
+	m_Origin->X = m_Body->GetPosition().x;
+	m_Origin->Y = m_Body->GetPosition().y;
 }
