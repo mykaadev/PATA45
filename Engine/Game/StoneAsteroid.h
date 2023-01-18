@@ -22,7 +22,8 @@ public:
 	SDL_TimerID myTimerID;
 
 	void SetOriginPoint();
-	
+
+
 	//life
 	int m_CurrentHealth;
 	int m_MaxHealth;
@@ -32,5 +33,6 @@ public:
 
 protected:
 	Size GetSize() { return size_; }
+	
 };
 

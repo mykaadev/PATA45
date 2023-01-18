@@ -21,8 +21,6 @@ void StoneAsteroid::Init()
 	m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
 
 	SpawnAsteroid();
-	std::cout << "Health" << m_CurrentHealth << std::endl;
-	std::cout << "MaxHealth" << m_MaxHealth << std::endl;
 
 }
 
@@ -37,6 +35,8 @@ void StoneAsteroid::Update(float deltaTime)
 	__super::Update(deltaTime);
 
 	SetOriginPoint();
+
+
 
 	if (!m_IsDead && m_Body != nullptr)
 	{
@@ -73,6 +73,8 @@ void StoneAsteroid::Update(float deltaTime)
 			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 
 		}
+
+		TakeDamage(0);
 	}
 
 	if (m_IsDead)
@@ -85,14 +87,20 @@ void StoneAsteroid::Update(float deltaTime)
 
 	m_Animation->Update(deltaTime);
 
+
 }
 
 
 
 void StoneAsteroid::TakeDamage(int damage)
 {
-	m_CurrentHealth -= damage;
 
+	if (damage > 0)
+	{
+
+		m_CurrentHealth -= damage;
+
+	}
 	if (m_CurrentHealth<= 0 )
 	{
 		// if u got time in the morning see how to make the player life and all that 
@@ -105,6 +113,7 @@ void StoneAsteroid::TakeDamage(int damage)
 			Explosion();
 		}
 	}
+
 }
 
 /* Goes to the player and gives damage  */
@@ -143,7 +152,7 @@ void StoneAsteroid::SpawnAsteroid()
 		}
 
 		std::cout << "Chosen Stone Asteroid Value: " << r << std::endl;
-		std::cout << "Chosen: "<< r << m_MaxHealth << std::endl;
+		std::cout << "Chosen: "<< r << m_CurrentHealth << std::endl;
 	}
 
 }
@@ -151,36 +160,40 @@ void StoneAsteroid::SpawnAsteroid()
 
 void StoneAsteroid::Split()
 {
-	// it only splits if the stone is big or medium otherwise this they dont brake
-	// for that you have to check what stone is spawning and compare the values 
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		//create new asteroids
+		StoneAsteroid* asteroid1 = new StoneAsteroid(new Properties("Asteroid1", m_Body->GetPosition().x - 30, m_Body->GetPosition().y - 30, 32, 32));
+		StoneAsteroid* asteroid2 = new StoneAsteroid(new Properties("Asteroid2", m_Body->GetPosition().x + 30, m_Body->GetPosition().y - 30, 32, 32));
+		StoneAsteroid* asteroid3 = new StoneAsteroid(new Properties("Asteroid3", m_Body->GetPosition().x, m_Body->GetPosition().y + 30, 32, 32));
 
+		// set properties for each new asteroid
+		if (size_ == Big)
+		{
+			asteroid1->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid1->m_CurrentHealth = 1;
+			asteroid2->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid2->m_CurrentHealth = 1;
+			asteroid3->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid3->m_CurrentHealth = 1;
+		}
+		else if (size_ == Medium)
+		{
+			asteroid1->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid1->m_CurrentHealth = 1;
+			asteroid2->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid2->m_CurrentHealth = 1;
+			asteroid3->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
+			asteroid3->m_CurrentHealth = 1;
+		}
 
-	// Check if the world is locked
-	if (!World::GetInstance()->GetWorld()->IsLocked()) {
-		// Create three new smaller asteroids
-		StoneAsteroid* a1 = new StoneAsteroid(new Properties("StoneSmall", (rand() % (840 - 160 + 1) + 160), -100, 96, 96, SDL_FLIP_NONE));
-		StoneAsteroid* a2 = new StoneAsteroid(new Properties("StoneSmall", (rand() % (840 - 160 + 1) + 160), -100, 96, 96, SDL_FLIP_NONE));
-		StoneAsteroid* a3 = new StoneAsteroid(new Properties("StoneSmall", (rand() % (840 - 160 + 1) + 160), -100, 96, 96, SDL_FLIP_NONE));
+		//load the new asteroids into the world
+		World::GetInstance()->LoadObjects(asteroid1);
+		World::GetInstance()->LoadObjects(asteroid2);
+		World::GetInstance()->LoadObjects(asteroid3);
 
-		// Set their size to small
-		a1->size_ = Small;
-		a2->size_ = Small;
-		a3->size_ = Small;
-		// Set their health to the appropriate value
-		a1->m_MaxHealth = 1;
-		a2->m_MaxHealth = 1;
-		a3->m_MaxHealth = 1;
-		// Give each smaller asteroid an initial velocity
-		a1->m_Body->SetLinearVelocity(b2Vec2(5, 5));
-		a2->m_Body->SetLinearVelocity(b2Vec2(-5, -5));
-		a3->m_Body->SetLinearVelocity(b2Vec2(5, -5));
-		// Add the smaller asteroids to the game world
-		World::GetInstance()->LoadObjects(a1);
-		World::GetInstance()->LoadObjects(a2);
-		World::GetInstance()->LoadObjects(a3);
-		// Remove the current asteroid from the game world
+		//destroy the original asteroid
 		Clean();
-
 	}
 }
 
@@ -216,3 +229,4 @@ void StoneAsteroid::SetOriginPoint()
 	}
 
 }
+
