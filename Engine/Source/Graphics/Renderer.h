@@ -39,8 +39,23 @@ struct VertexData {
 class Renderer
 {
 public:
-	
+	GLuint m_ShaderProgram;
 	static Renderer* GetInstance() { return m_Instance = (m_Instance != nullptr) ? m_Instance : new Renderer(); }
+
+
+#pragma region OPENGL
+
+	static void Init();
+	static void ShutDown();
+
+	static void BeginBatch();
+	static void EndBatch();
+	static void Flush();
+
+#pragma endregion
+
+
+
 
 #pragma region OPENGL Rendering
 
@@ -64,6 +79,8 @@ public:
 	std::map<std::string, std::string> m_TextureMapPath;
 	std::map<std::string, VertexData> m_VertexData;
 
+	void RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue);
+
 	
 #pragma endregion
 
@@ -80,6 +97,7 @@ public:
 private:
 	Renderer() { };
 	static Renderer* m_Instance;
+
 
 
 	std::map<std::string, SDL_Texture*> m_TextureMap;

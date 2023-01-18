@@ -150,6 +150,7 @@
     <ClInclude Include="..\Source\Core\Level.h" />
     <ClInclude Include="..\Source\Core\LevelParser.h" />
     <ClInclude Include="..\Source\Core\EngineTime.h" />
+    <ClInclude Include="..\Source\Core\MathHelper.h" />
     <ClInclude Include="..\Source\Core\World.h" />
     <ClInclude Include="..\Source\Graphics\Animation.h" />
     <ClInclude Include="..\Source\Graphics\IndexBuffer.h" />
@@ -182,6 +183,7 @@
     <ClCompile Include="..\Source\Core\Level.cpp" />
     <ClCompile Include="..\Source\Core\LevelParser.cpp" />
     <ClCompile Include="..\Source\Core\EngineTime.cpp" />
+    <ClCompile Include="..\Source\Core\MathHelper.cpp" />
     <ClCompile Include="..\Source\Core\World.cpp" />
     <ClCompile Include="..\Source\glad.c" />
     <ClCompile Include="..\Source\Graphics\Animation.cpp" />

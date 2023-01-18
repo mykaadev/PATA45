@@ -37,6 +37,8 @@ public:
 
 	inline bool IsRunning() { return m_bIsRunning; }
 	inline SDL_Renderer* GetRenderer() { return m_Renderer; }
+	inline SDL_Window* GetWindow() { return m_Window; }
+
 	inline bool UseLegacyRenderer() { return useLegacyRenderer;}
 
 

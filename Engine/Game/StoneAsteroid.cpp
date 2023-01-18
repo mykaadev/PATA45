@@ -96,16 +96,15 @@ void StoneAsteroid::TakeDamage(int damage)
 	if (m_CurrentHealth<= 0 )
 	{
 		// if u got time in the morning see how to make the player life and all that 
-		if (size_ == Big|| size_ == Medium)
+		if (size_ == Big || size_ == Medium)
 		{
 			Split();
 		}
-		else {
+		else 
+		{
 			Explosion();
 		}
-		
 	}
-	
 }
 
 /* Goes to the player and gives damage  */
@@ -210,7 +209,7 @@ void StoneAsteroid::CheckCollision(GameObject* otherGameObject)
 /* Set the position */
 void StoneAsteroid::SetOriginPoint()
 {
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body != nullptr)
 	{
 		m_Origin->X = m_Body->GetPosition().x;
 		m_Origin->Y = m_Body->GetPosition().y;

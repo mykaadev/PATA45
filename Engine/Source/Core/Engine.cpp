@@ -24,7 +24,6 @@ Engine::Engine()
 	m_bIsRunning = false;
 
 	useLegacyRenderer = true;
-
 }
 
 Engine::~Engine()
@@ -80,10 +79,16 @@ bool Engine::Init()
 		return m_bIsRunning = false;
 	}
 
-	Renderer::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
+	if (useLegacyRenderer)
+	{
+		Renderer::GetInstance()->ParseTextures("../Assets/Game/TextureParser.tml");
+	}
 
-	Renderer::GetInstance()->InitOpenGL();
-	
+	if (!useLegacyRenderer)
+	{
+		Renderer::GetInstance()->InitOpenGL();
+	}
+
 	return m_bIsRunning = true;
 }
 
@@ -111,21 +116,15 @@ void Engine::Renders()
 		///LEGACY SDL RENDERING
 		SDL_SetRenderDrawColor(m_Renderer, 30, 30, 30, 255);
 		SDL_RenderClear(m_Renderer);
-		Renderer::GetInstance()->Draw("EngineLogo", 0, 0, 960, 640, 1, 1, 0.5f);
+		Renderer::GetInstance()->Draw("EngineLogo", 960/2, 640/2, 960, 640, 1, 1, 0.5f);
 		World::GetInstance()->Render();
 		SDL_RenderPresent(m_Renderer);
 	}
 	else
 	{
-		///OPEN GL RENDERING
 		Renderer::GetInstance()->OpenGLLoop();
-
-		Renderer::GetInstance()->Draw("ScreenTest", 960 / 2 - 600, 640 / 2, 960, 640, 1, 1, 0.5f);
-		Renderer::GetInstance()->Draw("Mykaa", 960/2 + 200, 640/2, 100, 100, 1, 1, 1.0f);
-		World::GetInstance()->Render();    ///UNCOMMENT THIS TO CHECK THE ANIMATIONS
-
-	 	SDL_GL_SwapWindow(m_Window);
-	}
+		SDL_GL_SwapWindow(m_Window);
+ 	}
 }
 
 
@@ -140,6 +139,7 @@ bool Engine::Clean()
 	Renderer::GetInstance()->Clean();
 	SDL_DestroyRenderer(m_Renderer);
 	SDL_GL_DeleteContext(m_GLContext);
+	Renderer::GetInstance()->ShutDown();
 	SDL_DestroyWindow(m_Window);
 	SDL_Quit();
 

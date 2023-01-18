@@ -34,8 +34,8 @@ private:
 
 	static World* m_Instance;
 	std::unique_ptr<b2World> m_World;
-	std::vector <GameObject*> GameObjectLoaded;
-	std::vector <b2Body*> BodiesPendingKill;
+	std::vector<GameObject*> GameObjectLoaded;
+	std::vector<b2Body*> BodiesPendingKill;
 
 
 	Level* m_Level;
@@ -45,5 +45,9 @@ private:
 
 
 	void DestroyPendingKillObjects();
-	void GatherPendingObjects();
+	//void GatherPendingObjects();
+
+
+public:
+	inline std::vector<GameObject*> GetGameObjectLoaded() { return GameObjectLoaded; }
 };
