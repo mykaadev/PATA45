@@ -138,6 +138,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Companion.cpp" />
     <ClCompile Include="CoreGame.cpp" />
+    <ClCompile Include="Drone.cpp" />
     <ClCompile Include="EnemyBullet.cpp" />
     <ClCompile Include="EnemySpawner.cpp" />
     <ClCompile Include="LonerEnemy.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Companion.h" />
     <ClInclude Include="CoreGame.h" />
+    <ClInclude Include="Drone.h" />
     <ClInclude Include="EnemyBullet.h" />
     <ClInclude Include="EnemySpawner.h" />
     <ClInclude Include="LonerEnemy.h" />

@@ -150,11 +150,7 @@ void StoneAsteroid::SpawnAsteroid()
 			break;
 
 		}
-
-		std::cout << "Chosen Stone Asteroid Value: " << r << std::endl;
-		std::cout << "Chosen: "<< r << m_CurrentHealth << std::endl;
 	}
-
 }
 
 
