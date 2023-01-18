@@ -122,8 +122,6 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 		((BaseAsteroid*)otherGameObject)->TakeDamage(m_damageAmount);
 		m_IsDead = true;
 	}
-
-
 }
 
 
