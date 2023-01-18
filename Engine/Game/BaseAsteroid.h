@@ -17,7 +17,7 @@ public:
 
 	BaseAsteroid(Properties* props);
 
-	//
+	
 	enum Size {Big,Medium,Small};
 
 	virtual void Init();
@@ -36,7 +36,7 @@ public:
 	
 	/*For the stone one*/
 	void Split();
-	/*To spawn the astroid*/
+	/*To spawn the asteroid*/
 	virtual void SpawnAsteroid();
 
 	inline b2Body* GetBody() { return m_Body; }

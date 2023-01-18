@@ -7,20 +7,23 @@
 StoneAsteroid::StoneAsteroid(Properties* props) : BaseAsteroid(props)
 {
 	r = 0;
-	m_CurrentHealth = m_MaxHealh;
+	m_CurrentHealth = m_MaxHealth;
 
 	m_GoingRight = true;
-	b_IsDead = false;
 }
 
 void StoneAsteroid::Init()
 {
 	__super::Init();
+
 	SetupBody();
 
 	m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
 
 	SpawnAsteroid();
+	std::cout << "Health" << m_CurrentHealth << std::endl;
+	std::cout << "MaxHealth" << m_MaxHealth << std::endl;
+
 }
 
 void StoneAsteroid::Draw()
@@ -35,48 +38,52 @@ void StoneAsteroid::Update(float deltaTime)
 
 	SetOriginPoint();
 
-	m_Animation->Update(deltaTime);
-
-
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (!m_IsDead && m_Body != nullptr)
 	{
-		if (!m_IsDead && m_Body != nullptr)
+		if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
 		{
-			if (m_GoingRight && m_Body->GetPosition().x < 960 - m_Width / 2)
+			m_Body->SetLinearVelocity(b2Vec2(2.0f, 1.0f));
+		}
+
+		if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
+		{
+			m_GoingRight = false;
+		}
+
+		if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
+		{
+			m_Body->SetLinearVelocity(b2Vec2(-2.0f, 1.0f));
+
+		}
+
+		if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)
+		{
+			m_GoingRight = true;
+		}
+
+		//Handle Out of screen destroy
+		if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
+		{
+			m_IsDead = true;
+			if (!World::GetInstance()->GetWorld()->IsLocked())
 			{
-				m_Body->SetLinearVelocity(b2Vec2(2.0f, 1.0f));
+				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 			}
+			m_Animation->SetCurrentSprite(0);
+			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 
-			if (m_GoingRight && m_Body->GetPosition().x >= 960 - m_Width / 2)
-			{
-				m_GoingRight = false;
-			}
-
-			if (!m_GoingRight && m_Body->GetPosition().x > 900 - m_Width / 2)
-			{
-				m_Body->SetLinearVelocity(b2Vec2(-2.0f, 1.0f));
-
-			}
-
-			if (!m_GoingRight && m_Body->GetPosition().x <= 0 + m_Width / 2)
-			{
-				m_GoingRight = true;
-			}
-
-			//Handle Out of screen destroy
-			if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
-			{
-				m_IsDead = true;
-				if (!World::GetInstance()->GetWorld()->IsLocked())
-				{
-					m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-				}
-				m_Animation->SetCurrentSprite(0);
-				m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
-
-			}
 		}
 	}
+
+	if (m_IsDead)
+	{
+		if (GetAnimation()->GetCurrentSprite() >= 10)
+		{
+			Clean();
+		}
+	}
+
+	m_Animation->Update(deltaTime);
 
 }
 
@@ -119,24 +126,25 @@ void StoneAsteroid::SpawnAsteroid()
 			size_ = Big;
 			m_Animation->SetProperties("Stone", 1, 0, 25, 200, true);
 			// it takes two bullets to kill this stone
-			m_MaxHealh = 2;
+			m_CurrentHealth = 2;
 			break;
 		case 1:
 			size_ = Medium;
 			m_Animation->SetProperties("StoneMedium", 1, 0, 24, 200, true);
 			// it takes one bullet to kill this stone
-			m_MaxHealh = 1;
+			m_CurrentHealth = 1;
 			break;
 		case 2:
 			size_ = Small;
 			m_Animation->SetProperties("StoneSmall", 1, 0, 16, 200, true);
 			// it takes 1/2 bullet to kill this stone because is the smallest 
-			m_MaxHealh = 0.5;
+			m_CurrentHealth = 0.5;
 			break;
 
 		}
 
 		std::cout << "Chosen Stone Asteroid Value: " << r << std::endl;
+		std::cout << "Chosen: "<< r << m_MaxHealth << std::endl;
 	}
 
 }
@@ -160,9 +168,9 @@ void StoneAsteroid::Split()
 		a2->size_ = Small;
 		a3->size_ = Small;
 		// Set their health to the appropriate value
-		a1->m_MaxHealh = 1;
-		a2->m_MaxHealh = 1;
-		a3->m_MaxHealh = 1;
+		a1->m_MaxHealth = 1;
+		a2->m_MaxHealth = 1;
+		a3->m_MaxHealth = 1;
 		// Give each smaller asteroid an initial velocity
 		a1->m_Body->SetLinearVelocity(b2Vec2(5, 5));
 		a2->m_Body->SetLinearVelocity(b2Vec2(-5, -5));
@@ -180,7 +188,7 @@ void StoneAsteroid::Split()
 
 void StoneAsteroid::Explosion()
 {
-	b_IsDead = true;
+	m_IsDead = true;
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
