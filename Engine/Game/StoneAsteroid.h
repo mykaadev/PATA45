@@ -17,14 +17,23 @@ public:
 	void GiveDamage();
 	void SpawnAsteroid();
 	void Split();
+	void Explosion();
 
 	SDL_TimerID myTimerID;
 
 	void SetOriginPoint();
+	
+	//life
 	int m_CurrentHealth;
 	int m_MaxHealh;
-	bool m_GoingRight;
+	
+	// for random spawner
 	int r;
+	
+	int x;
+
+	bool m_GoingRight;
+	bool b_IsDead;
 
 protected:
 	Size GetSize() { return size_; }

@@ -2,6 +2,7 @@
 #include "World.h"
 #include "Renderer.h"
 #include "BaseEnemy.h"
+#include "BaseAsteroid.h"
 #include "Player.h"
 #include "RusherEnemy.h"
 
@@ -113,6 +114,12 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 	if (dynamic_cast<BaseEnemy*>(otherGameObject) && !m_PendingKill && !dynamic_cast<BaseEnemy*>(otherGameObject)->GetIsDead())
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
+		m_IsDead = true;
+	}
+
+	if (dynamic_cast<BaseAsteroid*>(otherGameObject) && !m_PendingKill && !dynamic_cast<BaseAsteroid*>(otherGameObject)->GetIsDead())
+	{
+		((BaseAsteroid*)otherGameObject)->TakeDamage(m_damageAmount);
 		m_IsDead = true;
 	}
 

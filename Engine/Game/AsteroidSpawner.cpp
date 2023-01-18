@@ -29,7 +29,7 @@ Uint32 SpawnStoneAsteroids(Uint32 interval, void* data) {
 	{
 		StoneAsteroid*  stoneAsteroid = nullptr;
 
-		stoneAsteroid = new StoneAsteroid(new Properties("Stone", (rand() % (840 - 160 + 1) + 160), -100, 96, 96, SDL_FLIP_NONE));	
+		stoneAsteroid = new StoneAsteroid(new Properties("Stone", (rand() % (840 - 260 + 1) + 160), -100, 96, 96, SDL_FLIP_NONE));	
 		World::GetInstance()->LoadObjects(stoneAsteroid);
 	}
 
@@ -46,6 +46,6 @@ AsteroidSpawner::~AsteroidSpawner()
 void AsteroidSpawner::Init()
 {
 	EngineTime::GetInstance()->StartTimer(2500, SpawnMetalAsteroids, (void*)"");
-	EngineTime::GetInstance()->StartTimer(3000, SpawnStoneAsteroids(), (void*)"");
+	EngineTime::GetInstance()->StartTimer(5000, SpawnStoneAsteroids, (void*)"");
 	 
 }
