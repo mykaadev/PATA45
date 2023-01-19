@@ -86,4 +86,5 @@ public:
 	
 public:
 	bool IsPendingKill() { return m_PendingKill; }
+	inline void SetSize(float x, float y) { m_Width = x; m_Height = y; };
 };

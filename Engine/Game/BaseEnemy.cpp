@@ -20,7 +20,10 @@ void BaseEnemy::Init()
 
 void BaseEnemy::Draw()
 {
-	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
+	if (m_Body != nullptr)
+	{
+		m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
+	}
 }
 
 

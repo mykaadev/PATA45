@@ -8,26 +8,7 @@ MetalAsteroid::MetalAsteroid(Properties* props) : BaseAsteroid(props)
 	b_IsIndestructible = true;
 	r = 0;
 	m_GoingRight = true;
-	//m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 
-	
-// 	switch (size)
-// 	{
-// 	case BaseAsteroid::Big:
-// 		m_Animation->SetProperties("Metal", 1, 0, 25, 50, true, SDL_FLIP_NONE);
-// 
-// 		break;
-// 	case BaseAsteroid::Medium:
-// 		m_Animation->SetProperties("MetalMedium", 1, 0, 24, 50, true, SDL_FLIP_NONE);
-// 
-// 		break;
-// 	case BaseAsteroid::Small:
-// 		m_Animation->SetProperties("MetalSmall", 1, 0, 16, 50, true);
-// 		break;
-// 	default:
-// 		break;
-// 	}
-	
 }
 
 /* Set the default asteroid for the small one */
@@ -128,14 +109,17 @@ void MetalAsteroid::SpawnAsteroid()
 		case 0:
 			size_ = Big;
 			m_Animation->SetProperties("Metal", 1, 0, 25, 200, true);
+			SetSize(96, 96);
 			break;
 		case 1:
 			size_ = Medium;
 			m_Animation->SetProperties("MetalMedium", 1, 0, 24, 200, true);
+			SetSize(64, 64);
 			break;
 		case 2:
 			size_ = Small;
 			m_Animation->SetProperties("MetalSmall", 1, 0, 16, 200, true);
+			SetSize(32, 32);
 			break;
 
 		}

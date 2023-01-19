@@ -17,7 +17,10 @@ void BaseAsteroid::Init()
 
 void BaseAsteroid::Draw()
 {
-	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
+	if (m_Body != nullptr)
+	{
+		m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
+	}
 }
 
 void BaseAsteroid::Update(float deltaTime)
