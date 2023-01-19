@@ -46,8 +46,9 @@
 	<texture id="MetalMedium" source="../Assets/Game/Textures/MetalMedium.bmp"/>
 	<texture id="MetalSmall" source="../Assets/Game/Textures/MetalSmall.bmp"/>
 
+	<!-- Drone -->
+	<texture id="Drone" source="../Assets/Game/Textures/Drone.bmp"/>
 
 
-		
-    
+
 </textures>	
