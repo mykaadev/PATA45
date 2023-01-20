@@ -66,6 +66,6 @@ void EnemySpawner::Init()
 {
 	/*EngineTime::GetInstance()->StartTimer(3000, SpawnLoner, (void*)"");
 	EngineTime::GetInstance()->StartTimer(3000, SpawnRusher, (void*)"");*/
-	EngineTime::GetInstance()->StartTimer(10000, SpawnDrone, (void*)"");
+	//EngineTime::GetInstance()->StartTimer(10000, SpawnDrone, (void*)"");
 }
 
