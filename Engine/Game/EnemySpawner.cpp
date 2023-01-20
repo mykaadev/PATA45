@@ -40,6 +40,7 @@ Uint32 SpawnRusher(Uint32 interval, void* data)
 }
 
 Uint32 SpawnDrone(Uint32 interval, void* data) {
+
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		Drone* drone = nullptr;

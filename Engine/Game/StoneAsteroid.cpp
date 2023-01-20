@@ -63,6 +63,7 @@ void StoneAsteroid::Update(float deltaTime)
 
 		}
 	
+		TakeDamage(0);
 	}
 
 	if (m_IsDead)
@@ -71,9 +72,10 @@ void StoneAsteroid::Update(float deltaTime)
 		{
 			Clean();
 		}
+		TakeDamage(0);
 	}
 	m_Animation->Update(deltaTime);
-
+	TakeDamage(0);
 }
 
 

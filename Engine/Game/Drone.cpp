@@ -9,7 +9,7 @@ Drone::Drone(Properties* props) : BaseEnemy(props)
 	m_SinCounter = 0.0f;
 	m_Speed = 1.5f;
 	m_Amplitude = 50.f;
-
+	y = 0;
 	m_CurrentHealth = 1;
 
 }
@@ -42,10 +42,9 @@ void Drone::Update(float deltaTime)
 		if (!m_IsDead && m_Body != nullptr)
 		{
 			// calculate horizontal sinusoidal movement
-			x = m_Body->GetPosition().x;
-			y = m_Body->GetPosition().y;
-			float amplitude = 5.0f; // adjust this value to change the amplitude of the sine wave
-			float frequency = 0.1f; // adjust this value to change the frequency of the sine wave
+			
+			float amplitude = 5.0f; 
+			float frequency = 0.1f; 
 			float offset = EngineTime::GetInstance()->GetDeltaTime() * frequency;
 			float horizontalVelocity = amplitude * sin(offset);
 
@@ -75,16 +74,16 @@ void Drone::Clean()
 void Drone::SpawnDrone()
 {
 
-	Drone* drone = new Drone(new Properties("Drone", x,y - 30, 32, 32));
-
 	//create and load 8 drones into the world
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 8; ++i)
 	{
+		x = m_Body->GetPosition().x;
+		y = m_Body->GetPosition().y;
+		Drone* drone = new Drone(new Properties("Drone", m_Body->GetPosition().x, m_Body->GetPosition().y + y, 32, 32));
 		drone->m_Animation->SetProperties("Drone", 1, 0, 16, 100, true);
 		drone->m_CurrentHealth = 1;
 		SetSize(32, 32);
 		World::GetInstance()->LoadObjects(drone);
-
 		y += 32;
 	}
 }
