@@ -1,13 +1,13 @@
 #pragma once
-#include "../Source/Objects/Character.h"
 
+#include "../Source/Objects/Character.h"
 #include "BaseEnemy.h"
 
-class Drone :public BaseEnemy{
 
-/*
+
+class Drone : public BaseEnemy
+{
 public:
-
 	Drone(Properties* props);
 
 	void Init() override;
@@ -18,20 +18,27 @@ public:
 	void TakeDamage(int inDamage) override;
 	void SetOriginPoint();
 
-
-	SDL_TimerID myTimerID;
+	/* Drone Part */
 
 	void SpawnDrone();
+	void Explosion();
 
 
-	
+	bool m_IsDead;
+
+private:
+	// float to keep track of the sinusoidal movement
+	float m_SinCounter;
+	//speed
+	float m_Speed;
+	// amplitude
+	float m_Amplitude;
+	float x;
+	float y;
+	//life
 	int m_CurrentHealth;
 	int m_MaxHealth;
 
-	int m_SinCounter;
-private:
-	bool m_GoingRight;
 
-*/
 };
 

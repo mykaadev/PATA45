@@ -19,7 +19,6 @@ public:
 	void Split();
 	void Explosion();
 
-	SDL_TimerID myTimerID;
 
 	void SetOriginPoint();
 
@@ -29,7 +28,7 @@ public:
 	int m_MaxHealth;
 	int r;
 
-	bool m_GoingRight;
+	bool m_HasBeenSplit;
 
 protected:
 	Size GetSize() { return size_; }

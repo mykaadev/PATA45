@@ -2,6 +2,7 @@
 #include <iostream>
 #include "EngineTime.h"
 #include "LonerEnemy.h"
+#include "Drone.h"
 #include "World.h"
 #include "RusherEnemy.h"
 
@@ -38,6 +39,17 @@ Uint32 SpawnRusher(Uint32 interval, void* data)
 	return interval;
 }
 
+Uint32 SpawnDrone(Uint32 interval, void* data) {
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		Drone* drone = nullptr;
+
+		drone = new Drone(new Properties("Drone", (rand() % (840 - 160 + 1) + 160), 0, 32, 32, SDL_FLIP_NONE));
+
+		World::GetInstance()->LoadObjects(drone);
+	}
+	return interval;
+}
 
 EnemySpawner::EnemySpawner()
 {
@@ -52,7 +64,8 @@ EnemySpawner::~EnemySpawner()
 
 void EnemySpawner::Init()
 {
-	EngineTime::GetInstance()->StartTimer(3000, SpawnLoner, (void*)"");
-	EngineTime::GetInstance()->StartTimer(3000, SpawnRusher, (void*)"");
+	/*EngineTime::GetInstance()->StartTimer(3000, SpawnLoner, (void*)"");
+	EngineTime::GetInstance()->StartTimer(3000, SpawnRusher, (void*)"");*/
+	EngineTime::GetInstance()->StartTimer(10000, SpawnDrone, (void*)"");
 }
 

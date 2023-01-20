@@ -68,7 +68,7 @@ void MetalAsteroid::Update(float deltaTime)
 				}
 				m_Animation->SetCurrentSprite(0);
 				m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
-
+				SetSize(64, 64);
 			}
 		}
 	}
@@ -77,7 +77,6 @@ void MetalAsteroid::Update(float deltaTime)
 
 void MetalAsteroid::Clean()
 {
-	EngineTime::GetInstance()->RemoveTimer(myTimerID);
 	m_PendingKill = true;
 }
 

@@ -44,7 +44,7 @@ public:
 
 
 	bool m_IsDead;
-	int m_health = 100;
+
 
 protected:
 
