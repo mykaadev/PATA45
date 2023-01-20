@@ -15,13 +15,12 @@ public:
 
 	/* Base Asteroid Part */
 	void GiveDamage();
-	void SpawnAsteroid();
-	void Split();
+	void ChooseType();
 	void Explosion();
 
 
 	void SetOriginPoint();
-
+	SDL_TimerID myTimerID;
 
 	//life
 	int m_CurrentHealth;

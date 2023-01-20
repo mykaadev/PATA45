@@ -6,7 +6,7 @@
 
 BaseAsteroid::BaseAsteroid(Properties* props) : Character(props)
 {
-		m_Animation = new Animation();
+	m_Animation = new Animation();
 }
 
 void BaseAsteroid::Init()
@@ -48,10 +48,11 @@ void BaseAsteroid::GiveDamage()
 	// todo in the specific asteroid type
 }
 
-void BaseAsteroid::SpawnAsteroid(){}
+void BaseAsteroid::ChooseType(){}
 
 void BaseAsteroid::SetupBody()
 {
+	
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		b2BodyDef _BodyDef;
@@ -76,6 +77,8 @@ void BaseAsteroid::SetupBody()
 
 		b2Fixture* _Fixture;
 		_Fixture = m_Body->CreateFixture(&_fixtureDef);
+		
+		
 	}
 }
 
@@ -89,7 +92,3 @@ void BaseAsteroid::SetOriginPoint()
 	// set the origin point 
 }
 
-void BaseAsteroid::Split()
-{
-	// to eliminate the sprite and show other in the same position 
-}

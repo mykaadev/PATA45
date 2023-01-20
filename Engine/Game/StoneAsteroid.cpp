@@ -4,28 +4,70 @@
 #include "Player.h"
 #include <iostream>
 
+
+
+Uint32 SplitIntoSmallAsteroids(Uint32 interval, void* data)
+{
+	StoneAsteroid* asteroid1 = nullptr;
+	StoneAsteroid* asteroid2 = nullptr;
+	StoneAsteroid* asteroid3 = nullptr;
+
+	asteroid1 = new StoneAsteroid(new Properties("Asteroid1",
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().x - 40,
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().y - 40, 32, 32));
+
+	asteroid2 = new StoneAsteroid(new Properties("Asteroid2",
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().x + 40,
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().y - 40, 32, 32));
+
+	asteroid3 = new StoneAsteroid(new Properties("Asteroid3",
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().x,
+		dynamic_cast<GameObject*>((StoneAsteroid*)data)->m_Body->GetPosition().y - 80, 32, 32));
+
+	asteroid1->m_HasBeenSplit = true;
+	asteroid2->m_HasBeenSplit = true;
+	asteroid3->m_HasBeenSplit = true;
+
+	World::GetInstance()->LoadObjects(asteroid1);
+	World::GetInstance()->LoadObjects(asteroid2);
+	World::GetInstance()->LoadObjects(asteroid3);
+
+	asteroid1->GetBody()->SetLinearVelocity(b2Vec2(-1.0f, 1.0f));
+	asteroid2->GetBody()->SetLinearVelocity(b2Vec2(0.0f, 1.0f));
+	asteroid3->GetBody()->SetLinearVelocity(b2Vec2(1.0f, 1.0f));
+
+
+	EngineTime::GetInstance()->RemoveTimer(dynamic_cast<StoneAsteroid*>((StoneAsteroid*)data)->myTimerID);
+
+	return interval;
+}
+
+
+
 StoneAsteroid::StoneAsteroid(Properties* props) : BaseAsteroid(props)
 {
 	r = 0;
+	m_HasBeenSplit = false;
 }
 
 void StoneAsteroid::Init()
 {
 	__super::Init();
 
-	SetupBody();
-
-	m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
-
-
-	SpawnAsteroid();
-
+	if (!m_HasBeenSplit) { ChooseType(); }
+	
+	if (m_HasBeenSplit)
+	{
+		m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
+		SetSize(32, 32);
+		m_CurrentHealth = 1;
+		size_ = Small;
+	}
 }
 
 void StoneAsteroid::Draw()
 {
 	__super::Draw();
-
 }
 
 
@@ -39,7 +81,8 @@ void StoneAsteroid::Update(float deltaTime)
 	if (!m_IsDead && m_Body != nullptr)
 	{
 		int randX = 0;
-		int randY = rand() % 8;
+		//int randY = rand() % 8;
+		int randY = 1;
 		int randVelocity = 0;
 
 		if (randX == 0 && !World::GetInstance()->GetWorld()->IsLocked()) {
@@ -50,20 +93,18 @@ void StoneAsteroid::Update(float deltaTime)
 		}
 		
 		//Handle Out of screen destroy
-		if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
+		if (m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
 		{
 			m_IsDead = true;
-			if (!World::GetInstance()->GetWorld()->IsLocked())
-			{
-				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-			}
+			
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			
 			m_Animation->SetCurrentSprite(0);
-			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 			SetSize(64, 64);
 
 		}
 	
-		TakeDamage(0);
 	}
 
 	if (m_IsDead)
@@ -72,10 +113,9 @@ void StoneAsteroid::Update(float deltaTime)
 		{
 			Clean();
 		}
-		TakeDamage(0);
 	}
+
 	m_Animation->Update(deltaTime);
-	TakeDamage(0);
 }
 
 
@@ -83,23 +123,12 @@ void StoneAsteroid::Update(float deltaTime)
 void StoneAsteroid::TakeDamage(int damage)
 {
 
-	if (damage > 0)
+	m_CurrentHealth -= damage;
+	
+  	if (m_CurrentHealth <= 0 && !m_IsDead)
 	{
-		m_CurrentHealth -= damage;
+		Explosion();	
 	}
-	if (m_CurrentHealth <= 0 && !m_IsDead && !m_HasBeenSplit)
-	{
-		if (size_ == Big || size_ == Medium)
-		{
-			Split();
-			m_HasBeenSplit = true;
-		}
-		else {
-			Explosion();
-		}
-
-	}
-
 }
 
 /* Goes to the player and gives damage  */
@@ -108,7 +137,7 @@ void StoneAsteroid::GiveDamage()
 }
 
 /* follows the same logic of the metal Asteroid */
-void StoneAsteroid::SpawnAsteroid()
+void StoneAsteroid::ChooseType()
 {
 
 	if (!World::GetInstance()->GetWorld()->IsLocked())
@@ -118,23 +147,20 @@ void StoneAsteroid::SpawnAsteroid()
 		switch (r) {
 		case 0:
 			size_ = Big;
-			m_Animation->SetProperties("Stone", 1, 0, 25, 200, true);
+			m_Animation->SetProperties("Stone", 1, 0, 25, 50, true);
 			SetSize(96, 96);
-			// it takes two bullets to kill this stone
 			m_CurrentHealth = 3;
 			break;
 		case 1:
 			size_ = Medium;
-			m_Animation->SetProperties("StoneMedium", 1, 0, 24, 200, true);
+			m_Animation->SetProperties("StoneMedium", 1, 0, 24, 50, true);
 			SetSize(64, 64);
-			// it takes one bullet to kill this stone
 			m_CurrentHealth = 2;
 			break;
 		case 2:
 			size_ = Small;
-			m_Animation->SetProperties("StoneSmall", 1, 0, 16, 200, true);
+			m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
 			SetSize(32, 32);
-			// it takes 1 bullet to kill this stone because is the smallest 
 			m_CurrentHealth = 1;
 			break;
 
@@ -142,64 +168,30 @@ void StoneAsteroid::SpawnAsteroid()
 			size_ = Small;
 			m_Animation->SetProperties("StoneSmall", 1, 0, 16, 200, true);
 			SetSize(32, 32);
-			// it takes 1 bullet to kill this stone because is the smallest 
 			m_CurrentHealth = 1;
 			break;
 		}
 	}
 }
 
-void StoneAsteroid::Split()
-{
-	if (!World::GetInstance()->GetWorld()->IsLocked())
-	{	
-		//create new asteroids
-		StoneAsteroid* asteroid1 = new StoneAsteroid(new Properties("Asteroid1", m_Body->GetPosition().x - 30, m_Body->GetPosition().y - 30, 32, 32));
-		StoneAsteroid* asteroid2 = new StoneAsteroid(new Properties("Asteroid2", m_Body->GetPosition().x + 30, m_Body->GetPosition().y - 30, 32, 32));
-		StoneAsteroid* asteroid3 = new StoneAsteroid(new Properties("Asteroid3", m_Body->GetPosition().x, m_Body->GetPosition().y + 30, 32, 32));
-	
-
-		// set properties for each new asteroid
-		asteroid1->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
-		SetSize(96, 96);
-		asteroid1->m_CurrentHealth = 1;
-		asteroid1->size_ = Small;
-		// two
-		asteroid2->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
-		SetSize(64, 64);
-		asteroid2->m_CurrentHealth = 1;
-		asteroid2->size_ = Small;
-		//three
-		asteroid3->m_Animation->SetProperties("StoneSmall", 1, 0, 16, 100, true);
-		SetSize(32, 32);
-		asteroid3->m_CurrentHealth = 1;
-		asteroid3->size_ = Small;
-			
-
-
-		//load the new asteroids into the world
-		World::GetInstance()->LoadObjects(asteroid1);
-		World::GetInstance()->LoadObjects(asteroid2); 
-		World::GetInstance()->LoadObjects(asteroid3);
-		
-	}
-
-		//destroy the original asteroid
-		Explosion();
-}
-
-
 
 void StoneAsteroid::Explosion()
 {
 	m_IsDead = true;
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+
+	if (size_ == Big || size_ == Medium)
+	{
+		myTimerID = EngineTime::GetInstance()->StartTimer(100, SplitIntoSmallAsteroids, (StoneAsteroid*)this);
+	}
+
+	if (World::GetInstance()->GetWorld()->IsLocked())
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 	}
 	m_Animation->SetCurrentSprite(0);
 	m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 	SetSize(64, 64);
+
 }
 
 void StoneAsteroid::Clean()
@@ -214,11 +206,10 @@ void StoneAsteroid::CheckCollision(GameObject* otherGameObject)
 /* Set the position */
 void StoneAsteroid::SetOriginPoint()
 {
-	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body != nullptr)
+	if (m_Body != nullptr)
 	{
 		m_Origin->X = m_Body->GetPosition().x;
 		m_Origin->Y = m_Body->GetPosition().y;
 	}
-
 }
 

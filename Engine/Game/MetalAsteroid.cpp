@@ -123,14 +123,13 @@ void MetalAsteroid::SpawnAsteroid()
 
 		}
 
-		std::cout << "Chosen Metal Asteroid Value: " << r << std::endl;
 	}
 }
 
 /* Set the position */
 void MetalAsteroid::SetOriginPoint()
 {
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (m_Body != nullptr)
 	{
 		m_Origin->X = m_Body->GetPosition().x;
 		m_Origin->Y = m_Body->GetPosition().y;

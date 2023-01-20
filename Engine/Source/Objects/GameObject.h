@@ -79,6 +79,7 @@ protected:
 	int m_Height;
 	std::string m_TextureID;
 	SDL_RendererFlip m_Flip;
+
 public:
 	b2Body* m_Body;
 	b2Body* GetBody() { return m_Body; };

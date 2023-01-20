@@ -13,9 +13,6 @@
 *
 *    Character Handles Animations
 * 
-*    TODO: Add RigidBody Component
-*
-*
 */
 
 Character::Character(Properties* props) : WorldObject(props)

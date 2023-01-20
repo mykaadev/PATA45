@@ -41,10 +41,10 @@ void RusherEnemy::Update(float deltaTime)
 	{
 		m_IsDead = true;
 		m_Height = m_Width;
-		if (!World::GetInstance()->GetWorld()->IsLocked())
-		{
-			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-		}
+		
+		
+		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
 

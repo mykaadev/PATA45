@@ -19,10 +19,10 @@ public:
 	void SetOriginPoint();
 
 	/* Drone Part */
-
-	void SpawnDrone();
 	void Explosion();
 
+	float amplitude;
+	float frequency;
 
 	bool m_IsDead;
 

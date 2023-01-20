@@ -34,10 +34,8 @@ public:
 	void SetAnimationState(AsteroidSpinning inCurrentAnimationState, float inAxisValue);
 	void SetOriginPoint();
 	
-	/*For the stone one*/
-	void Split();
 	/*To spawn the asteroid*/
-	virtual void SpawnAsteroid();
+	virtual void ChooseType();
 
 	inline b2Body* GetBody() { return m_Body; }
 	inline bool GetIsDead() { return m_IsDead; }
