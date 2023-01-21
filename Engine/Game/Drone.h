@@ -32,7 +32,7 @@ private:
 	//speed
 	float m_Speed;
 	// amplitude
-	float m_Amplitude;
+	float m_amplitude;
 	float x;
 	float y;
 	//life

@@ -1,21 +1,22 @@
-#include "BaseAsteroid.h"
+#include "BasePowerUp.h"
 #include "World.h"
 #include "Animation.h"
 #include "Renderer.h"
 #include "World.h"
 
-BaseAsteroid::BaseAsteroid(Properties* props) : Character(props)
+
+BasePowerUp::BasePowerUp(Properties* props) : Character(props)
 {
-	m_Animation = new Animation();
+	m_Animation = new Animation;
 }
 
-void BaseAsteroid::Init()
+void BasePowerUp::Init()
 {
 	__super::Init();
 	SetupBody();
 }
 
-void BaseAsteroid::Draw()
+void BasePowerUp::Draw()
 {
 	if (m_Body != nullptr)
 	{
@@ -23,20 +24,19 @@ void BaseAsteroid::Draw()
 	}
 }
 
-void BaseAsteroid::Update(float deltaTime)
+void BasePowerUp::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 }
 
-void BaseAsteroid::Clean()
+void BasePowerUp::Clean()
 {
 	delete m_Animation;
 }
 
 
-void BaseAsteroid::SetupBody()
+void BasePowerUp::SetupBody()
 {
-	
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		b2BodyDef _BodyDef;
@@ -61,34 +61,15 @@ void BaseAsteroid::SetupBody()
 
 		b2Fixture* _Fixture;
 		_Fixture = m_Body->CreateFixture(&_fixtureDef);
-		
-		
 	}
 }
 
-void BaseAsteroid::SetAnimationState(AsteroidSpinning inCurrentAnimationState, float inAxisValue)
-{
-	//Set the animation for them 
-}
+void BasePowerUp::SetAnimationState(PowerupState inCurrentAnimationState, float inAxisValue){}
 
-void BaseAsteroid::SetOriginPoint()
-{
-	// set the origin point 
-}
+void BasePowerUp::SetOriginPoint(){}
 
-void BaseAsteroid::CheckColision()
-{
-	// todo in specific asteroid type
-}
+void BasePowerUp::ChooseType(){}
 
-void BaseAsteroid::TakeDamage(int inDamage)
-{
-	// todo in the specific asteroid type
-}
+void BasePowerUp::CheckColision() {}
 
-void BaseAsteroid::GiveDamage()
-{
-	// todo in the specific asteroid type
-}
-
-void BaseAsteroid::ChooseType() {}
+void BasePowerUp::TakeDamage(int inDamage) {}

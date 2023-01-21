@@ -6,6 +6,8 @@
 #include "World.h"
 #include "EngineTime.h"
 #include "Companion.h"
+#include "WeaponPowerUp.h"
+#include "ShieldPowerUp.h"
 
 
 
@@ -34,6 +36,8 @@ Player::Player(Properties* props) : Character(props) {
 	fSpeed = 2.0f;
 	fireRate = 300.0f;
 	m_MaxPowerLevel = 3;
+	m_damageAmount = 1;
+
 }
 
 
@@ -205,6 +209,7 @@ void Player::FireGun()
 		canShoot = false;
 		Bullet* bullet = nullptr;
 		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 32, 16, 16, SDL_FLIP_NONE));
+		bullet->SetDamage(m_damageAmount);
 		World::GetInstance()->LoadObjects(bullet);
 
 		if (FirstCompanion != nullptr)
@@ -284,6 +289,22 @@ void Player::AddPowerUp()
 	}
 }
 
+
+void Player::AddSheildPowerUp(int morelife)
+{
+	currentHealth += morelife;
+
+	if (currentHealth > maxHealth)
+	{
+		currentHealth = maxHealth;
+	}
+}
+
+void Player::AddWeaponPowerUp(int Power)
+{
+
+}
+
 void Player::Draw()
 {
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
@@ -297,6 +318,41 @@ void Player::Clean()
 
 void Player::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<WeaponPowerUp*>(otherGameObject) && !m_PendingKill && !dynamic_cast<WeaponPowerUp*>(otherGameObject)->GetIsDead())
+	{
+		((WeaponPowerUp*)otherGameObject)->OnPickUp((GameObject*)this);
+	}
+
+	if (dynamic_cast<ShieldPowerUp*>(otherGameObject) && !m_PendingKill && !dynamic_cast<ShieldPowerUp*>(otherGameObject)->GetIsDead())
+	{
+		((ShieldPowerUp*)otherGameObject)->TakeDamage(m_damageAmount);
 	
+	}
+
 }
 
+void Player::ChooseBulletType()
+{
+
+	bulletLevel++;
+
+	if (bulletLevel == 0)
+	{
+		bulletType = light;
+		m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
+		m_damageAmount = 1;
+	}
+	else if (bulletLevel == 1)
+	{
+		bulletType = medium;
+		m_Animation->SetProperties("BulletTwo", 1, 0, 24, 50, true);
+		m_damageAmount = 2;
+	}
+	else {
+		bulletType = hard;
+		m_Animation->SetProperties("BulletThree", 1, 0, 16, 50, true);
+		m_damageAmount = 3;
+	}
+
+	
+}

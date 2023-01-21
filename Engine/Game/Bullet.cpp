@@ -3,6 +3,8 @@
 #include "Renderer.h"
 #include "BaseEnemy.h"
 #include "StoneAsteroid.h"
+#include "WeaponPowerUp.h"
+#include "ShieldPowerUp.h"
 #include "Player.h"
 #include "RusherEnemy.h"
 
@@ -18,7 +20,24 @@ void Bullet::Init()
 	if (m_Body == nullptr) { SetupBody(); }
 
 	if (m_Body == nullptr) { return; }
-	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
+
+	if (m_damageAmount == 1)
+	{
+		m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
+		SetSize(16, 16);
+	}
+	else if (m_damageAmount == 2)
+	{
+		m_Animation->SetProperties("BulletTwo", 1, 0, 2, 50, true);
+		SetSize(16,16);
+	}
+	else {
+	
+		m_Animation->SetProperties("BulletThree", 1, 0, 2, 50, true);
+		SetSize(16, 16);
+	}
+
+//	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
 	m_Body->SetLinearVelocity(b2Vec2(0.0f, -3.0f));
 }
 
@@ -121,9 +140,43 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 	{
 		((StoneAsteroid*)otherGameObject)->TakeDamage(m_damageAmount);
 		m_IsDead = true;
-	}
+	}	
+	
+
+
 
 }
+
+
+void Bullet::ChooseType(int type)
+{
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+	
+		switch (type) {
+		case 0:
+			type = light;
+			m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
+			m_damageAmount = 1;
+			break;
+		case 1:
+			type = medium;
+			m_Animation->SetProperties("BulletTwo", 1, 0, 24, 50, true);
+			m_damageAmount = 2;
+			break;
+		case 2:
+			type = hard;
+			m_Animation->SetProperties("BulletThree", 1, 0, 16, 50, true);
+			break;
+
+		default:
+			m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
+			m_damageAmount = 3;
+			break;
+		}
+	}
+}
+
 
 
 Bullet::~Bullet()

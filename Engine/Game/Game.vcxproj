@@ -135,6 +135,7 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="BackgroundProps.cpp" />
     <ClCompile Include="BaseEnemy.cpp" />
+    <ClCompile Include="BasePowerUp.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Companion.cpp" />
     <ClCompile Include="CoreGame.cpp" />
@@ -145,8 +146,11 @@
     <ClCompile Include="MetalAsteroid.cpp" />
     <ClCompile Include="ObjectInitializer.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PowerUpsSpawner.cpp" />
     <ClCompile Include="RusherEnemy.cpp" />
+    <ClCompile Include="ShieldPowerUp.cpp" />
     <ClCompile Include="StoneAsteroid.cpp" />
+    <ClCompile Include="WeaponPowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseAsteroid.h" />
@@ -154,6 +158,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="BackgroundProps.h" />
     <ClInclude Include="BaseEnemy.h" />
+    <ClInclude Include="BasePowerUp.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Companion.h" />
     <ClInclude Include="CoreGame.h" />
@@ -164,8 +169,11 @@
     <ClInclude Include="MetalAsteroid.h" />
     <ClInclude Include="ObjectInitializer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerUpsSpawner.h" />
     <ClInclude Include="RusherEnemy.h" />
+    <ClInclude Include="ShieldPowerUp.h" />
     <ClInclude Include="StoneAsteroid.h" />
+    <ClInclude Include="WeaponPowerUp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

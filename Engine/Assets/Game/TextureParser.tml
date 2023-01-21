@@ -48,6 +48,10 @@
 
 	<!-- Drone -->
 	<texture id="Drone" source="../Assets/Game/Textures/Drone.bmp"/>
+	
+	<!-- Power Ups -->
+	<texture id="WeaponPowerUp" source="../Assets/Game/Textures/PowerUpWeapon.bmp"/>
+	<texture id="ShieldPowerUp" source="../Assets/Game/Textures/PowerUpShield.bmp"/>
 
 
 
