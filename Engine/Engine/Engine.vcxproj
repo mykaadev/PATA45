@@ -189,12 +189,8 @@
     <ClCompile Include="..\Source\Graphics\Animation.cpp" />
     <ClCompile Include="..\Source\Graphics\IndexBuffer.cpp" />
     <ClCompile Include="..\Source\Graphics\Renderer.cpp" />
-    <ClCompile Include="..\Source\Graphics\Shader.cpp" />
     <ClCompile Include="..\Source\Graphics\stb_image.cpp" />
-    <ClCompile Include="..\Source\Graphics\Texture.cpp" />
     <ClCompile Include="..\Source\Graphics\TileLayer.cpp" />
-    <ClCompile Include="..\Source\Graphics\VertexArray.cpp" />
-    <ClCompile Include="..\Source\Graphics\VertexBuffer.cpp" />
     <ClCompile Include="..\Source\Objects\Character.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -19,9 +19,138 @@
 #include "../Core/World.h"
 
 
+#pragma region TextureParser
+
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+Renderer* Renderer::m_Instance = nullptr;
+
+
+bool Renderer::ParseTextures(std::string source)
+{
+	TiXmlDocument _xml;
+	_xml.LoadFile(source);
+
+	if (_xml.Error())
+	{
+		std::cout << "Failed to load: " << source << std::endl;
+		return false;
+	}
+
+	TiXmlElement* _root = _xml.RootElement();
+	for (TiXmlElement* e = _root->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (e->Value() == std::string("texture"))
+		{
+			std::string _id = e->Attribute("id");
+			std::string _src = e->Attribute("source");
+			Renderer::Load(_id, _src);
+		}
+	}
+
+	std::cout << "TextureParser loaded: " << source << std::endl;
+	return true;
+}
+
+
+bool Renderer::Load(std::string inID, std::string inFileName)
+{
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		/// LEGACY SDL LOADING
+		SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
+		if (surface == nullptr)
+		{
+			SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
+			return false;
+		}
+
+		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
+
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
+		if (texture == nullptr)
+		{
+			SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
+			return false;
+		}
+
+		m_TextureMap[inID] = texture;
+
+		m_TextureMapPath[inID] = inFileName.c_str();
+		return true;
+	}
+	else
+	{
+		// Load the texture using SOIL
+		int width = 0, height = 0, numComponents = 0;
+		GLint dataFormat = 0;
+		stbi_set_flip_vertically_on_load(1);
+		unsigned char* image = stbi_load(inFileName.c_str(), &width, &height, &numComponents, 0);
+
+
+		RemoveColor(image, width, height, 255, 0, 255);
+
+		// Determine the format of the image data
+
+		if (numComponents == 3)
+		{
+			dataFormat = GL_RGB;
+		}
+		else
+		{
+			dataFormat = GL_RGBA;
+		}
+
+		// Generate a texture and bind it
+		GLuint _gltexture;
+		GLCall(glGenTextures(1, &_gltexture));
+		GLCall(glBindTexture(GL_TEXTURE_2D, _gltexture));
+
+		// Set the texture parameters
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+
+
+		// Upload the texture data
+		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, image));
+
+		// Free the image data and unbind the texture
+		stbi_image_free(image);
+		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+
+		// Store the texture in the texture map
+		SDL_Texture* sdlTexture = reinterpret_cast<SDL_Texture*>(_gltexture);
+
+		m_TextureMap[inID] = sdlTexture;
+		m_GLTextureMap[m_TextureMap[inID]] = _gltexture;
+
+		m_TextureMapPath[inID] = inFileName.c_str();
+
+		return true;
+	}
+}
+
+void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue)
+{
+	for (int i = 0; i < width * height * 3; i += 3)
+	{
+		if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue)
+		{
+			pixels[i] = pixels[i + 1] = pixels[i + 2] = 0;
+		}
+	}
+}
+
+
+
+#pragma endregion
+
+
 #pragma region OPENGL
-
-
 
 static const size_t MaxQuadCount = 5000;
 static const size_t MaxVertexCount = MaxQuadCount * 4;
@@ -413,19 +542,19 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 	else
 	{
 		/// OPEN GL RENDERING ///
-		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
+		GLuint _TextureID = m_GLTextureMap[m_TextureMap[inID]];
 
-		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
+		SDL_Rect _SrcRect = { (width * (currentFrame - startingFrame)), height * (row - 1), width, height };
 
 		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
 
-		SDL_Rect destRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
+		SDL_Rect _DestRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
 
-		float fX = destRect.x / destRect.w;
-		float fY = destRect.y / destRect.h;
+		float fX = _DestRect.x / _DestRect.w;
+		float fY = _DestRect.y / _DestRect.h;
 
-		float drawWidth = destRect.w;
-		float drawHeight = destRect.h;
+		float drawWidth = _DestRect.w;
+		float drawHeight = _DestRect.h;
 
 		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
 		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
@@ -446,7 +575,7 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 
 		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
 		{
-			if (RenderingData.TextureSlots[i] == textureID)
+			if (RenderingData.TextureSlots[i] == _TextureID)
 			{
 				textureIndex = (float)i;
 				break;
@@ -454,12 +583,11 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		}
 
 
-
 		// If not, bound a new one
 		if (textureIndex == 0.f)
 		{
 			textureIndex = (float)RenderingData.TextureSlotIndex;
-			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
+			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = _TextureID;
 			RenderingData.TextureSlotIndex++;
 		}
 
@@ -532,137 +660,6 @@ void Renderer::Clean()
 
 #pragma endregion
 
-
-
-#pragma region TextureParser
-
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
-Renderer* Renderer::m_Instance = nullptr;
-
-
-bool Renderer::ParseTextures(std::string source)
-{
-	TiXmlDocument _xml;
-	_xml.LoadFile(source);
-
-	if (_xml.Error())
-	{
-		std::cout << "Failed to load: " << source << std::endl;
-		return false;
-	}
-
-	TiXmlElement* _root = _xml.RootElement();
-	for (TiXmlElement* e = _root->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
-	{
-		if (e->Value() == std::string("texture"))
-		{
-			std::string _id = e->Attribute("id");
-			std::string _src = e->Attribute("source");
-			Renderer::Load(_id, _src);
-		}
-	}
-
-	std::cout << "TextureParser loaded: " << source << std::endl;
-	return true;
-}
-
-
-bool Renderer::Load(std::string inID, std::string inFileName)
-{
-	if (Engine::GetInstance()->UseLegacyRenderer())
-	{
-		/// LEGACY SDL LOADING
-		SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
-		if (surface == nullptr)
-		{
-			SDL_Log("Failed to load .BMP texture: %s, %s", inFileName.c_str(), SDL_GetError());
-			return false;
-		}
-
-		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
-
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
-		if (texture == nullptr)
-		{
-			SDL_Log("Failed to create texture from surface: %s", SDL_GetError());
-			return false;
-		}
-
-		m_TextureMap[inID] = texture;
-
-		m_TextureMapPath[inID] = inFileName.c_str();
-		return true;
-	}
-	else
-	{
-		// Load the texture using SOIL
-		int width = 0, height = 0, numComponents = 0;
-		GLint dataFormat = 0;
-		stbi_set_flip_vertically_on_load(1);
-		unsigned char* image = stbi_load(inFileName.c_str(), &width, &height, &numComponents, 0);
-
-
-		RemoveColor(image, width, height, 255, 0, 255);
-
-		// Determine the format of the image data
-
-		if (numComponents == 3)
-		{
-			dataFormat = GL_RGB;
-		}
-		else
-		{
-			dataFormat = GL_RGBA;
-		}
-
-		// Generate a texture and bind it
-		GLuint _gltexture;
-		GLCall(glGenTextures(1, &_gltexture));
-		GLCall(glBindTexture(GL_TEXTURE_2D, _gltexture));
-
-		// Set the texture parameters
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-
-
-		// Upload the texture data
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, image));
-
-		// Free the image data and unbind the texture
-		stbi_image_free(image);
-		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-
-		// Store the texture in the texture map
-		SDL_Texture* sdlTexture = reinterpret_cast<SDL_Texture*>(_gltexture);
-
-		m_TextureMap[inID] = sdlTexture;
-		m_GLTextureMap[m_TextureMap[inID]] = _gltexture;
-
-		m_TextureMapPath[inID] = inFileName.c_str();
-
-		return true;
-	}
-}
-
-void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue)
-{
-	for (int i = 0; i < width * height * 3; i += 3)
-	{
-		if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue)
-		{
-			pixels[i] = pixels[i + 1] = pixels[i + 2] = 0;
-		}
-	}
-}
-
-
-
-#pragma endregion
 
 
 
