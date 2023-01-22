@@ -152,7 +152,7 @@ void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigne
 
 #pragma region OPENGL
 
-static const size_t MaxQuadCount = 5000;
+static const size_t MaxQuadCount = 10000;
 static const size_t MaxVertexCount = MaxQuadCount * 4;
 static const size_t m_MaxIndexCount = MaxQuadCount * 6;
 static const size_t MaxTextures = 32;
@@ -464,8 +464,9 @@ void Renderer::Draw(std::string inID, int x, int y, int width, int height, float
 		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
 		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
 
+		
 		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
-		float drawPosY = MathHelper::MapClampRanged(y, 0.0f, 640, -1.0f, 1.0f) - drawHeight / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
 
 
 		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)

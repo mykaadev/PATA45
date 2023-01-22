@@ -73,38 +73,6 @@ void Animation::Update(float deltaTime)
 
 }
 
-// 	if (!m_Loop)
-// 	{
-// 		if (m_FrameCount != 0 && m_FrameCounter > 0)
-// 		{
-// 			if (m_SpriteFrame == m_FrameCount - 1)
-// 			{
-// 				m_SpriteFrame = m_EndFrame;
-// 			}
-// 			else
-// 			{
-// 				m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-// 			}
-// 		}
-// 
-// 		if (m_FrameCounter == 0)
-// 		{
-// 			m_SpriteFrame = m_EndFrame;
-// 		}
-// 	}
-// 
-// 
-// 	if (m_Loop)
-// 	{
-// 		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
-// 
-// 		if (m_FrameCount == 0)
-// 		{
-// 			m_SpriteFrame = m_StartingFrame;
-// 		}
-//}
-//}
-
 void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight)
 {
 	if (m_FrameCount == 0 || m_FrameCount == 1)
