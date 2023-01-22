@@ -21,7 +21,6 @@ class Player : public Character
 {
 public:
 
-	enum EType { light, medium, hard };
 	Player(Properties* props);
 
 	virtual void Init();
@@ -32,7 +31,7 @@ public:
 
 	void ChooseBulletType();
 	void TakeDamage(int inDamage);
-	void AddPowerUp();
+	void AddCompanion();
 
 	/* PowerUps  */
 	void AddSheildPowerUp(int morelife);
@@ -46,16 +45,19 @@ private:
 	void SetAnimationState(AnimationStates inCurrentAnimationState, float inAxisValue);
 	void Move();
 
-	void SpawnFirstCompanion();
-	void SpawnSecondCompanion();
+private:
 
 public:
 	void FireGun();
-	EType bulletType;
 	int bulletLevel;
+	void SpawnCompanion();
 
 private:
 	SDL_TimerID myTimerID;
+public:
+	SDL_TimerID myTimerIDCompanion;
+private:
+	bool firstCompanionSpawned;
 
 	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
 	float fSpeed;
@@ -70,10 +72,11 @@ private:
 	b2Vec2 secondCompanionPosition;
 	float fireRate;
 
-	int m_damageAmount;
+	int m_DamageAmount;
 	
 	Vector2 m_MoveAxis;
 
 	~Player();
+	bool secondCompanionSpawned;
 };
 

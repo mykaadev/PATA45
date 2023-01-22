@@ -80,7 +80,8 @@ void Drone::Update(float deltaTime)
 
 
 			// handle out of screen destroy
-			if (m_Body->GetPosition().x < -500.0f - m_Width / 2 || m_Body->GetPosition().x > 960.0f + m_Width / 2)
+			if (m_Body->GetPosition().x < 0.0f - m_Width / 2 || m_Body->GetPosition().x > 960.0f + m_Width / 2
+				|| m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
 			{
 				m_IsDead = true;
 			

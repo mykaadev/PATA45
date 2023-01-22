@@ -8,23 +8,23 @@
 #include "Companion.h"
 #include "WeaponPowerUp.h"
 #include "ShieldPowerUp.h"
+#include "PowerUpCompanion.h"
 
 
 
 Uint32 HoldingFire(Uint32 interval, void* data)
 {
-
-	// 	Bullet* bullet = nullptr;
-	// 	bullet = new Bullet(new Properties("Bullet", ((Bullet*)data)->m_Body->GetPosition().x,
-	// 		((Bullet*)data)->m_Body->GetPosition().y - 50, 16, 16, SDL_FLIP_NONE));
-
-	Player* player = nullptr;
 	((Player*)data)->FireGun();
-	//	World::GetInstance()->LoadObjects(bullet);
-
-
 	return interval;
+}
 
+
+
+Uint32 SpawnCompanionTimer(Uint32 interval, void* data)
+{
+	((Player*)data)->SpawnCompanion();
+	EngineTime::GetInstance()->RemoveTimer(((Player*)data)->myTimerIDCompanion);
+	return interval;
 }
 
 Player::Player(Properties* props) : Character(props) {
@@ -35,8 +35,9 @@ Player::Player(Properties* props) : Character(props) {
 	currentHealth = maxHealth;
 	fSpeed = 2.0f;
 	fireRate = 300.0f;
-	m_MaxPowerLevel = 3;
-	m_damageAmount = 1;
+	m_MaxPowerLevel = 2;
+	m_DamageAmount = 1;
+	m_PowerLevel = 0;
 
 }
 
@@ -63,13 +64,13 @@ void Player::Update(float deltaTime)
 	SetOriginPoint();
 	Move();
 
-	if (FirstCompanion != nullptr)
+	if (FirstCompanion != nullptr && m_Body != nullptr)
 	{
 		firstCompanionPosition = b2Vec2(m_Body->GetPosition().x + 50, m_Body->GetPosition().y - 10);
 		dynamic_cast<Companion*>(FirstCompanion)->SetPosition(firstCompanionPosition, 0.15f);
 	}
 
-	if (SecondCompanion != nullptr)
+	if (SecondCompanion != nullptr && m_Body != nullptr)
 	{
 		secondCompanionPosition = b2Vec2(m_Body->GetPosition().x - 50, m_Body->GetPosition().y - 10);
 		dynamic_cast<Companion*>(SecondCompanion)->SetPosition(secondCompanionPosition, 0.15f);
@@ -155,14 +156,9 @@ void Player::BindAxisAndActions()
 
 	}
 
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_P))
-	{
-		SpawnFirstCompanion();
-	}
-	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_O))
-	{
-		SpawnSecondCompanion();
-	}
+
+	if (InputHandler::GetInstance()->GetKeyDown(SDL_SCANCODE_O))  AddCompanion();
+
 }
 
 
@@ -179,49 +175,60 @@ void Player::Move()
 		SetAnimationState(MovingX, m_MoveAxis.X);
 	}
 
-	m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
-}
-
-
-void Player::SpawnFirstCompanion()
-{
-	if (FirstCompanion == nullptr)
+	if (m_Body != nullptr)
 	{
-		FirstCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x + 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
-		World::GetInstance()->LoadObjects(FirstCompanion);
+		m_Body->SetLinearVelocity(b2Vec2(m_MoveAxis.X * fSpeed, m_MoveAxis.Y * -fSpeed));
 	}
-	
 }
 
-void Player::SpawnSecondCompanion()
+
+void Player::SpawnCompanion()
 {
-	if (SecondCompanion == nullptr)
+	
+
+	if (SecondCompanion == nullptr && FirstCompanion != nullptr && !secondCompanionSpawned)
 	{
 		SecondCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x - 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
 		World::GetInstance()->LoadObjects(SecondCompanion);
+		secondCompanionSpawned = true;
 	}
+
+	if (FirstCompanion == nullptr && !firstCompanionSpawned)
+	{
+		FirstCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x + 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(FirstCompanion);
+		firstCompanionSpawned = true;
+
+	}	
+
 }
+
 
 void Player::FireGun()
 {
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body != nullptr)
 	{
 		canShoot = false;
 		Bullet* bullet = nullptr;
 		bullet = new Bullet(new Properties("Bullet", m_Body->GetPosition().x, m_Body->GetPosition().y - 32, 16, 16, SDL_FLIP_NONE));
-		bullet->SetDamage(m_damageAmount);
+		bullet->SetDamage(m_DamageAmount);
 		World::GetInstance()->LoadObjects(bullet);
 
-		if (FirstCompanion != nullptr)
+		if (FirstCompanion != nullptr && firstCompanionSpawned)
 		{
+
+			if (FirstCompanion->GetBody() == nullptr) { dynamic_cast<Companion*>(FirstCompanion)->Init(); }
+			if (FirstCompanion->GetBody() == nullptr) { return; }
 			Bullet* bullet = nullptr;
 			b2Vec2 ShootPosition = dynamic_cast<Companion*>(FirstCompanion)->GetBody()->GetPosition();
 			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
 			World::GetInstance()->LoadObjects(bullet);
 		}
 
-		if (SecondCompanion != nullptr)
+		if (SecondCompanion != nullptr && secondCompanionSpawned)
 		{
+			if (SecondCompanion->GetBody() == nullptr) { dynamic_cast<Companion*>(SecondCompanion)->Init(); }
+			if (SecondCompanion->GetBody() == nullptr) { return; }
 			Bullet* bullet = nullptr;
 			b2Vec2 ShootPosition = dynamic_cast<Companion*>(SecondCompanion)->GetBody()->GetPosition();
 			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
@@ -234,8 +241,11 @@ void Player::FireGun()
 
 void Player::SetOriginPoint()
 {
-	m_Origin->X = m_Body->GetPosition().x;
-	m_Origin->Y = m_Body->GetPosition().y;
+	if (m_Body != nullptr)
+	{
+		m_Origin->X = m_Body->GetPosition().x;
+		m_Origin->Y = m_Body->GetPosition().y;
+	}
 }
 
 
@@ -275,13 +285,17 @@ void Player::TakeDamage(int inDamage)
 }
 
 
-void Player::AddPowerUp()
+void Player::AddCompanion()
 {
 	if (m_PowerLevel <= m_MaxPowerLevel)
 	{
 		++m_PowerLevel;
-		if (m_PowerLevel == 1) { SpawnFirstCompanion();	fireRate = 200.0f; }
-		if (m_PowerLevel == 2) { SpawnSecondCompanion(); fireRate = 50.0f; }
+// 		if (m_PowerLevel == 1) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, (Player*)this); fireRate = 200.0f; }
+// 		if (m_PowerLevel == 2) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, (Player*)this); fireRate = 100.0f; }
+
+		if (m_PowerLevel == 1) { SpawnCompanion(); fireRate = 200.0f; }
+ 		if (m_PowerLevel == 2) { SpawnCompanion(); fireRate = 100.0f; }
+
 	}
 	else
 	{
@@ -300,10 +314,6 @@ void Player::AddSheildPowerUp(int morelife)
 	}
 }
 
-void Player::AddWeaponPowerUp(int Power)
-{
-
-}
 
 void Player::Draw()
 {
@@ -325,10 +335,8 @@ void Player::CheckCollision(GameObject* otherGameObject)
 
 	if (dynamic_cast<ShieldPowerUp*>(otherGameObject) && !m_PendingKill && !dynamic_cast<ShieldPowerUp*>(otherGameObject)->GetIsDead())
 	{
-		((ShieldPowerUp*)otherGameObject)->TakeDamage(m_damageAmount);
-	
+		((ShieldPowerUp*)otherGameObject)->TakeDamage(m_DamageAmount);
 	}
-
 }
 
 void Player::ChooseBulletType()
@@ -338,21 +346,15 @@ void Player::ChooseBulletType()
 
 	if (bulletLevel == 0)
 	{
-		bulletType = light;
-		m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
-		m_damageAmount = 1;
+		m_DamageAmount = 1;
 	}
 	else if (bulletLevel == 1)
 	{
-		bulletType = medium;
-		m_Animation->SetProperties("BulletTwo", 1, 0, 24, 50, true);
-		m_damageAmount = 2;
+		m_DamageAmount = 2;
 	}
 	else {
-		bulletType = hard;
-		m_Animation->SetProperties("BulletThree", 1, 0, 16, 50, true);
-		m_damageAmount = 3;
+		m_DamageAmount = 3;
 	}
 
-	
+
 }

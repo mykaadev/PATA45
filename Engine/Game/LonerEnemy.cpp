@@ -85,7 +85,7 @@ void LonerEnemy::Update(float deltaTime)
 		if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
 		{
 			m_IsDead = true;
-			if (!World::GetInstance()->GetWorld()->IsLocked())
+			if (m_Body != nullptr)
 			{
 				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 			}
@@ -115,10 +115,12 @@ void LonerEnemy::TakeDamage(int inDamage)
 	if (m_CurrentHealth <= 0)
 	{
 		m_IsDead = true;
-		if (!World::GetInstance()->GetWorld()->IsLocked())
+
+		if (m_Body != nullptr)
 		{
 			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
+
 		m_Animation->SetCurrentSprite(0);
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 	}
@@ -128,11 +130,9 @@ void LonerEnemy::SetOriginPoint()
 {
 	if (m_Body == nullptr) return;
 
-	if (!World::GetInstance()->GetWorld()->IsLocked())
-	{
-		m_Origin->X = m_Body->GetPosition().x;
-		m_Origin->Y = m_Body->GetPosition().y;
-	}
+	m_Origin->X = m_Body->GetPosition().x;
+	m_Origin->Y = m_Body->GetPosition().y;
+	
 }
 
 void LonerEnemy::Clean()

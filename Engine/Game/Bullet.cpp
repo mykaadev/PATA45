@@ -38,7 +38,10 @@ void Bullet::Init()
 	}
 
 //	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, -3.0f));
+	if (m_Body != nullptr)
+	{
+		m_Body->SetLinearVelocity(b2Vec2(0.0f, -3.0f));
+	}
 }
 
 
@@ -84,7 +87,10 @@ void Bullet::CheckIfIsOutOfBounds()
 
 	if (m_IsDead)
 	{
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		if (m_Body != nullptr)
+		{
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		}
 
 		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
 

@@ -146,6 +146,7 @@
     <ClCompile Include="MetalAsteroid.cpp" />
     <ClCompile Include="ObjectInitializer.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PowerUpCompanion.cpp" />
     <ClCompile Include="PowerUpsSpawner.cpp" />
     <ClCompile Include="RusherEnemy.cpp" />
     <ClCompile Include="ShieldPowerUp.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="MetalAsteroid.h" />
     <ClInclude Include="ObjectInitializer.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PowerUpCompanion.h" />
     <ClInclude Include="PowerUpsSpawner.h" />
     <ClInclude Include="RusherEnemy.h" />
     <ClInclude Include="ShieldPowerUp.h" />

@@ -22,7 +22,7 @@ void WeaponPowerUp::Init()
 
 	m_Animation->SetProperties("WeaponPowerUp", 1, 0, 8, 100, true);
 
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body != nullptr)
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 	}

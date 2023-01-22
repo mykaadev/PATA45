@@ -19,7 +19,7 @@ void RusherEnemy::Init()
 
 	m_Animation->SetProperties("Rusher", 1, 0, 24, 50, true);
 	
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (m_Body != nullptr)
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.f, 1.5f));
 	}
@@ -42,8 +42,10 @@ void RusherEnemy::Update(float deltaTime)
 		m_IsDead = true;
 		m_Height = m_Width;
 		
-		
-		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		if (m_Body != nullptr)
+		{
+			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+		}
 		
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
@@ -70,10 +72,12 @@ void RusherEnemy::TakeDamage(int inDamage)
 	{
 		m_IsDead = true;
 		m_Height = m_Width;
-		if (!World::GetInstance()->GetWorld()->IsLocked())
+
+		if (m_Body != nullptr)
 		{
 			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
+		
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
 	}

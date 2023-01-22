@@ -31,10 +31,13 @@ Uint32 SplitIntoSmallAsteroids(Uint32 interval, void* data)
 	World::GetInstance()->LoadObjects(asteroid1);
 	World::GetInstance()->LoadObjects(asteroid2);
 	World::GetInstance()->LoadObjects(asteroid3);
-
-	asteroid1->GetBody()->SetLinearVelocity(b2Vec2(-1.0f, 1.0f));
-	asteroid2->GetBody()->SetLinearVelocity(b2Vec2(0.0f, 1.0f));
-	asteroid3->GetBody()->SetLinearVelocity(b2Vec2(1.0f, 1.0f));
+	
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		asteroid1->GetBody()->SetLinearVelocity(b2Vec2(-1.0f, 1.0f));
+		asteroid2->GetBody()->SetLinearVelocity(b2Vec2(0.0f, 1.0f));
+		asteroid3->GetBody()->SetLinearVelocity(b2Vec2(1.0f, 1.0f));
+	}
 
 
 	EngineTime::GetInstance()->RemoveTimer(dynamic_cast<StoneAsteroid*>((StoneAsteroid*)data)->myTimerID);
@@ -96,15 +99,16 @@ void StoneAsteroid::Update(float deltaTime)
 		if (m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
 		{
 			m_IsDead = true;
-			
-			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			if (!World::GetInstance()->GetWorld()->IsLocked())
+			{
+				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
+			}
 			
 			m_Animation->SetCurrentSprite(0);
 			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 			SetSize(64, 64);
 
 		}
-	
 	}
 
 	if (m_IsDead)
@@ -184,10 +188,11 @@ void StoneAsteroid::Explosion()
 		myTimerID = EngineTime::GetInstance()->StartTimer(100, SplitIntoSmallAsteroids, (StoneAsteroid*)this);
 	}
 
-	if (World::GetInstance()->GetWorld()->IsLocked())
+	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 	}
+
 	m_Animation->SetCurrentSprite(0);
 	m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 	SetSize(64, 64);

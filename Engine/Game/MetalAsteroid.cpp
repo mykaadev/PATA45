@@ -62,10 +62,12 @@ void MetalAsteroid::Update(float deltaTime)
 			if (m_Body->GetPosition().y > 640.0f + m_Height / 2 && !m_IsDead)
 			{
 				m_IsDead = true;
-				if (!World::GetInstance()->GetWorld()->IsLocked())
+
+				if (m_Body != nullptr)
 				{
 					m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 				}
+				
 				m_Animation->SetCurrentSprite(0);
 				m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 				SetSize(64, 64);

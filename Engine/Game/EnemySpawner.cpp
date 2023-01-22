@@ -43,15 +43,15 @@ Uint32 SpawnDrone(Uint32 interval, void* data) {
 
 	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
-		float x = -400;
-		float randY = (rand() % (840 - 160 + 1) + 160);
+		float y = 0;
+		float randX = (rand() % (840 - 160 + 1) + 160);
 
 		for (int i = 0; i < 8; ++i)
 		{
 			
-			Drone* drone = new Drone(new Properties("Drone", x, randY, 32, 32));
-			randY -= 50;
-			x += 50;
+			Drone* drone = new Drone(new Properties("Drone", randX, y, 32, 32));
+			randX += 50;
+			y -= 50;
 			World::GetInstance()->LoadObjects(drone);			
 		}
 	
@@ -72,8 +72,8 @@ EnemySpawner::~EnemySpawner()
 
 void EnemySpawner::Init()
 {
-	/*EngineTime::GetInstance()->StartTimer(3000, SpawnLoner, (void*)"");
-	EngineTime::GetInstance()->StartTimer(3000, SpawnRusher, (void*)"");*/
-	EngineTime::GetInstance()->StartTimer(3000, SpawnDrone, (void*)"");
+	EngineTime::GetInstance()->StartTimer(10000, SpawnLoner, (void*)"");
+	EngineTime::GetInstance()->StartTimer(20000, SpawnRusher, (void*)"");
+	EngineTime::GetInstance()->StartTimer(30000, SpawnDrone, (void*)"");
 }
 

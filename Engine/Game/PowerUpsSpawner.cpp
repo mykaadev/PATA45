@@ -4,6 +4,7 @@
 #include "WeaponPowerUp.h"
 #include "ShieldPowerUp.h"
 #include "PowerUpsSpawner.h"
+#include "PowerUpCompanion.h"
 
 
 
@@ -40,6 +41,20 @@ Uint32 SpawnWeaponPowerup(Uint32 interval, void* data) {
 }
 
 
+Uint32 SpawnCompanionPowerup(Uint32 interval, void* data) {
+
+	if (!World::GetInstance()->GetWorld()->IsLocked())
+	{
+		PowerUpCompanion* companionPowerUp = nullptr;
+
+		companionPowerUp = new PowerUpCompanion(new Properties("Companion", (rand() % (840 - 260 + 1) + 160), -100, 32, 32, SDL_FLIP_NONE));
+		World::GetInstance()->LoadObjects(companionPowerUp);
+	}
+
+	return interval;
+}
+
+
 PowerUpsSpawner::~PowerUpsSpawner()
 {
 	delete m_Instance;
@@ -47,6 +62,8 @@ PowerUpsSpawner::~PowerUpsSpawner()
 
 void PowerUpsSpawner::Init()
 {
-	EngineTime::GetInstance()->StartTimer(5000, SpawnShieldPowerup, (void*)"");
-	EngineTime::GetInstance()->StartTimer(5000, SpawnWeaponPowerup, (void*)"");
+	EngineTime::GetInstance()->StartTimer(25000, SpawnShieldPowerup, (void*)"");
+	EngineTime::GetInstance()->StartTimer(25000, SpawnWeaponPowerup, (void*)"");
+	EngineTime::GetInstance()->StartTimer(5000, SpawnCompanionPowerup, (void*)"");
+
 }

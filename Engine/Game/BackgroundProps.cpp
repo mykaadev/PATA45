@@ -10,7 +10,11 @@ void BackgroundProps::Init()
 {
 	SetupBody();
 	m_DefaultPos = m_Body->GetPosition();
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.45f));
+
+	if (m_Body != nullptr)
+	{
+		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.45f));
+	}
 }
 
 void BackgroundProps::SetAnimationProps(std::string FileName, bool isFlippedHorizontaly)

@@ -18,7 +18,7 @@ public:
 	virtual void CheckCollision(GameObject* otherGameObject);
 
 
-private:
+public:
 	void SetupBody();
 	void SetOriginPoint();
 	b2Vec2 vDesiredPosition;

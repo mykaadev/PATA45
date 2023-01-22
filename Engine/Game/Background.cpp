@@ -10,7 +10,12 @@ void Background::Init()
 {
 	SetupBody();
 	m_DefaultPos = m_Body->GetPosition();
-	m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.2f));
+	
+	if (m_Body != nullptr)
+	{
+		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.2f));
+	}
+
 	m_Animation->SetProperties("Galaxy", 1, 0, 1, 100, false);
 
 }

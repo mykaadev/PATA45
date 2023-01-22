@@ -80,10 +80,13 @@ void Companion::SetOriginPoint()
 
 void Companion::SetPosition(b2Vec2 inPlayerPosition, float interpSpeed)
 {
-	vDesiredPosition.x = m_Origin->X += (inPlayerPosition.x - m_Body->GetPosition().x) * interpSpeed;
-	vDesiredPosition.y = m_Origin->Y += (inPlayerPosition.y - m_Body->GetPosition().y) * interpSpeed;
+	if (m_Body != nullptr)
+	{
+		vDesiredPosition.x = m_Origin->X += (inPlayerPosition.x - m_Body->GetPosition().x) * interpSpeed;
+		vDesiredPosition.y = m_Origin->Y += (inPlayerPosition.y - m_Body->GetPosition().y) * interpSpeed;
+		m_Body->SetTransform(vDesiredPosition, m_Body->GetAngle());
+	}
 
-	m_Body->SetTransform(vDesiredPosition, m_Body->GetAngle());
 }
 
 void Companion::Clean()
