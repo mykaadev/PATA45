@@ -23,7 +23,7 @@ public:
 
 private:
 
-	int addLife;
+	int lifeBonus;
 	int m_FirePower;
 	int m_CurrentHealth;
 	int m_MaxHealth;

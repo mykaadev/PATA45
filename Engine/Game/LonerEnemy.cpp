@@ -3,6 +3,8 @@
 #include "EnemyBullet.h"
 #include "EngineTime.h"
 #include <iostream>
+#include "Player.h"
+#include "Companion.h"
 
 
 
@@ -143,7 +145,21 @@ void LonerEnemy::Clean()
 
 void LonerEnemy::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<Player*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Player*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Player*)otherGameObject)->TakeDamage(1);
+		collided = true;
 
+		m_IsDead = true;
+	}
+
+	if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Companion*)otherGameObject)->TakeDamage(1);
+		collided = true;
+
+		m_IsDead = true;
+	}
 }
 
 

@@ -18,5 +18,7 @@ public:
 	
 	RusherEnemy();
 
+private:
+	bool collided;
 };
 

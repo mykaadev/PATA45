@@ -62,7 +62,7 @@ PowerUpsSpawner::~PowerUpsSpawner()
 
 void PowerUpsSpawner::Init()
 {
-	EngineTime::GetInstance()->StartTimer(25000, SpawnShieldPowerup, (void*)"");
+	EngineTime::GetInstance()->StartTimer(2000, SpawnShieldPowerup, (void*)"");
 	EngineTime::GetInstance()->StartTimer(25000, SpawnWeaponPowerup, (void*)"");
 	EngineTime::GetInstance()->StartTimer(5000, SpawnCompanionPowerup, (void*)"");
 

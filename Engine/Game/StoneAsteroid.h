@@ -23,7 +23,7 @@ public:
 	SDL_TimerID myTimerID;
 
 	//life
-	int m_GiveDamage;
+	int m_DamageAmount;
 	int m_CurrentHealth;
 	int m_MaxHealth;
 	int r;
@@ -33,5 +33,7 @@ public:
 protected:
 	Size GetSize() { return size_; }
 	
+private:
+	bool collided;
 };
 

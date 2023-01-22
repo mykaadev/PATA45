@@ -7,6 +7,7 @@
 #include "ShieldPowerUp.h"
 #include "Player.h"
 #include "RusherEnemy.h"
+#include "MetalAsteroid.h"
 
 Bullet::Bullet(Properties* props) : Character(props) {
 
@@ -148,9 +149,10 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 		m_IsDead = true;
 	}	
 	
-
-
-
+	if (dynamic_cast<MetalAsteroid*>(otherGameObject) && !m_PendingKill && !dynamic_cast<MetalAsteroid*>(otherGameObject)->GetIsDead())
+	{
+		m_IsDead = true;
+	}
 }
 
 

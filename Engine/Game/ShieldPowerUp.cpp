@@ -9,7 +9,7 @@
 ShieldPowerUp::ShieldPowerUp(Properties* props): BasePowerUp(props)
 {
 	m_CurrentHealth = 1;
-	addLife = 0;
+	lifeBonus = 1;
 	
 }
 
@@ -34,6 +34,20 @@ void ShieldPowerUp::Draw()
 void ShieldPowerUp::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
+
+
+	if (m_IsDead)
+	{
+		if (GetAnimation()->GetCurrentSprite() >= 10)
+		{
+			Clean();
+		}
+	}
+
+	if (m_Body == nullptr)
+	{
+		return;
+	}
 
 	SetOriginPoint();
 
@@ -67,15 +81,15 @@ void ShieldPowerUp::Clean()
 	m_PendingKill = true;
 }
 
+
 void ShieldPowerUp::CheckCollision(GameObject* otherGameObject)
 {
-	m_PendingKill = true;
+
 }
 
 void ShieldPowerUp::TakeDamage(int damage)
 {
-	m_IsDead = true;
-	Clean();
+
 }
 
 void ShieldPowerUp::SetOriginPoint()
@@ -91,13 +105,9 @@ void ShieldPowerUp::SetOriginPoint()
 
 void ShieldPowerUp::ApplyPowerUp(GameObject* otherGameObject)
 {
-// 	Player* player = nullptr;
-// 	amount = addLife += 1;
-// 	player->AddSheildPowerUp(amount);
-
 	if (dynamic_cast<Player*>(otherGameObject))
 	{
-		dynamic_cast<Player*>(otherGameObject)->AddSheildPowerUp(addLife++);
+		dynamic_cast<Player*>(otherGameObject)->AddSheildPowerUp(lifeBonus);
 		m_IsDead = true;
 		Clean();
 	}

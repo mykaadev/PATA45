@@ -4,6 +4,9 @@
 #include "box2d.h"
 #include "World.h"
 
+class Player;
+
+
 
 class Companion : public Character
 {
@@ -17,6 +20,13 @@ public:
 	virtual void Clean();
 	virtual void CheckCollision(GameObject* otherGameObject);
 
+	Player* myPlayer;
+
+	void SetPlayer(Player* inMyPlayer);
+
+	void TakeDamage(int inDamage);
+
+	inline bool GetIsDead() { return m_IsDead; }
 
 public:
 	void SetupBody();
@@ -29,5 +39,7 @@ public:
 
 	bool m_IsDead;
 	~Companion();
+private:
+	int currentHealth;
 };
 

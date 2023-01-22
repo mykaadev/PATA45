@@ -28,5 +28,7 @@ public:
 
 protected:
 	Size GetSize() { return size_; }
+private:
+	bool collided;
 };
 

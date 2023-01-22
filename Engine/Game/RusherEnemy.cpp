@@ -1,6 +1,8 @@
 #include "RusherEnemy.h"
 #include "BaseEnemy.h"
 #include "World.h"
+#include "Player.h"
+#include "Companion.h"
 
 
 
@@ -97,10 +99,23 @@ void RusherEnemy::SetOriginPoint()
 void RusherEnemy::Clean()
 {
 	m_PendingKill = true;
-	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void RusherEnemy::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<Player*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Player*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Player*)otherGameObject)->TakeDamage(1);
+		collided = true;
 
+		m_IsDead = true;
+	}
+
+	if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Companion*)otherGameObject)->TakeDamage(1);
+		collided = true;
+
+		m_IsDead = true;
+	}
 }

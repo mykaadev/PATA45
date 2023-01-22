@@ -10,13 +10,15 @@ Companion::Companion(Properties* props) : Character(props) {
 	m_Animation = new Animation();
 	m_damageAmount = { 1 };
 
+	currentHealth = 2;
+
 }
 
 void Companion::Init()
 {
-	if (m_Body == nullptr) { SetupBody(); }
+	if (m_Body == nullptr && !m_IsDead) { SetupBody(); }
 
-	if (m_Body == nullptr) { return; }
+	if (m_Body == nullptr && !m_IsDead) { return; }
 	m_Animation->SetProperties("Companion", 1, 0, 16, 100, true);
 }
 
@@ -24,7 +26,7 @@ void Companion::Init()
 
 void Companion::SetupBody()
 {	
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (!World::GetInstance()->GetWorld()->IsLocked() && !m_IsDead)
 	{
 		b2BodyDef _BodyDef;
 		_BodyDef.type = b2_dynamicBody;
@@ -54,24 +56,42 @@ void Companion::SetupBody()
 void Companion::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
+	SetOriginPoint();
+	
+	if (myPlayer->GetIsDead())
+	{
+		m_IsDead = true;
+	}
+
+	if (m_IsDead)
+	{
+
+		dynamic_cast<Player*>(myPlayer)->DetachCompanion(this);
+
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		SetSize(64, 64);
+
+		if (GetAnimation()->GetCurrentSprite() >= 10)
+		{
+			Clean();
+		}
+	}
 
 	m_Animation->Update(deltaTime);
-
-	SetOriginPoint();
 
 }
 
 
 void Companion::Draw()
 {
-	if (m_Body == nullptr) { return; }
+	if (m_Body == nullptr && !m_IsDead) { return; }
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
 
 
 void Companion::SetOriginPoint()
 {
-	if (m_Body == nullptr) return;
+	if (m_Body == nullptr && !m_IsDead) return;
 
 	m_Origin->X = m_Body->GetPosition().x;
 	m_Origin->Y = m_Body->GetPosition().y;
@@ -80,7 +100,7 @@ void Companion::SetOriginPoint()
 
 void Companion::SetPosition(b2Vec2 inPlayerPosition, float interpSpeed)
 {
-	if (m_Body != nullptr)
+	if (m_Body != nullptr && !m_IsDead)
 	{
 		vDesiredPosition.x = m_Origin->X += (inPlayerPosition.x - m_Body->GetPosition().x) * interpSpeed;
 		vDesiredPosition.y = m_Origin->Y += (inPlayerPosition.y - m_Body->GetPosition().y) * interpSpeed;
@@ -100,6 +120,26 @@ void Companion::CheckCollision(GameObject* otherGameObject)
 
 }
 
+
+void Companion::SetPlayer(Player* inMyPlayer)
+{
+	myPlayer = inMyPlayer;
+}
+
+void Companion::TakeDamage(int inDamage)
+{
+	currentHealth -= inDamage;
+
+	if (currentHealth <= 0 && !m_IsDead)
+	{
+		currentHealth = 0;
+
+		m_Animation->SetCurrentSprite(0);
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		SetSize(64, 64);
+		m_IsDead = true;
+	}
+}
 
 Companion::~Companion()
 {

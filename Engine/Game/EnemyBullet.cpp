@@ -5,8 +5,7 @@
 EnemyBullet::EnemyBullet(Properties* props) : Character(props) {
 
 	m_Animation = new Animation();
-	m_damageAmount = { 0 };  // TESTING PURPOSES
-
+	m_damageAmount = { 1 };
 }
 
 void EnemyBullet::Init()
@@ -109,7 +108,6 @@ void EnemyBullet::SetOriginPoint()
 void EnemyBullet::Clean()
 {
 	m_PendingKill = true;
-	//World::GetInstance()->DestroyGameObject(this, m_Body);
 }
 
 void EnemyBullet::CheckCollision(GameObject* otherGameObject)
@@ -118,12 +116,20 @@ void EnemyBullet::CheckCollision(GameObject* otherGameObject)
 	if (dynamic_cast<Player*>(otherGameObject))
 	{
 		((Player*)otherGameObject)->TakeDamage(m_damageAmount);
+
+		m_IsDead = true;
+	}
+	else  if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Companion*)otherGameObject)->TakeDamage(1);
+		collided = true;
+
+		m_IsDead = true;
 	}
 	else
 	{
 		return;
 	}
-	m_IsDead = true;
 }
 
 

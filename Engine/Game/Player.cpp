@@ -14,7 +14,15 @@
 
 Uint32 HoldingFire(Uint32 interval, void* data)
 {
-	((Player*)data)->FireGun();
+	if (!dynamic_cast<Player*>((Player*)data)->m_IsDead)
+	{
+		((Player*)data)->FireGun();
+	}
+	else
+	{
+		EngineTime::GetInstance()->RemoveTimer(((Player*)data)->myTimerID);
+	}
+	
 	return interval;
 }
 
@@ -50,6 +58,20 @@ void Player::Init()
 	SetAnimationState(Idle, 0);
 }
 
+void Player::DetachCompanion(Companion* CompanionToCheck)
+{
+	if (FirstCompanion == CompanionToCheck) { 
+		FirstCompanion = nullptr; 
+		firstCompanionSpawned = false;
+		m_PowerLevel--;
+	}
+	if (SecondCompanion == CompanionToCheck) { 
+		SecondCompanion = nullptr; 
+		secondCompanionSpawned = false;
+		m_PowerLevel--;
+	}
+}
+
 Player::~Player()
 {
     delete m_Animation;
@@ -58,7 +80,6 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-	std::cout << "my life is " << currentHealth << std::endl;
 	__super::Update(deltaTime);
 
 	BindAxisAndActions();
@@ -75,6 +96,18 @@ void Player::Update(float deltaTime)
 	{
 		secondCompanionPosition = b2Vec2(m_Body->GetPosition().x - 50, m_Body->GetPosition().y - 10);
 		dynamic_cast<Companion*>(SecondCompanion)->SetPosition(secondCompanionPosition, 0.15f);
+	}
+
+	if (m_IsDead)
+	{
+		if (GetAnimation()->GetCurrentSprite() >= 10)
+		{
+			EngineTime::GetInstance()->RemoveTimer(myTimerID);
+			EngineTime::GetInstance()->RemoveTimer(myTimerIDCompanion);
+			SecondCompanion->m_IsDead = true;
+			FirstCompanion->m_IsDead = true;
+			Clean();
+		}
 	}
 
 	m_Animation->Update(deltaTime);
@@ -185,12 +218,11 @@ void Player::Move()
 
 void Player::SpawnCompanion()
 {
-	
-
 	if (SecondCompanion == nullptr && FirstCompanion != nullptr && !secondCompanionSpawned)
 	{
 		SecondCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x - 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
 		World::GetInstance()->LoadObjects(SecondCompanion);
+		dynamic_cast<Companion*>(SecondCompanion)->SetPlayer(this);
 		secondCompanionSpawned = true;
 	}
 
@@ -198,10 +230,9 @@ void Player::SpawnCompanion()
 	{
 		FirstCompanion = new Companion(new Properties("Companion", m_Body->GetPosition().x + 50, m_Body->GetPosition().y + 50, 32, 32, SDL_FLIP_NONE));
 		World::GetInstance()->LoadObjects(FirstCompanion);
+		dynamic_cast<Companion*>(FirstCompanion)->SetPlayer(this);
 		firstCompanionSpawned = true;
-
 	}	
-
 }
 
 
@@ -220,6 +251,7 @@ void Player::FireGun()
 
 			if (FirstCompanion->GetBody() == nullptr) { dynamic_cast<Companion*>(FirstCompanion)->Init(); }
 			if (FirstCompanion->GetBody() == nullptr) { return; }
+			dynamic_cast<Companion*>(FirstCompanion)->SetPlayer(this);
 			Bullet* bullet = nullptr;
 			b2Vec2 ShootPosition = dynamic_cast<Companion*>(FirstCompanion)->GetBody()->GetPosition();
 			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
@@ -230,6 +262,7 @@ void Player::FireGun()
 		{
 			if (SecondCompanion->GetBody() == nullptr) { dynamic_cast<Companion*>(SecondCompanion)->Init(); }
 			if (SecondCompanion->GetBody() == nullptr) { return; }
+			dynamic_cast<Companion*>(SecondCompanion)->SetPlayer(this);
 			Bullet* bullet = nullptr;
 			b2Vec2 ShootPosition = dynamic_cast<Companion*>(SecondCompanion)->GetBody()->GetPosition();
 			bullet = new Bullet(new Properties("Bullet", ShootPosition.x, ShootPosition.y - 32, 16, 16, SDL_FLIP_NONE));
@@ -278,13 +311,16 @@ void Player::TakeDamage(int inDamage)
 
 	if (currentHealth <= 0 && !m_IsDead)
 	{
+		currentHealth = 0;
+
+		m_Animation->SetCurrentSprite(0);
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		SetSize(64, 64); 
 		m_IsDead = true;
+
 		SetAnimationState(Dead, 0);
-		//World::GetInstance()->DestroyGameObject(this, m_Body);
 		m_PendingKill = true;
 	}
-
-
 }
 
 
@@ -293,12 +329,11 @@ void Player::AddCompanion()
 	if (m_PowerLevel <= m_MaxPowerLevel)
 	{
 		++m_PowerLevel;
-// 		if (m_PowerLevel == 1) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, (Player*)this); fireRate = 200.0f; }
-// 		if (m_PowerLevel == 2) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, (Player*)this); fireRate = 100.0f; }
-
-		if (m_PowerLevel == 1) { SpawnCompanion(); fireRate = 200.0f; }
- 		if (m_PowerLevel == 2) { SpawnCompanion(); fireRate = 100.0f; }
-
+ 		if (m_PowerLevel == 1) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, 
+			(Player*)this); fireRate = 200.0f; }
+ 	
+		if (m_PowerLevel == 2) { myTimerIDCompanion = EngineTime::GetInstance()->StartTimer(100.0f, SpawnCompanionTimer, 
+			(Player*)this); fireRate = 100.0f; }
 	}
 	else
 	{
@@ -317,13 +352,10 @@ void Player::AddSheildPowerUp(int morelife)
 	}
 }
 
-
-
 void Player::Draw()
 {
 	m_Animation->Draw(m_Body->GetPosition().x, m_Body->GetPosition().y, m_Width, m_Height);
 }
-
 
 void Player::Clean()
 {
@@ -345,7 +377,6 @@ void Player::CheckCollision(GameObject* otherGameObject)
 
 void Player::ChooseBulletType()
 {
-
 	bulletLevel++;
 
 	if (bulletLevel == 0)
@@ -359,6 +390,4 @@ void Player::ChooseBulletType()
 	else {
 		m_DamageAmount = 3;
 	}
-
-
 }

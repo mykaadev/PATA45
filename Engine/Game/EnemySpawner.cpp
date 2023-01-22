@@ -50,8 +50,8 @@ Uint32 SpawnDrone(Uint32 interval, void* data) {
 		{
 			
 			Drone* drone = new Drone(new Properties("Drone", randX, y, 32, 32));
-			randX += 50;
-			y -= 50;
+		/*	randX += 50;*/
+			y -= 100;
 			World::GetInstance()->LoadObjects(drone);			
 		}
 	

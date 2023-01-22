@@ -24,5 +24,6 @@ public:
 	int m_MaxHealth;
 private:
 	bool m_GoingRight;
+	bool collided;
 };
 

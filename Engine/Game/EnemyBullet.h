@@ -20,5 +20,7 @@ public:
 	int m_damageAmount;
 	bool m_IsDead;
 	~EnemyBullet();
+private:
+	bool collided;
 };
 

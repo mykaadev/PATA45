@@ -4,6 +4,12 @@
 #include "BaseEnemy.h"
 
 
+struct SineMovement
+{
+	float ticksCounter;
+	float sineSpeed;
+	float sineAmplitude;
+};
 
 class Drone : public BaseEnemy
 {
@@ -20,25 +26,18 @@ public:
 
 	/* Drone Part */
 	void Explosion();
-
-	float amplitude;
-	float frequency;
-
 	bool m_IsDead;
 
 private:
-	// float to keep track of the sinusoidal movement
-	float m_SinCounter;
-	//speed
-	float m_Speed;
-	// amplitude
-	float m_amplitude;
-	float x;
-	float y;
+	SineMovement m_SineMovement;
+
 	//life
 	int m_CurrentHealth;
 	int m_MaxHealth;
+	float xMovement;
+	float yMovement;
 
-
+	bool collided;
 };
+
 

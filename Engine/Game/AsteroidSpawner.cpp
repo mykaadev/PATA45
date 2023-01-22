@@ -45,7 +45,7 @@ AsteroidSpawner::~AsteroidSpawner()
 
 void AsteroidSpawner::Init()
 {
-	EngineTime::GetInstance()->StartTimer(1500, SpawnMetalAsteroids, (void*)"");
-	EngineTime::GetInstance()->StartTimer(3000, SpawnStoneAsteroids, (void*)"");
+	EngineTime::GetInstance()->StartTimer(30000, SpawnMetalAsteroids, (void*)"");
+	EngineTime::GetInstance()->StartTimer(15000, SpawnStoneAsteroids, (void*)"");
 	 
 }

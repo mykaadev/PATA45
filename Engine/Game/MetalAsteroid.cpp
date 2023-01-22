@@ -2,6 +2,7 @@
 #include "World.h"
 #include "EngineTime.h"
 #include <iostream>
+#include "Player.h"
 
 MetalAsteroid::MetalAsteroid(Properties* props) : BaseAsteroid(props)
 {
@@ -84,7 +85,24 @@ void MetalAsteroid::Clean()
 
 void MetalAsteroid::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<Player*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Player*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Player*)otherGameObject)->TakeDamage(1);
+		collided = true;		
+	}
 
+	if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
+	{
+		((Companion*)otherGameObject)->TakeDamage(1);
+		collided = true;
+
+		m_IsDead = true;
+	}
+
+	if (!dynamic_cast<Player*>(otherGameObject) && !dynamic_cast<Companion*>(otherGameObject))
+	{
+		collided = false;
+	}
 }
 
 /* Gives damage when colliding with the player*/

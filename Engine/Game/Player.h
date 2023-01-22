@@ -6,6 +6,8 @@
 #include <vector>
 #include "Companion.h"
 
+class Companion;
+
 // custom player game side 
 
 enum AnimationStates
@@ -55,14 +57,15 @@ public:
 	int m_MoreLife;
 	void SpawnCompanion();
 
-private:
-	SDL_TimerID myTimerID;
 public:
+	SDL_TimerID myTimerID;
 	SDL_TimerID myTimerIDCompanion;
+	bool m_IsDead;
+
 private:
 	bool firstCompanionSpawned;
 
-	bool bIdle, bMovingRight, bMovingLeft, canShoot, m_IsDead;
+	bool bIdle, bMovingRight, bMovingLeft, canShoot;
 	float fSpeed;
 	int maxHealth = 100;
 	int currentHealth = 100;
@@ -75,6 +78,9 @@ private:
 	b2Vec2 secondCompanionPosition;
 	float fireRate;
 
+public:
+	void DetachCompanion(Companion* CompanionToCheck);
+private:
 	int m_DamageAmount;
 	
 	Vector2 m_MoveAxis;
