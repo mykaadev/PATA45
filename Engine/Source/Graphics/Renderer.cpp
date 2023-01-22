@@ -445,7 +445,7 @@ void Renderer::Draw(std::string inID, int x, int y, int width, int height, float
 
 		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
 
-		SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
+		SDL_Rect destRect = { x - _cameraPosition.X - width/2, y - _cameraPosition.Y - height/2, width * xScale, height * yScale };
 		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
 	}
 	else

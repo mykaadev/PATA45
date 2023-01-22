@@ -109,7 +109,7 @@ void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight)
 {
 	if (m_FrameCount == 0 || m_FrameCount == 1)
 	{
-		Renderer::GetInstance()->Draw(m_TextureID, x-spriteWidth/2, y-spriteHeight/2, spriteWidth, spriteHeight, 1.0f,1.0f, m_Flip);
+		Renderer::GetInstance()->Draw(m_TextureID, x, y, spriteWidth, spriteHeight, 1.0f,1.0f, 1.0f, m_Flip);
 	}
 	else
 	{
