@@ -152,7 +152,7 @@ void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigne
 
 #pragma region OPENGL
 
-static const size_t MaxQuadCount = 10000;
+static const size_t MaxQuadCount = 5000;
 static const size_t MaxVertexCount = MaxQuadCount * 4;
 static const size_t m_MaxIndexCount = MaxQuadCount * 6;
 static const size_t MaxTextures = 32;
@@ -177,6 +177,7 @@ struct RendererData
 	Vertex* QuadBufferPtr = nullptr;
 
 	std::array<uint32_t, MaxTextures> TextureSlots;
+
 	// Start at 1 because 0 is reserved for no texture
 	uint32_t TextureSlotIndex = 1;
 };
@@ -243,17 +244,17 @@ void Renderer::InitOpenGL()
 	)glsl";
 
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
+	GLCall(glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr));
+	GLCall(glCompileShader(vertexShader));
 
 	GLint success;
 	char infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	GLCall(glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success));
 
 	if (!success)
 	{
-		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		GLCall(glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog));
+		std::cout << "[OPENGL ERROR] VERTEX Shader Compilation Failed \n" << infoLog << std::endl;
 		SDL_GL_DeleteContext(context);
 		SDL_DestroyWindow(Engine::GetInstance()->GetWindow());
 		SDL_Quit();
@@ -282,14 +283,14 @@ void Renderer::InitOpenGL()
 	)glsl";
 
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-	glCompileShader(fragmentShader);
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	GLCall(glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr));
+	GLCall(glCompileShader(fragmentShader));
+	GLCall(glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success));
 
 	if (!success)
 	{
-		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		GLCall(glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog));
+		std::cout << "[OPENGL ERROR] FRAGMENT Shader Compilation Failed \n" << infoLog << std::endl;
 		SDL_GL_DeleteContext(context);
 		SDL_DestroyWindow(Engine::GetInstance()->GetWindow());
 		SDL_Quit();
@@ -300,18 +301,18 @@ void Renderer::InitOpenGL()
 #pragma region ShaderProgram
 
 	m_ShaderProgram = glCreateProgram();
-	glAttachShader(m_ShaderProgram, vertexShader);
-	glAttachShader(m_ShaderProgram, fragmentShader);
-	glLinkProgram(m_ShaderProgram);
+	GLCall(glAttachShader(m_ShaderProgram, vertexShader));
+	GLCall(glAttachShader(m_ShaderProgram, fragmentShader));
+	GLCall(glLinkProgram(m_ShaderProgram));
 
 	glGetProgramiv(m_ShaderProgram, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		glGetProgramInfoLog(m_ShaderProgram, 512, nullptr, infoLog);
-		std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
+		std::cout << "[OPENGL ERROR] SHADER PROGRAM Failed \n" << infoLog << std::endl;
 	}
 
-	glUseProgram(m_ShaderProgram);
+	GLCall(glUseProgram(m_ShaderProgram));
 
 #pragma endregion
 
@@ -324,29 +325,29 @@ void Renderer::InitOpenGL()
 		samplers[i] = i;
 	}
 
-	glUniform1iv(textureUniformLocation, 32, samplers);
+	GLCall(glUniform1iv(textureUniformLocation, 32, samplers));
 
 	RenderingData.QuadBuffer = new Vertex[MaxVertexCount];
 
-	glCreateVertexArrays(1, &RenderingData.Vao);
-	glBindVertexArray(RenderingData.Vao);
+	GLCall(glCreateVertexArrays(1, &RenderingData.Vao));
+	GLCall(glBindVertexArray(RenderingData.Vao));
 
 	/* Create empty dynamic vbo that will be populated every frame */
-	glCreateBuffers(1, &RenderingData.Vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, RenderingData.Vbo);
-	glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+	GLCall(glCreateBuffers(1, &RenderingData.Vbo));
+	GLCall(glBindBuffer(GL_ARRAY_BUFFER, RenderingData.Vbo));
+	GLCall(glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW));
 
-	glEnableVertexArrayAttrib(RenderingData.Vao, 0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+	GLCall(glEnableVertexArrayAttrib(RenderingData.Vao, 0));
+	GLCall(glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position)));
 
-	glEnableVertexArrayAttrib(RenderingData.Vao, 1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+	GLCall(glEnableVertexArrayAttrib(RenderingData.Vao, 1));
+	GLCall(glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color)));
 
-	glEnableVertexArrayAttrib(RenderingData.Vao, 2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoords));
+	GLCall(glEnableVertexArrayAttrib(RenderingData.Vao, 2));
+	GLCall(glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoords)));
 
-	glEnableVertexArrayAttrib(RenderingData.Vao, 3);
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+	GLCall(glEnableVertexArrayAttrib(RenderingData.Vao, 3));
+	GLCall(glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID)));
 
 	// CPU Index Buffer
 	uint32_t _indices[m_MaxIndexCount];
@@ -365,9 +366,9 @@ void Renderer::InitOpenGL()
 		_offset += 4;
 	}
 
-	glCreateBuffers(1, &RenderingData.Ib);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, RenderingData.Ib);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices, GL_STATIC_DRAW);
+	GLCall(glCreateBuffers(1, &RenderingData.Ib));
+	GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, RenderingData.Ib));
+	GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices, GL_STATIC_DRAW));
 
 	// Default texture slot is 0, where 0 is none
 	for (size_t i = 0; i < MaxTextures; i++) { RenderingData.TextureSlots[i] = 0; }
@@ -377,19 +378,19 @@ void Renderer::InitOpenGL()
 
 void Renderer::OpenGLLoop()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glUseProgram(m_ShaderProgram);
+	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+	GLCall(glUseProgram(m_ShaderProgram));
 	Renderer::BeginBatch();
-	Renderer::GetInstance()->Draw("Mykaa", 960 / 2, 640 / 2, 100, 100, 1, 1);
-	Renderer::GetInstance()->Draw("Mykaa", 960 / 2 - 100, 640 / 2 - 200, 100, 100, 1, 1);
+	
+//	Renderer::GetInstance()->Draw("ScreenTest", 960 / 2, 640 / 2, 960, 640, 1, 1);
+//	Renderer::GetInstance()->Draw("Mykaa", 960 / 2 - 100, 640 / 2 - 200, 100, 100, 1, 1);
 
-
-	World::GetInstance()->Render();    ///UNCOMMENT THIS TO CHECK THE ANIMATIONS
+	World::GetInstance()->Render();
 
 	Renderer::EndBatch();
 	Renderer::Flush();
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.f);
+	GLCall(glClearColor(0.1f, 0.1f, 0.1f, 1.f));
 }
 
 void Renderer::BeginBatch()
