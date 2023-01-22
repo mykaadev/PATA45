@@ -67,9 +67,11 @@ void EnemyBullet::Update(float deltaTime)
 
 	if (m_Body == nullptr) return;
 
-	if (m_Body->GetPosition().y >= 640.0f)
+	if (m_Body->GetPosition().y >= 640.0f && !m_IsDead) 
 	{
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
+		m_Animation->SetCurrentSprite(0);
 	}
 
 	if (m_IsDead)
@@ -78,8 +80,6 @@ void EnemyBullet::Update(float deltaTime)
 		{
 			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
-
-		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
 
 		if (GetAnimation()->GetCurrentSprite() >= 10)
 		{
@@ -113,23 +113,24 @@ void EnemyBullet::Clean()
 void EnemyBullet::CheckCollision(GameObject* otherGameObject)
 {
 
-	if (dynamic_cast<Player*>(otherGameObject))
+	if (dynamic_cast<Player*>(otherGameObject) && !collided)
 	{
 		((Player*)otherGameObject)->TakeDamage(m_damageAmount);
-
+		collided = true;
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
+		m_Animation->SetCurrentSprite(0);
 	}
-	else  if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
+	
+	if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
 	{
 		((Companion*)otherGameObject)->TakeDamage(1);
 		collided = true;
-
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
+		m_Animation->SetCurrentSprite(0);
 	}
-	else
-	{
-		return;
-	}
+	
 }
 
 

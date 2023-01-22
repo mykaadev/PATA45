@@ -51,6 +51,8 @@ void RusherEnemy::Update(float deltaTime)
 		
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
+		SetSize(64, 64);
+
 
 	}
 
@@ -82,6 +84,8 @@ void RusherEnemy::TakeDamage(int inDamage)
 		
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
+		SetSize(64, 64);
+
 	}
 }
 
@@ -107,15 +111,21 @@ void RusherEnemy::CheckCollision(GameObject* otherGameObject)
 	{
 		((Player*)otherGameObject)->TakeDamage(1);
 		collided = true;
-
 		m_IsDead = true;
+
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		m_Animation->SetCurrentSprite(0);
+		SetSize(64, 64);
+
 	}
 
 	if (dynamic_cast<Companion*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Companion*>(otherGameObject)->GetIsDead() && !collided)
 	{
 		((Companion*)otherGameObject)->TakeDamage(1);
 		collided = true;
-
 		m_IsDead = true;
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		SetSize(64, 64);
+		m_Animation->SetCurrentSprite(0);
 	}
 }

@@ -100,12 +100,14 @@ void Player::Update(float deltaTime)
 
 	if (m_IsDead)
 	{
+		SecondCompanion->m_IsDead = true;
+		FirstCompanion->m_IsDead = true;
+
 		if (GetAnimation()->GetCurrentSprite() >= 10)
 		{
 			EngineTime::GetInstance()->RemoveTimer(myTimerID);
 			EngineTime::GetInstance()->RemoveTimer(myTimerIDCompanion);
-			SecondCompanion->m_IsDead = true;
-			FirstCompanion->m_IsDead = true;
+			
 			Clean();
 		}
 	}
@@ -203,6 +205,11 @@ void Player::Move()
 	{
 		SetAnimationState(Idle, m_MoveAxis.X);
 	}
+	
+	if (m_MoveAxis.X == 0 && m_MoveAxis.Y > 0 || m_MoveAxis.Y < 0)
+	{
+		SetAnimationState(Idle, m_MoveAxis.X);
+	}
 
 	if (m_MoveAxis.X < 0 || m_MoveAxis.X > 0)
 	{
@@ -293,13 +300,13 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 	if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
-		m_Animation->SetProperties("ShipRight", 1, 0, 4, 100, false);
+		m_Animation->SetProperties("ShipRight", 1, 0, 3, 100, false);
 
 	}
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
-		m_Animation->SetProperties("ShipLeft", 1, 0, 4, 100, false);
+		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
 
 	}
 }
@@ -313,12 +320,10 @@ void Player::TakeDamage(int inDamage)
 	{
 		currentHealth = 0;
 
+		m_IsDead = true;
 		m_Animation->SetCurrentSprite(0);
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 		SetSize(64, 64); 
-		m_IsDead = true;
-
-		SetAnimationState(Dead, 0);
 		m_PendingKill = true;
 	}
 }
@@ -359,7 +364,7 @@ void Player::Draw()
 
 void Player::Clean()
 {
-    Renderer::GetInstance()->Clean();
+	m_PendingKill = true;
 }
 
 void Player::CheckCollision(GameObject* otherGameObject)

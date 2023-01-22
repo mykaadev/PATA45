@@ -49,7 +49,8 @@ void Bullet::Init()
 
 void Bullet::SetupBody()
 {	
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	
+	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body == nullptr)
 	{
 		b2BodyDef _BodyDef;
 		_BodyDef.type = b2_dynamicBody;
@@ -81,9 +82,12 @@ void Bullet::SetupBody()
 void Bullet::CheckIfIsOutOfBounds()
 {
 	if (m_Body == nullptr) { return;	}
-	if (m_Body->GetPosition().y < 10.0f)
+	if (m_Body->GetPosition().y < 10.0f && !m_IsDead)
 	{
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, true);
+		m_Animation->SetCurrentSprite(0);
+		
 	}
 
 	if (m_IsDead)
@@ -93,9 +97,7 @@ void Bullet::CheckIfIsOutOfBounds()
 			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
 
-		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, false);
-		
-		if (m_Animation->GetAnimationFinished())
+		if (m_Animation->GetCurrentSprite() >= 10)
 		{
 			Clean();
 		}
@@ -106,11 +108,11 @@ void Bullet::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
 
-	m_Animation->Update(deltaTime);
-
 	SetOriginPoint();
 
 	CheckIfIsOutOfBounds();
+
+	m_Animation->Update(deltaTime);
 }
 
 
@@ -144,17 +146,23 @@ void Bullet::CheckCollision(GameObject* otherGameObject)
 	{
 		((BaseEnemy*)otherGameObject)->TakeDamage(m_damageAmount);
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, true);
+		m_Animation->SetCurrentSprite(0);
 	}
 
 	if (dynamic_cast<StoneAsteroid*>(otherGameObject) && !m_PendingKill && !dynamic_cast<StoneAsteroid*>(otherGameObject)->GetIsDead())
 	{
 		((StoneAsteroid*)otherGameObject)->TakeDamage(m_damageAmount);
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, true);
+		m_Animation->SetCurrentSprite(0);
 	}	
 	
 	if (dynamic_cast<MetalAsteroid*>(otherGameObject) && !m_PendingKill && !dynamic_cast<MetalAsteroid*>(otherGameObject)->GetIsDead())
 	{
 		m_IsDead = true;
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, true);
+		m_Animation->SetCurrentSprite(0);
 	}
 }
 

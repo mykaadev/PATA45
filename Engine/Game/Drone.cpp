@@ -50,8 +50,8 @@ void Drone::Update(float deltaTime)
 			
 				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 				
-				m_Animation->SetCurrentSprite(0);
 				m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
+				m_Animation->SetCurrentSprite(0);
 				SetSize(64, 64);
 			}
 		}
@@ -80,7 +80,9 @@ void Drone::CheckCollision(GameObject* otherGameObject)
 	{
 		((Player*)otherGameObject)->TakeDamage(1);
 		collided = true;
-
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
+		m_Animation->SetCurrentSprite(0);
+		SetSize(64, 64);
 		m_IsDead = true;
 	}
 
@@ -88,7 +90,9 @@ void Drone::CheckCollision(GameObject* otherGameObject)
 	{
 		((Companion*)otherGameObject)->TakeDamage(1);
 		collided = true;
-
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 50, false);
+		m_Animation->SetCurrentSprite(0);
+		SetSize(64, 64);
 		m_IsDead = true;
 	}
 }
@@ -98,9 +102,8 @@ void Drone::TakeDamage(int damage)
 	
 	m_CurrentHealth -= damage;
 	
-	if (m_CurrentHealth <= 0)
+	if (m_CurrentHealth <= 0 && !m_IsDead)
 	{
-
 		Explosion();
 	}
 }

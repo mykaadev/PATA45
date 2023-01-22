@@ -56,11 +56,14 @@ void Companion::SetupBody()
 void Companion::Update(float deltaTime)
 {
 	__super::Update(deltaTime);
+
 	SetOriginPoint();
 	
-	if (myPlayer->GetIsDead())
+	if (myPlayer->GetIsDead() && !m_IsDead)
 	{
 		m_IsDead = true;
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		SetSize(64, 64);
 	}
 
 	if (m_IsDead)
@@ -68,8 +71,7 @@ void Companion::Update(float deltaTime)
 
 		dynamic_cast<Player*>(myPlayer)->DetachCompanion(this);
 
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
-		SetSize(64, 64);
+		
 
 		if (GetAnimation()->GetCurrentSprite() >= 10)
 		{
@@ -78,7 +80,6 @@ void Companion::Update(float deltaTime)
 	}
 
 	m_Animation->Update(deltaTime);
-
 }
 
 

@@ -62,6 +62,7 @@ void StoneAsteroid::Init()
 	
 	if (m_HasBeenSplit)
 	{
+		if (m_Body == nullptr) {SetupBody();}
 		m_Animation->SetProperties("StoneSmall", 1, 0, 16, 50, true);
 		SetSize(32, 32);
 		m_CurrentHealth = 1;
@@ -106,13 +107,13 @@ void StoneAsteroid::Update(float deltaTime)
 			}
 			
 			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
-			SetSize(64, 64);
-			if (m_Animation->GetAnimationFinished())
-			{
-				Clean();
-			}
-			 
+			SetSize(64, 64);			 
 		}
+	}
+
+	if (m_Animation->GetCurrentSprite() >= 10 && m_IsDead)
+	{
+		Clean();
 	}
 
 
@@ -180,6 +181,9 @@ void StoneAsteroid::ChooseType()
 void StoneAsteroid::Explosion()
 {
 	m_IsDead = true;
+	m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
+	SetSize(64, 64);
+
 
 	if (size_ == Big || size_ == Medium)
 	{

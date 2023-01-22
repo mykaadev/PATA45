@@ -68,7 +68,9 @@ void PowerUpCompanion::Update(float deltaTime)
 
 	SetOriginPoint();
 
-	if (m_Body->GetPosition().y > 700.0f && m_Body != nullptr)
+	if (m_Body == nullptr) { return; }
+
+	if (m_Body->GetPosition().y > 700.0f)
 	{
 		m_Height = m_Width;
 
@@ -113,9 +115,7 @@ void PowerUpCompanion::OnPickUp(GameObject* otherGameObject)
 
 void PowerUpCompanion::SetOriginPoint()
 {
-	if (m_Body == nullptr) return;
-
-	if (!World::GetInstance()->GetWorld()->IsLocked())
+	if (m_Body != nullptr) 
 	{
 		m_Origin->X = m_Body->GetPosition().x;
 		m_Origin->Y = m_Body->GetPosition().y;

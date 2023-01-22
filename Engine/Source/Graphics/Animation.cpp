@@ -25,6 +25,7 @@ void Animation::SetProperties(std::string textureID, int spriteRow, int starting
 	m_Loop = loop;
 	m_FrameCounter = m_FrameCount;
 	m_AnimTime = 0.0f;
+	m_Finished = false;
 }
 
 
@@ -44,7 +45,6 @@ void Animation::Update(float deltaTime)
 				{
 					m_SpriteFrame = m_EndFrame;
 					m_FrameCounter = 0;
-					m_Finished = true;
 				}
 
 			}

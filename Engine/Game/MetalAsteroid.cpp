@@ -105,18 +105,12 @@ void MetalAsteroid::CheckCollision(GameObject* otherGameObject)
 	}
 }
 
-/* Gives damage when colliding with the player*/
 void MetalAsteroid::GiveDamage()
 {
-	/**
-	 * Go to the player and them taking health
-	 */
+	
 }
 
 
-/**
- * Chose a random number between 0 and 3 and set the size for the spawning
- */
 void MetalAsteroid::SpawnAsteroid()
 {
 	
@@ -146,7 +140,7 @@ void MetalAsteroid::SpawnAsteroid()
 	}
 }
 
-/* Set the position */
+
 void MetalAsteroid::SetOriginPoint()
 {
 	if (m_Body != nullptr)
