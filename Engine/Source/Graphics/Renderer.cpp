@@ -19,6 +19,41 @@
 #include "../Core/World.h"
 
 
+#pragma region OPENGL
+
+
+
+static const size_t MaxQuadCount = 5000;
+static const size_t MaxVertexCount = MaxQuadCount * 4;
+static const size_t m_MaxIndexCount = MaxQuadCount * 6;
+static const size_t MaxTextures = 32;
+
+struct Vertex
+{
+	glm::vec3 Position;
+	glm::vec3 Color;
+	glm::vec2 TexCoords;
+	float TexID;
+};
+
+struct RendererData
+{
+	GLuint Vao = 0;
+	GLuint Vbo = 0;
+	GLuint Ib = 0;
+
+	uint32_t IndexCount = 0;
+
+	Vertex* QuadBuffer = nullptr;
+	Vertex* QuadBufferPtr = nullptr;
+
+	std::array<uint32_t, MaxTextures> TextureSlots;
+	// Start at 1 because 0 is reserved for no texture
+	uint32_t TextureSlotIndex = 1;
+};
+
+static RendererData RenderingData;
+
 void GLClearError()
 {
 	while (glGetError() != GL_NO_ERROR);
@@ -162,19 +197,61 @@ void Renderer::InitOpenGL()
 
 	glUniform1iv(textureUniformLocation, 32, samplers);
 
-	Init();
+	RenderingData.QuadBuffer = new Vertex[MaxVertexCount];
+
+	glCreateVertexArrays(1, &RenderingData.Vao);
+	glBindVertexArray(RenderingData.Vao);
+
+	/* Create empty dynamic vbo that will be populated every frame */
+	glCreateBuffers(1, &RenderingData.Vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, RenderingData.Vbo);
+	glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
+
+	glEnableVertexArrayAttrib(RenderingData.Vao, 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
+
+	glEnableVertexArrayAttrib(RenderingData.Vao, 1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
+
+	glEnableVertexArrayAttrib(RenderingData.Vao, 2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoords));
+
+	glEnableVertexArrayAttrib(RenderingData.Vao, 3);
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
+
+	// CPU Index Buffer
+	uint32_t _indices[m_MaxIndexCount];
+	uint32_t _offset = 0;
+	
+	for (size_t i = 0; i < m_MaxIndexCount; i += 6)
+	{
+		_indices[i + 0] = 0 + _offset;
+		_indices[i + 1] = 1 + _offset;
+		_indices[i + 2] = 2 + _offset;
+
+		_indices[i + 3] = 2 + _offset;
+		_indices[i + 4] = 3 + _offset;
+		_indices[i + 5] = 0 + _offset;
+
+		_offset += 4;
+	}
+
+	glCreateBuffers(1, &RenderingData.Ib);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, RenderingData.Ib);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(_indices), _indices, GL_STATIC_DRAW);
+
+	// Default texture slot is 0, where 0 is none
+	for (size_t i = 0; i < MaxTextures; i++) { RenderingData.TextureSlots[i] = 0; }
 
 	ParseTextures("../Assets/Game/TextureParser.tml");
 }
-
-
 
 void Renderer::OpenGLLoop()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glUseProgram(m_ShaderProgram);
 	Renderer::BeginBatch();
-	Renderer::GetInstance()->Draw("Mykaa", 960/2, 640/2, 100, 100 ,1 ,1);
+	Renderer::GetInstance()->Draw("Mykaa", 960 / 2, 640 / 2, 100, 100, 1, 1);
 	Renderer::GetInstance()->Draw("Mykaa", 960 / 2 - 100, 640 / 2 - 200, 100, 100, 1, 1);
 
 
@@ -186,146 +263,278 @@ void Renderer::OpenGLLoop()
 	glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 }
 
-
-static const size_t MaxQuadCount = 5000;
-static const size_t MaxVertexCount = MaxQuadCount * 4;
-static const size_t MaxIndexCount = MaxQuadCount * 6;
-static const size_t MaxTextures = 32;
-
-struct Vertex
-{
-	glm::vec3 Position;
-	glm::vec3 Color;
-	glm::vec2 TexCoords;
-	float TexID;
-};
-
-struct RendererData
-{
-	GLuint Vao = 0;
-	GLuint Vbo = 0;
-	GLuint Ib = 0;
-
-	uint32_t IndexCount = 0;
-
-	Vertex* QuadBuffer = nullptr;
-	Vertex* QuadBufferPtr = nullptr;
-
-	std::array<uint32_t, MaxTextures> TextureSlots;
-	// Start at 1 because 0 is reserved for no texture
-	uint32_t TextureSlotIndex = 1;
-};
-
-static RendererData s_Data;
-
-void Renderer::Init()
-{
-	s_Data.QuadBuffer = new Vertex[MaxVertexCount];
-
-	glCreateVertexArrays(1, &s_Data.Vao);
-	glBindVertexArray(s_Data.Vao);
-
-	/* Create empty dynamic vbo that will be populated every frame */
-	glCreateBuffers(1, &s_Data.Vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, s_Data.Vbo);
-	glBufferData(GL_ARRAY_BUFFER, MaxVertexCount * sizeof(Vertex), nullptr, GL_DYNAMIC_DRAW);
-
-	glEnableVertexArrayAttrib(s_Data.Vao, 0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Position));
-
-	glEnableVertexArrayAttrib(s_Data.Vao, 1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, Color));
-
-	glEnableVertexArrayAttrib(s_Data.Vao, 2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexCoords));
-
-	glEnableVertexArrayAttrib(s_Data.Vao, 3);
-	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const void*)offsetof(Vertex, TexID));
-
-	// CPU Index Buffer
-	uint32_t indices[MaxIndexCount];
-	uint32_t offset = 0;
-	for (size_t i = 0; i < MaxIndexCount; i += 6)
-	{
-		indices[i + 0] = 0 + offset;
-		indices[i + 1] = 1 + offset;
-		indices[i + 2] = 2 + offset;
-
-		indices[i + 3] = 2 + offset;
-		indices[i + 4] = 3 + offset;
-		indices[i + 5] = 0 + offset;
-
-		offset += 4;
-	}
-
-	glCreateBuffers(1, &s_Data.Ib);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_Data.Ib);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// Default texture slot is 0 (meaning none)
-	for (size_t i = 0; i < MaxTextures; i++)
-		s_Data.TextureSlots[i] = 0;
-}
-
-void Renderer::ShutDown()
-{
-	glDeleteVertexArrays(1, &s_Data.Vao);
-	glDeleteBuffers(1, &s_Data.Vbo);
-	glDeleteBuffers(1, &s_Data.Ib);
-
-	delete[] s_Data.QuadBuffer;
-}
-
 void Renderer::BeginBatch()
 {
-	s_Data.QuadBufferPtr = s_Data.QuadBuffer;
+	RenderingData.QuadBufferPtr = RenderingData.QuadBuffer;
 }
 
 void Renderer::EndBatch()
 {
 	// Calculate the amount of things that need to be rendered. 
-	GLsizeiptr size = (uint8_t*)s_Data.QuadBufferPtr - (uint8_t*)s_Data.QuadBuffer;
-	glBindBuffer(GL_ARRAY_BUFFER, s_Data.Vbo);
+	GLsizeiptr size = (uint8_t*)RenderingData.QuadBufferPtr - (uint8_t*)RenderingData.QuadBuffer;
+	glBindBuffer(GL_ARRAY_BUFFER, RenderingData.Vbo);
 	// Send that data do the dynamic VBO
-	glBufferSubData(GL_ARRAY_BUFFER, 0, size, s_Data.QuadBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, size, RenderingData.QuadBuffer);
 }
 
 void Renderer::Flush()
 {
-	for (uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
-		glBindTextureUnit(i, s_Data.TextureSlots[i]);
+	for (uint32_t i = 0; i < RenderingData.TextureSlotIndex; i++)
+		glBindTextureUnit(i, RenderingData.TextureSlots[i]);
 
-	glBindVertexArray(s_Data.Vao);
-	glDrawElements(GL_TRIANGLES, s_Data.IndexCount, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(RenderingData.Vao);
+	glDrawElements(GL_TRIANGLES, RenderingData.IndexCount, GL_UNSIGNED_INT, nullptr);
 
 	// Reset Stats
-	s_Data.IndexCount = 0;
-	s_Data.TextureSlotIndex = 1;
+	RenderingData.IndexCount = 0;
+	RenderingData.TextureSlotIndex = 1;
 }
 
-
-void Renderer::AddVertexData(const std::string& id, const std::vector<float>& positions, const std::vector<unsigned int>& indices)
+void Renderer::ShutDown()
 {
-	VertexData data;
-	data.positions = positions;
-	data.indices = indices;
-	m_VertexData[id] = data;
+	glDeleteVertexArrays(1, &RenderingData.Vao);
+	glDeleteBuffers(1, &RenderingData.Vbo);
+	glDeleteBuffers(1, &RenderingData.Ib);
+
+	delete[] RenderingData.QuadBuffer;
 }
 
+#pragma endregion
 
-void Renderer::GLDraw(VertexArray* va, IndexBuffer* ib, Shader* shader)
+
+#pragma region RENDERING
+
+
+
+void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-	m_Shader->Bind();
-	m_VA->Bind();
-	m_IB->Bind();
-	GLCall(glDrawElements(GL_TRIANGLES, m_IB->GetCount(), GL_UNSIGNED_INT, nullptr));
+
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		/// LEGACY SDL RENDERING 
+		SDL_Rect srcRect = { 0, 0, width, height };
+
+		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
+
+		SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
+		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+	}
+	else
+	{
+		/// OPEN GL RENDERING 
+		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
+
+		SDL_Rect srcRect = { 0, 0, width, height };
+
+		float fX = srcRect.x / srcRect.w;
+		float fY = srcRect.y / srcRect.h;
+
+		float drawWidth = srcRect.w * xScale;
+		float drawHeight = srcRect.h * yScale;
+
+		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
+
+		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 0.0f, 640, -1.0f, 1.0f) - drawHeight / 2;
+
+
+		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
+		{
+			EndBatch();
+			Flush();
+			BeginBatch();
+		}
+
+		// Check if this texture is already bond and used by other quad
+		float textureIndex = 0.f;
+
+		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
+		{
+			if (RenderingData.TextureSlots[i] == textureID)
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		// If not, bound a new one
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (float)RenderingData.TextureSlotIndex;
+			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
+			RenderingData.TextureSlotIndex++;
+		}
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 0.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 0.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 1.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.IndexCount += 6;
+
+	}
 }
 
 
-void Renderer::GLClear()
+void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-	GLCall(glClear(GL_COLOR_BUFFER_BIT));
+
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		/// LEGACY SDL RENDERING  ///
+		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
+
+		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+
+		SDL_Rect destRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
+
+		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+	}
+	else
+	{
+		/// OPEN GL RENDERING ///
+		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
+
+		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
+
+		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+
+		SDL_Rect destRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
+
+		float fX = destRect.x / destRect.w;
+		float fY = destRect.y / destRect.h;
+
+		float drawWidth = destRect.w;
+		float drawHeight = destRect.h;
+
+		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
+
+		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
+
+
+		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
+		{
+			EndBatch();
+			Flush();
+			BeginBatch();
+		}
+
+		// Check if this texture is already bond and used by other quad
+		float textureIndex = 0.f;
+
+		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
+		{
+			if (RenderingData.TextureSlots[i] == textureID)
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+
+
+		// If not, bound a new one
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (float)RenderingData.TextureSlotIndex;
+			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
+			RenderingData.TextureSlotIndex++;
+		}
+
+
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 0.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 0.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 1.f };
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+
+		RenderingData.IndexCount += 6;
+	}
 }
+
+
+void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
+{
+	/// LEGACY SDL RENDERING  ///
+	SDL_Rect srcRect = { tileSize * frame, tileSize * row, tileSize, tileSize };
+
+	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+
+	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, tileSize, tileSize };
+
+	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);
+}
+
+
+void Renderer::Drop(std::string inID)
+{
+	SDL_DestroyTexture(m_TextureMap[inID]);
+	m_TextureMap.erase(inID);
+}
+
+
+void Renderer::Clean()
+{
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		std::map<std::string, SDL_Texture*>::iterator i;
+
+		for (i = m_TextureMap.begin(); i != m_TextureMap.end(); ++i)
+		{
+			SDL_DestroyTexture(i->second);
+		}
+
+		m_TextureMap.clear();
+	}
+}
+
+
+#pragma endregion
+
+
+
+#pragma region TextureParser
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -341,12 +550,12 @@ bool Renderer::ParseTextures(std::string source)
 
 	if (_xml.Error())
 	{
-		std::cout<< "Failed to load: " << source << std::endl;
+		std::cout << "Failed to load: " << source << std::endl;
 		return false;
 	}
 
 	TiXmlElement* _root = _xml.RootElement();
-	for (TiXmlElement* e=_root->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	for (TiXmlElement* e = _root->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (e->Value() == std::string("texture"))
 		{
@@ -394,12 +603,12 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 		GLint dataFormat = 0;
 		stbi_set_flip_vertically_on_load(1);
 		unsigned char* image = stbi_load(inFileName.c_str(), &width, &height, &numComponents, 0);
-		
+
 
 		RemoveColor(image, width, height, 255, 0, 255);
 
 		// Determine the format of the image data
-		
+
 		if (numComponents == 3)
 		{
 			dataFormat = GL_RGB;
@@ -423,7 +632,7 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 
 		// Upload the texture data
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, image));
-		
+
 		// Free the image data and unbind the texture
 		stbi_image_free(image);
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
@@ -438,7 +647,7 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 
 		return true;
 	}
- }
+}
 
 void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue)
 {
@@ -446,238 +655,14 @@ void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigne
 	{
 		if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue)
 		{
-			pixels[i] = pixels[i + 1] = pixels[i + 2] = 0; 
+			pixels[i] = pixels[i + 1] = pixels[i + 2] = 0;
 		}
 	}
 }
 
 
-void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
-{
 
-	if (Engine::GetInstance()->UseLegacyRenderer())
-	{
-		/// LEGACY SDL RENDERING 
-		SDL_Rect srcRect = { 0, 0, width, height};
+#pragma endregion
 
-		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
-
-		SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, width * xScale, height * yScale };
-		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
-	}
-	else
-	{
-		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
-		
-		SDL_Rect srcRect = { 0, 0, width, height };
-	
-		float fX = srcRect.x / srcRect.w;
-		float fY = srcRect.y / srcRect.h;
-
-		float drawWidth = srcRect.w * xScale;
-		float drawHeight = srcRect.h * yScale;
-
-		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
-		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
-
-		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth/2;
-		float drawPosY = MathHelper::MapClampRanged(y, 0.0f, 640, -1.0f, 1.0f) - drawHeight/2;
-
-
-		if (s_Data.IndexCount >= MaxIndexCount || s_Data.TextureSlotIndex > 31)
-		{
-			EndBatch();
-			Flush();
-			BeginBatch();
-		}
-
-		// Check if this texture is already bond and used by other quad
-		float textureIndex = 0.f;
-
-		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
-		{
-			if (s_Data.TextureSlots[i] == textureID)
-			{
-				textureIndex = (float)i;
-				break;
-			}
-		}
-
-		// If not, bound a new one
-		if (textureIndex == 0.f)
-		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
-			s_Data.TextureSlots[s_Data.TextureSlotIndex] = textureID;
-			s_Data.TextureSlotIndex++;
-		}
-
-		s_Data.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
-		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		s_Data.QuadBufferPtr->TexCoords = { 0.f, 0.f };
-		s_Data.QuadBufferPtr->TexID = textureIndex;
-		s_Data.QuadBufferPtr++;
-
-		s_Data.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
-		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		s_Data.QuadBufferPtr->TexCoords = { 1.f, 0.f };
-		s_Data.QuadBufferPtr->TexID = textureIndex;
-		s_Data.QuadBufferPtr++;
-
-		s_Data.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
-		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		s_Data.QuadBufferPtr->TexCoords = { 1.f, 1.f };
-		s_Data.QuadBufferPtr->TexID = textureIndex;
-		s_Data.QuadBufferPtr++;
-
-		s_Data.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
-		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		s_Data.QuadBufferPtr->TexCoords = { 0.f, 1.f };
-		s_Data.QuadBufferPtr->TexID = textureIndex;
-		s_Data.QuadBufferPtr++;
-
-		s_Data.IndexCount += 6;
-
-	}
-}
-
-
-void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
-{
-
-	if (Engine::GetInstance()->UseLegacyRenderer())
-	{
-		/// LEGACY SDL RENDERING  ///
-		SDL_Rect srcRect = { (width* currentFrame), height*(row-1), width, height};
-
-		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
-
-		SDL_Rect destRect = { (x-width/2) - _cameraPosition.X, (y - height/2) - _cameraPosition.Y, width, height };
-
-		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
-	}
-	else
-	{
-		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
-
-		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
-
-		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
-
-		SDL_Rect destRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
-
-		float fX = destRect.x / destRect.w;
-		float fY = destRect.y / destRect.h;
-
-		float drawWidth = destRect.w;
-		float drawHeight = destRect.h;
-
-		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
-		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
-
-		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
-		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
-
-
-		if (s_Data.IndexCount >= MaxIndexCount || s_Data.TextureSlotIndex > 31)
-		{
-			EndBatch();
-			Flush();
-			BeginBatch();
-		}
-
-		// Check if this texture is already bond and used by other quad
-		float textureIndex = 0.f;
-
-		for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
-		{
-			if (s_Data.TextureSlots[i] == textureID)
-			{
-				textureIndex = (float)i;
-				break;
-			}
-		}
-
-
-
-		// If not, bound a new one
-		if (textureIndex == 0.f)
-		{
-			textureIndex = (float)s_Data.TextureSlotIndex;
-			s_Data.TextureSlots[s_Data.TextureSlotIndex] = textureID;
-			s_Data.TextureSlotIndex++;
-		}
-
-		
- 		
- 		s_Data.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
- 		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
- 		s_Data.QuadBufferPtr->TexCoords = { 0.f, 0.f };
- 		s_Data.QuadBufferPtr->TexID = textureIndex;
- 		s_Data.QuadBufferPtr++;
- 
- 		s_Data.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
- 		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
- 		s_Data.QuadBufferPtr->TexCoords = { 1.f, 0.f };
- 		s_Data.QuadBufferPtr->TexID = textureIndex;
- 		s_Data.QuadBufferPtr++;
- 
- 		s_Data.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
- 		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
- 		s_Data.QuadBufferPtr->TexCoords = { 1.f, 1.f };
- 		s_Data.QuadBufferPtr->TexID = textureIndex;
- 		s_Data.QuadBufferPtr++;
- 
- 		s_Data.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
- 		s_Data.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
- 		s_Data.QuadBufferPtr->TexCoords = { 0.f, 1.f };
- 		s_Data.QuadBufferPtr->TexID = textureIndex;
- 		s_Data.QuadBufferPtr++;
- 
- 		s_Data.IndexCount += 6;
-	}
-}
-
-
-
-void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
-{
-	/// LEGACY SDL RENDERING  ///
-	SDL_Rect srcRect = { tileSize * frame, tileSize * row, tileSize, tileSize };
-
-	Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
-
-	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, tileSize, tileSize };
-
-	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);	
-}
-
-
-void Renderer::Drop(std::string inID)
-{
-	SDL_DestroyTexture(m_TextureMap[inID]);
-	m_TextureMap.erase(inID);
-}
-
-
-void Renderer::Clean()
-{
-	if (Engine::GetInstance()->UseLegacyRenderer())
-	{
-		std::map<std::string, SDL_Texture*>::iterator i;
-
-		 for (i = m_TextureMap.begin(); i != m_TextureMap.end(); ++i)
- 		 {
- 			SDL_DestroyTexture(i->second);
- 		 }
-
-		m_TextureMap.clear();
-	}
-	else
-	{
-			//GLCall(glDeleteProgram(m_Shader));
-			delete(m_VB);
-			delete(m_IB);
-	}
-}
 
 
