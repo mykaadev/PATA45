@@ -17,7 +17,7 @@ public:
 
 
 	void SetOriginPoint();
-	void ApplyPowerUp(int amount);
+	void ApplyPowerUp(GameObject* otherGameObject);
 
 
 

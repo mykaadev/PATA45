@@ -10,6 +10,7 @@ ShieldPowerUp::ShieldPowerUp(Properties* props): BasePowerUp(props)
 {
 	m_CurrentHealth = 1;
 	addLife = 0;
+	
 }
 
 void ShieldPowerUp::Init()
@@ -73,18 +74,8 @@ void ShieldPowerUp::CheckCollision(GameObject* otherGameObject)
 
 void ShieldPowerUp::TakeDamage(int damage)
 {
-	m_CurrentHealth -= damage;
-
-	if (m_CurrentHealth <= 0 && !m_IsDead)
-	{
-		m_IsDead = true;
-		if (m_Body != nullptr && !World::GetInstance()->GetWorld()->IsLocked())
-		{
-			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
-		}
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
-		m_Animation->SetCurrentSprite(0);
-	}
+	m_IsDead = true;
+	Clean();
 }
 
 void ShieldPowerUp::SetOriginPoint()
@@ -98,9 +89,16 @@ void ShieldPowerUp::SetOriginPoint()
 	}
 }
 
-void ShieldPowerUp::ApplyPowerUp(int amount)
+void ShieldPowerUp::ApplyPowerUp(GameObject* otherGameObject)
 {
-	Player* player = nullptr;
-	amount = addLife +=1;
-	player->AddSheildPowerUp(amount);
+// 	Player* player = nullptr;
+// 	amount = addLife += 1;
+// 	player->AddSheildPowerUp(amount);
+
+	if (dynamic_cast<Player*>(otherGameObject))
+	{
+		dynamic_cast<Player*>(otherGameObject)->AddSheildPowerUp(addLife++);
+		m_IsDead = true;
+		Clean();
+	}
 }

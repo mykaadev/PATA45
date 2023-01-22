@@ -23,6 +23,7 @@ public:
 	SDL_TimerID myTimerID;
 
 	//life
+	int m_GiveDamage;
 	int m_CurrentHealth;
 	int m_MaxHealth;
 	int r;

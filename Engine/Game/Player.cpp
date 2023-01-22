@@ -58,6 +58,7 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
+	std::cout << "my life is " << currentHealth << std::endl;
 	__super::Update(deltaTime);
 
 	BindAxisAndActions();
@@ -275,13 +276,15 @@ void Player::TakeDamage(int inDamage)
 {
 	currentHealth -= inDamage;
 
-	if (currentHealth <= 0 && !isDead)
+	if (currentHealth <= 0 && !m_IsDead)
 	{
-		isDead = true;
+		m_IsDead = true;
 		SetAnimationState(Dead, 0);
 		//World::GetInstance()->DestroyGameObject(this, m_Body);
 		m_PendingKill = true;
 	}
+
+
 }
 
 
@@ -308,11 +311,12 @@ void Player::AddSheildPowerUp(int morelife)
 {
 	currentHealth += morelife;
 
-	if (currentHealth > maxHealth)
+	if (currentHealth >= maxHealth)
 	{
 		currentHealth = maxHealth;
 	}
 }
+
 
 
 void Player::Draw()
@@ -335,7 +339,7 @@ void Player::CheckCollision(GameObject* otherGameObject)
 
 	if (dynamic_cast<ShieldPowerUp*>(otherGameObject) && !m_PendingKill && !dynamic_cast<ShieldPowerUp*>(otherGameObject)->GetIsDead())
 	{
-		((ShieldPowerUp*)otherGameObject)->TakeDamage(m_DamageAmount);
+		((ShieldPowerUp*)otherGameObject)->ApplyPowerUp((GameObject*)this);
 	}
 }
 

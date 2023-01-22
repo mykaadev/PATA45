@@ -24,9 +24,9 @@ public:
 	virtual void Draw();
 	virtual void Update(float deltaTime);
 	virtual void Clean();
-	virtual void CheckColision();
+	virtual void CheckColision(GameObject* otherGameObject);
 	virtual void TakeDamage(int inDamage);
-	virtual void GiveDamage();
+	virtual void GiveDamage(GameObject* otherGameObject);
 
 	
 	/*Classic stuff */

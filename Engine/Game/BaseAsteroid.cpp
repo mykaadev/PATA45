@@ -76,7 +76,7 @@ void BaseAsteroid::SetOriginPoint()
 	// set the origin point 
 }
 
-void BaseAsteroid::CheckColision()
+void BaseAsteroid::CheckColision(GameObject* otherGameObject)
 {
 	// todo in specific asteroid type
 }
@@ -86,7 +86,7 @@ void BaseAsteroid::TakeDamage(int inDamage)
 	// todo in the specific asteroid type
 }
 
-void BaseAsteroid::GiveDamage()
+void BaseAsteroid::GiveDamage(GameObject* otherGameObject)
 {
 	// todo in the specific asteroid type
 }

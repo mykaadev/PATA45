@@ -29,6 +29,7 @@ public:
 	virtual void Clean();
 	virtual void CheckCollision(GameObject* otherGameObject);
 
+	inline bool GetIsDead() { return m_IsDead; }
 	void ChooseBulletType();
 	void TakeDamage(int inDamage);
 	void AddCompanion();
@@ -36,6 +37,7 @@ public:
 	/* PowerUps  */
 	void AddSheildPowerUp(int morelife);
 	void AddWeaponPowerUp(int Power);
+
 
 private:
 
@@ -50,6 +52,7 @@ private:
 public:
 	void FireGun();
 	int bulletLevel;
+	int m_MoreLife;
 	void SpawnCompanion();
 
 private:
@@ -59,7 +62,7 @@ public:
 private:
 	bool firstCompanionSpawned;
 
-	bool bIdle, bMovingRight, bMovingLeft, canShoot, isDead;
+	bool bIdle, bMovingRight, bMovingLeft, canShoot, m_IsDead;
 	float fSpeed;
 	int maxHealth = 100;
 	int currentHealth = 100;

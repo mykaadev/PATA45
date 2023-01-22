@@ -51,6 +51,7 @@ StoneAsteroid::StoneAsteroid(Properties* props) : BaseAsteroid(props)
 {
 	r = 0;
 	m_HasBeenSplit = false;
+	m_GiveDamage = 2;
 }
 
 void StoneAsteroid::Init()
@@ -138,6 +139,7 @@ void StoneAsteroid::TakeDamage(int damage)
 /* Goes to the player and gives damage  */
 void StoneAsteroid::GiveDamage()
 {
+	
 }
 
 /* follows the same logic of the metal Asteroid */
@@ -206,6 +208,10 @@ void StoneAsteroid::Clean()
 
 void StoneAsteroid::CheckCollision(GameObject* otherGameObject)
 {
+	if (dynamic_cast<Player*>(otherGameObject) && !m_PendingKill && !dynamic_cast<Player*>(otherGameObject)->GetIsDead())
+	{
+			((Player*)otherGameObject)->TakeDamage(m_GiveDamage);
+	}
 }
 
 /* Set the position */
