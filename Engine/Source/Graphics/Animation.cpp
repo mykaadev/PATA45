@@ -24,44 +24,95 @@ void Animation::SetProperties(std::string textureID, int spriteRow, int starting
 	m_Flip = flip;
 	m_Loop = loop;
 	m_FrameCounter = m_FrameCount;
+	m_AnimTime = 0.0f;
 }
 
 
 void Animation::Update(float deltaTime)
 {
+	
 	if (!m_Loop)
 	{
 		if (m_FrameCount != 0 && m_FrameCounter > 0)
 		{
-			if (m_SpriteFrame == m_FrameCount - 1)
+			m_AnimTime += deltaTime;
+			if (m_AnimTime >= (1.0f / 0.15f))
 			{
-				m_SpriteFrame = m_EndFrame;
-			}
-			else
-			{
-				m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
+				m_SpriteFrame++;
+				m_AnimTime = 0.0f;
+				if (m_SpriteFrame == m_FrameCount - 1)
+				{
+					m_SpriteFrame = m_EndFrame;
+					m_FrameCounter = 0;
+					m_Finished = true;
+				}
+
 			}
 		}
 
-		if (m_FrameCounter == 0)
+		if (m_FrameCounter == 1)
 		{
 			m_SpriteFrame = m_EndFrame;
 		}
 	}
-	
 
 	if (m_Loop)
 	{
-		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;		
+		m_AnimTime += deltaTime;
+		if (m_AnimTime >= (1.0f / 0.15f))
+		{
+			m_SpriteFrame = (m_SpriteFrame + 1) % m_FrameCount;
+			m_AnimTime = 0.0f;
+		}
 
-		if (m_FrameCount == 0)
+		if (m_FrameCount == 1)
 		{
 			m_SpriteFrame = m_StartingFrame;
 		}
 	}
+
 }
+
+// 	if (!m_Loop)
+// 	{
+// 		if (m_FrameCount != 0 && m_FrameCounter > 0)
+// 		{
+// 			if (m_SpriteFrame == m_FrameCount - 1)
+// 			{
+// 				m_SpriteFrame = m_EndFrame;
+// 			}
+// 			else
+// 			{
+// 				m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
+// 			}
+// 		}
+// 
+// 		if (m_FrameCounter == 0)
+// 		{
+// 			m_SpriteFrame = m_EndFrame;
+// 		}
+// 	}
+// 
+// 
+// 	if (m_Loop)
+// 	{
+// 		m_SpriteFrame = (SDL_GetTicks() / m_AnimSpeed) % m_FrameCount;
+// 
+// 		if (m_FrameCount == 0)
+// 		{
+// 			m_SpriteFrame = m_StartingFrame;
+// 		}
+//}
+//}
 
 void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight)
 {
-	Renderer::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+	if (m_FrameCount == 0 || m_FrameCount == 1)
+	{
+		Renderer::GetInstance()->Draw(m_TextureID, x-spriteWidth/2, y-spriteHeight/2, spriteWidth, spriteHeight, 1.0f,1.0f, m_Flip);
+	}
+	else
+	{
+		Renderer::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+	}
 }

@@ -288,18 +288,18 @@ void Player::SetAnimationState(AnimationStates inCurrentAnimationState, float in
 
 	if (inCurrentAnimationState == Idle && inAxisValue == 0)
 {
-		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 50, true);
+		m_Animation->SetProperties("ShipIdle", 1, 0, 1, 100, true);
 	}
 
 	if (inCurrentAnimationState == MovingX && inAxisValue > 0)
 	{
-		m_Animation->SetProperties("ShipRight", 1, 0, 3, 100, false);
+		m_Animation->SetProperties("ShipRight", 1, 0, 4, 100, false);
 
 	}
 
 	if (inCurrentAnimationState == MovingX && inAxisValue < 0)
 	{
-		m_Animation->SetProperties("ShipLeft", 1, 0, 3, 100, false);
+		m_Animation->SetProperties("ShipLeft", 1, 0, 4, 100, false);
 
 	}
 }
@@ -314,7 +314,7 @@ void Player::TakeDamage(int inDamage)
 		currentHealth = 0;
 
 		m_Animation->SetCurrentSprite(0);
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 		SetSize(64, 64); 
 		m_IsDead = true;
 

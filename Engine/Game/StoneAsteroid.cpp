@@ -105,20 +105,16 @@ void StoneAsteroid::Update(float deltaTime)
 				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 			}
 			
-			m_Animation->SetCurrentSprite(0);
 			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 			SetSize(64, 64);
-
+			if (m_Animation->GetAnimationFinished())
+			{
+				Clean();
+			}
+			 
 		}
 	}
 
-	if (m_IsDead)
-	{
-		if (GetAnimation()->GetCurrentSprite() >= 10)
-		{
-			Clean();
-		}
-	}
 
 	m_Animation->Update(deltaTime);
 }
@@ -194,11 +190,6 @@ void StoneAsteroid::Explosion()
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 	}
-
-	m_Animation->SetCurrentSprite(0);
-	m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
-	SetSize(64, 64);
-
 }
 
 void StoneAsteroid::Clean()

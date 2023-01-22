@@ -93,9 +93,12 @@ void Bullet::CheckIfIsOutOfBounds()
 			m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 		}
 
-		m_Animation->SetProperties("Explosion", 1, 0, 11, 50, false);
-
-		if (GetAnimation()->GetCurrentSprite() >= 10) { Clean(); }
+		m_Animation->SetProperties("Explosion", 1, 0, 11, 100, false);
+		
+		if (m_Animation->GetAnimationFinished())
+		{
+			Clean();
+		}
 	}
 }
 

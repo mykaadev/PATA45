@@ -45,7 +45,7 @@ void LonerEnemy::Init()
 
 	myTimerID = EngineTime::GetInstance()->StartTimer((rand() % (5000 - 1000 + 1) + 1000), Fire, (LonerEnemy*)this);
 
-	m_Animation->SetProperties("Loner", 1, 0, 16, 50, true);
+	m_Animation->SetProperties("Loner", 1, 0, 16, 100, true);
 }
 
 void LonerEnemy::Draw()
@@ -92,7 +92,7 @@ void LonerEnemy::Update(float deltaTime)
 				m_Body->SetLinearVelocity(b2Vec2(0.0f, 0.0f));
 			}
 			m_Animation->SetCurrentSprite(0);
-			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+			m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 
 		}
 	}
@@ -124,7 +124,7 @@ void LonerEnemy::TakeDamage(int inDamage)
 		}
 
 		m_Animation->SetCurrentSprite(0);
-		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
+		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 100, false);
 	}
 }
 

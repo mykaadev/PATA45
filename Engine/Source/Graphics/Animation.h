@@ -20,6 +20,7 @@ public:
 	void SetProperties(std::string textureID, int spriteRow, int startingFrame, int frameCount, int animSpeed, bool loop = true, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 	inline int GetCurrentSprite() { return m_SpriteFrame; }
+	inline bool GetAnimationFinished(){ return m_Finished; }
 	inline void SetCurrentSprite(int val) { m_SpriteFrame = val; }
 
 private:
@@ -37,5 +38,7 @@ private:
 	std::string m_TextureID;
 
 	SDL_RendererFlip m_Flip;
+	float m_AnimTime;
+	bool m_Finished;
 };
 
