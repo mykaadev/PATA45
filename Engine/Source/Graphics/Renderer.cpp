@@ -92,8 +92,8 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 
 		RemoveColor(image, width, height, 255, 0, 255);
 
-		// Determine the format of the image data
 
+		// Determine the format of the image data
 		if (numComponents == 3)
 		{
 			dataFormat = GL_RGB;
@@ -118,8 +118,10 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 		// Upload the texture data
 		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, image));
 
+				
 		// Free the image data and unbind the texture
 		stbi_image_free(image);
+
 		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
 		// Store the texture in the texture map
@@ -461,7 +463,9 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 
 		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
 
-		SDL_Rect destRect = { (x - width / 2),  (y - height / 2), width, height };
+		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
+
+		SDL_Rect destRect = {(x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
 
 
 		if (srcRect.w == 0) {
@@ -523,7 +527,6 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		}
 
 
-		/* BL, BR, TR, TL */
 		const glm::vec2 textureCoords[] = {
 		{(px * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},
 		{((px + 1) * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},

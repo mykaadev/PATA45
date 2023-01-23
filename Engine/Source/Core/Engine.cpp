@@ -23,7 +23,7 @@ Engine::Engine()
 
 	m_bIsRunning = false;
 
-	useLegacyRenderer = false;
+	useLegacyRenderer = true;
 }
 
 Engine::~Engine()

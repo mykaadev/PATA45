@@ -1,6 +1,7 @@
 #include "Animation.h"
 #include "Renderer.h"
 #include <iostream>
+#include "..\Core\Engine.h"
 
 Animation::Animation()
 {
@@ -77,10 +78,24 @@ void Animation::Draw(float x, float y, int spriteWidth, int spriteHeight)
 {
 	if (m_FrameCount == 0 || m_FrameCount == 1)
 	{
-		Renderer::GetInstance()->Draw(m_TextureID, x, y, spriteWidth, spriteHeight, 1.0f,1.0f, 1.0f, m_Flip);
+		if (Engine::GetInstance()->UseLegacyRenderer())
+		{
+			Renderer::GetInstance()->Draw(m_TextureID, x, y, spriteWidth, spriteHeight, 1.0f,1.0f, 1.0f, m_Flip);
+		}
+		else
+		{
+			Renderer::GetInstance()->Draw(m_TextureID + "png", x, y, spriteWidth, spriteHeight, 1.0f, 1.0f, 1.0f, m_Flip);
+		}
 	}
 	else
 	{
-		Renderer::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+		if (Engine::GetInstance()->UseLegacyRenderer())
+		{
+			Renderer::GetInstance()->DrawFrame(m_TextureID, x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+		}
+		else
+		{
+			Renderer::GetInstance()->DrawFrame(m_TextureID + "png", x, y, spriteWidth, spriteHeight, m_SpriteRow, m_SpriteFrame, m_StartingFrame, m_FrameCount, m_Flip);
+		}
 	}
 }

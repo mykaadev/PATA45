@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <textures>
 	
-	<!-- Test -->
-	<texture id="EngineLogo" source="../Assets/Engine/EngineLogo.bmp"/>
-	<texture id="ScreenTest" source="../Assets/Engine/TEST.png"/>
-	<texture id="Mykaa" source="../Assets/Engine/wm.png"/>
-	
 	<!-- Ship -->	
 	<texture id="ShipIdle" source="../Assets/Game/Textures/ShipIdle.bmp"/>
     <texture id="ShipLeft" source="../Assets/Game/Textures/ShipTurningLeft.bmp"/>
@@ -52,6 +47,58 @@
 	<!-- Power Ups -->
 	<texture id="WeaponPowerUp" source="../Assets/Game/Textures/PowerUpWeapon.bmp"/>
 	<texture id="ShieldPowerUp" source="../Assets/Game/Textures/PowerUpShield.bmp"/>
+
+
+
+
+	<!-- PNGS -->
+
+	<!-- Ship -->	
+	<texture id="ShipIdlepng" source="../Assets/Game/Textures/ShipIdle.bmp"/>
+    <texture id="ShipLeftpng" source="../Assets/Game/Textures/ShipTurningLeft.bmp"/>
+    <texture id="ShipRightpng" source="../Assets/Game/Textures/ShipTurningRight.bmp"/>
+	
+	<!-- Bullets -->
+    <texture id="BulletOnepng" source="../Assets/Game/Textures/missileOne.bmp"/>
+    <texture id="BulletTwopng" source="../Assets/Game/Textures/missileTwo.bmp"/>
+    <texture id="BulletThreepng" source="../Assets/Game/Textures/missileThree.bmp"/>
+	<texture id="EnemyBulletpng" source="../Assets/Game/Textures/EnemyBullet.bmp"/>
+
+	<!-- Explosiona -->
+	<texture id="Explosionpng" source="../Assets/Game/Textures/Explosion16.bmp"/>
+	<texture id="ExplosionMobpng" source="../Assets/Game/Textures/Explosion64.bmp"/>
+	
+	<!-- Background -->
+    <texture id="Galaxypng" source="../Assets/Game/Textures/galaxy.bmp"/>
+	<texture id="BackgroundProps1png" source="../Assets/Game/Textures/BackgroundProps1.bmp"/>
+	<texture id="BackgroundProps2png" source="../Assets/Game/Textures/BackgroundProps2.bmp"/>
+	<texture id="BackgroundProps3png" source="../Assets/Game/Textures/BackgroundProps3.bmp"/>
+
+	<!-- Companion -->
+	<texture id="Companionpng" source="../Assets/Game/Textures/Companion.bmp"/>
+
+	<!-- Enemies -->
+	<texture id="Lonerpng" source="../Assets/Game/Textures/Loner.bmp"/>
+    <texture id="Rusherpng" source="../Assets/Game/Textures/Rusher.bmp"/>
+    <texture id="EnemyBulletpng" source="../Assets/Game/Textures/EnemyBullet.bmp"/> 
+
+
+	<!-- Stone Asteroid -->
+	<texture id="Stonepng" source="../Assets/Game/Textures/Stone.bmp"/> 
+	<texture id="StoneMediumpng" source="../Assets/Game/Textures/StoneMedium.bmp"/> 
+	<texture id="StoneSmallpng" source="../Assets/Game/Textures/StoneSmall.bmp"/> 
+	
+	<!-- Metal Asteroid -->
+	<texture id="Metalpng" source="../Assets/Game/Textures/Metal.bmp"/> 
+	<texture id="MetalMediumpng" source="../Assets/Game/Textures/MetalMedium.bmp"/>
+	<texture id="MetalSmallpng" source="../Assets/Game/Textures/MetalSmall.bmp"/>
+
+	<!-- Drone -->
+	<texture id="Dronepng" source="../Assets/Game/Textures/Drone.bmp"/>
+	
+	<!-- Power Ups -->
+	<texture id="WeaponPowerUppng" source="../Assets/Game/Textures/PowerUpWeapon.bmp"/>
+	<texture id="ShieldPowerUppng" source="../Assets/Game/Textures/PowerUpShield.bmp"/>
 
 
 

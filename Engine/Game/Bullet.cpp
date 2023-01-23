@@ -18,6 +18,8 @@ Bullet::Bullet(Properties* props) : Character(props) {
 
 void Bullet::Init()
 {
+	__super::Init();
+
 	if (m_Body == nullptr) { SetupBody(); }
 
 	if (m_Body == nullptr) { return; }
@@ -48,8 +50,7 @@ void Bullet::Init()
 
 void Bullet::SetupBody()
 {	
-	
-	if (!World::GetInstance()->GetWorld()->IsLocked() && m_Body == nullptr)
+	if (!World::GetInstance()->GetWorld()->IsLocked())
 	{
 		b2BodyDef _BodyDef;
 		_BodyDef.type = b2_dynamicBody;
