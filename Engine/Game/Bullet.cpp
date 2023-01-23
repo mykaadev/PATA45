@@ -38,7 +38,6 @@ void Bullet::Init()
 		SetSize(16, 16);
 	}
 
-//	m_Animation->SetProperties("BulletOne", 1, 0, 2, 100, true);
 	if (m_Body != nullptr)
 	{
 		m_Body->SetLinearVelocity(b2Vec2(0.0f, -3.0f));

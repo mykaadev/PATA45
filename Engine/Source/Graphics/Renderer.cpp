@@ -86,7 +86,7 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 		// Load the texture using SOIL
 		int width = 0, height = 0, numComponents = 0;
 		GLint dataFormat = 0;
-		stbi_set_flip_vertically_on_load(1);
+		stbi_set_flip_vertically_on_load(0);
 		unsigned char* image = stbi_load(inFileName.c_str(), &width, &height, &numComponents, 0);
 
 
@@ -436,77 +436,6 @@ void Renderer::ShutDown()
 
 
 
-void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
-{
-
-	if (Engine::GetInstance()->UseLegacyRenderer())
-	{
-		/// LEGACY SDL RENDERING 
-		SDL_Rect srcRect = { 0, 0, width, height };
-
-		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
-
-		SDL_Rect destRect = { x - _cameraPosition.X - width/2, y - _cameraPosition.Y - height/2, width * xScale, height * yScale };
-		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
-	}
-	else
-	{
-		/// OPEN GL RENDERING 
-		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
-
-		SDL_Rect srcRect = { 0, 0, width, height };
-
-		float fX = srcRect.x / srcRect.w;
-		float fY = srcRect.y / srcRect.h;
-
-		float drawWidth = srcRect.w * xScale;
-		float drawHeight = srcRect.h * yScale;
-
-		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
-		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
-
-		
-		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
-		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
-
-
-		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
-		{
-			EndBatch();
-			Flush();
-			BeginBatch();
-		}
-
-		// Check if this texture is already bond and used by other quad
-		float textureIndex = 0.f;
-
-		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
-		{
-			if (RenderingData.TextureSlots[i] == textureID)
-			{
-				textureIndex = (float)i;
-				break;
-			}
-		}
-
-		// If not, bound a new one
-		if (textureIndex == 0.f)
-		{
-			textureIndex = (float)RenderingData.TextureSlotIndex;
-			if (RenderingData.TextureSlotIndex < MaxTextures) {
-				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
-				RenderingData.TextureSlotIndex++;
-			}
-			else {
-				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
-			}
-		}
-
-		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex);
-
-	}
-}
-
 // This function handles the rendering of a sprite using Open GL
 void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
@@ -524,27 +453,124 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 	}
 	else
 	{
+		// Get the GL texture ID associated with the given sprite ID
+		GLuint _TextureID = m_GLTextureMap[m_TextureMap[inID]];
+
+
+		const float sheetWidth = width * frameCount, sheetHeight = height;
+
+		SDL_Rect srcRect = { (width * currentFrame), height * (row - 1), width, height };
+
+		SDL_Rect destRect = { (x - width / 2),  (y - height / 2), width, height };
+
+
+		if (srcRect.w == 0) {
+			return;
+		}
+		if (srcRect.h == 0) {
+			return;
+		}
+		float px = srcRect.x / srcRect.w;
+		float py = srcRect.y / srcRect.h;
+
+		// Convert scale factor to be sprite size * value
+		float drawWidth = srcRect.w;
+		float drawHeight = srcRect.h;
+
+
+		// Calculate the normalized X and Y size of the sprite
+		drawWidth = MathHelper::MapClampRanged(width, 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(height, 0.0f, 640, 0.0f, 2.0f);
+
+		// Determine the normalized X and Y position of the sprite
+		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
+
+		// If the max number of quads are already being drawn, draw them and start another batch
+		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
+		{
+			EndBatch();
+			Flush();
+			BeginBatch();
+		}
+
+		// Check if the current texture is already boundand being used by another quad
+		float textureIndex = 0.f;
+
+		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
+		{
+			if (RenderingData.TextureSlots[i] == _TextureID)
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+
+		// If the texture is not already bound, bind it
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (float)RenderingData.TextureSlotIndex;
+
+			if (RenderingData.TextureSlotIndex < MaxTextures) {
+				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = _TextureID;
+				RenderingData.TextureSlotIndex++;
+			}
+			else
+			{
+				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
+			}
+		}
+
+
+		/* BL, BR, TR, TL */
+		const glm::vec2 textureCoords[] = {
+		{(px * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},
+		{((px + 1) * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},
+		{((px + 1) * srcRect.w) / sheetWidth, ((py + 1) * srcRect.h) / sheetHeight},
+		{(px * srcRect.w) / sheetWidth, ((py + 1) * srcRect.h) / sheetHeight}
+		};
+
+		const glm::vec3 positions[] = {
+			{ drawPosX, drawPosY + drawHeight, 0.f},
+			{ drawPosX + drawWidth, drawPosY + drawHeight, 0.f},
+			{ drawPosX + drawWidth, drawPosY, 0.f },
+			{ drawPosX, drawPosY, 0.f}
+		};
+
+		for (int i = 0; i < 4; ++i)
+		{
+			RenderingData.QuadBufferPtr->Position = positions[i];
+			RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+			RenderingData.QuadBufferPtr->TexCoords = textureCoords[i];
+			RenderingData.QuadBufferPtr->TexID = textureIndex;
+			RenderingData.QuadBufferPtr++;
+		}
+		RenderingData.IndexCount += 6;
+	}
 		
+	/*
 		// Get the GL texture ID associated with the given sprite ID
 		GLuint _TextureID = m_GLTextureMap[m_TextureMap[inID]];
 
 		// Determine the source rectangle for the current frame of the spritesheet
-		SDL_Rect _SrcRect = { (width * (currentFrame - startingFrame)), height * (row - 1), width, height };
-
+		//SDL_Rect _SrcRect = { (width * (currentFrame - startingFrame)), height * (row - 1), width, height };
+		SDL_Rect _SrcRect = { (width * currentFrame), 0, width, height };
+		
 		// Get the current camera position
 		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
 
 		// Determine the destination rectangle for the sprite, taking into account the camera position
-		SDL_Rect _DestRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
+		SDL_Rect _DestRect = { (x - (width*frameCount) / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, (width * frameCount), height };
 
 		
 		// Determine the width and height of the sprite in normalized space
-		float drawWidth = _DestRect.w;
-		float drawHeight = _DestRect.h;
-
+		float drawWidth = width * frameCount;
+		float drawHeight = height;
+		
 		// Calculate the normalized X and Y size of the sprite
-		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
-		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
+		drawWidth = MathHelper::MapClampRanged((width * frameCount), 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(height, 0.0f, 640, 0.0f, 2.0f);
 
 		// Determine the normalized X and Y position of the sprite
 		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
@@ -586,9 +612,9 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 			}
 		}
 
-		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex);
-	}
-
+		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex, _SrcRect, frameCount);
+		
+	}*/
 }
 
 /*
@@ -598,7 +624,7 @@ and assigns the same color and texture index to all of them. And it also increme
 It is important to have this in the renderer because it is actually adding the quad to the buffer and specifying its properties.
 Without it, the quad won't be added to the buffer and therefore won't be rendered.
 */
-void Renderer::AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, float drawHeight, float textureIndex) 
+void Renderer::AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, float drawHeight, float textureIndex, SDL_Rect srcRect, int frameCount)
 {
 	// Create an array of vertex positions
 	glm::vec3 vertexPositions[] = {
@@ -616,6 +642,14 @@ void Renderer::AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, 
 		{ 0.f, 1.f }
 	};
 
+
+
+// 	glm::vec2 texCoords[] = {
+// 	{(drawPosX * drawWidth) / drawWidth*frameCount,          (drawPosY * drawHeight) / drawHeight},
+// 	{ ((drawPosX + 1) * drawWidth) / drawWidth * frameCount, (drawPosY * drawHeight) / drawHeight },
+// 	{ ((drawPosX + 1) * drawWidth) / drawWidth * frameCount, ((drawPosY + 1) * drawHeight) / drawHeight },
+// 	{ (drawPosX * drawWidth) / drawWidth * frameCount,       ((drawPosY + 1) * drawHeight) / drawHeight }
+// };
 	for (int i = 0; i < 4; i++) {
 		RenderingData.QuadBufferPtr->Position = vertexPositions[i];
 		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
@@ -639,6 +673,182 @@ void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int
 	SDL_Rect destRect = { x - _cameraPosition.X, y - _cameraPosition.Y, tileSize, tileSize };
 
 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);
+}
+
+
+
+void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
+{
+
+	if (Engine::GetInstance()->UseLegacyRenderer())
+	{
+		/// LEGACY SDL RENDERING 
+		SDL_Rect srcRect = { 0, 0, width, height };
+
+		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition() * lagRatio;
+
+		SDL_Rect destRect = { x - _cameraPosition.X - width / 2, y - _cameraPosition.Y - height / 2, width * xScale, height * yScale };
+		SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inID], &srcRect, &destRect, 0, nullptr, flip);
+	}
+	else
+	{
+
+
+
+		// Get the GL texture ID associated with the given sprite ID
+		GLuint _TextureID = m_GLTextureMap[m_TextureMap[inID]];
+
+
+		const float sheetWidth = width, sheetHeight = height;
+
+		SDL_Rect srcRect = { 0, 0, width, height };
+		
+
+		SDL_Rect destRect = { x  - width / 2, y - height / 2, width * xScale, height * yScale };
+
+
+		if (srcRect.w == 0) {
+			return;
+		}
+		if (srcRect.h == 0) {
+			return;
+		}
+		float px = srcRect.x / srcRect.w;
+		float py = srcRect.y / srcRect.h;
+
+		// Convert scale factor to be sprite size * value
+		float drawWidth = srcRect.w;
+		float drawHeight = srcRect.h;
+
+
+		// Calculate the normalized X and Y size of the sprite
+		drawWidth = MathHelper::MapClampRanged(width, 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(height, 0.0f, 640, 0.0f, 2.0f);
+
+		// Determine the normalized X and Y position of the sprite
+		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
+
+		// If the max number of quads are already being drawn, draw them and start another batch
+		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
+		{
+			EndBatch();
+			Flush();
+			BeginBatch();
+		}
+
+		// Check if the current texture is already boundand being used by another quad
+		float textureIndex = 0.f;
+
+		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
+		{
+			if (RenderingData.TextureSlots[i] == _TextureID)
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+
+		// If the texture is not already bound, bind it
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (float)RenderingData.TextureSlotIndex;
+
+			if (RenderingData.TextureSlotIndex < MaxTextures) {
+				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = _TextureID;
+				RenderingData.TextureSlotIndex++;
+			}
+			else
+			{
+				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
+			}
+		}
+
+
+		/* BL, BR, TR, TL */
+		const glm::vec2 textureCoords[] = {
+		{(px * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},
+		{((px + 1) * srcRect.w) / sheetWidth, (py * srcRect.h) / sheetHeight},
+		{((px + 1) * srcRect.w) / sheetWidth, ((py + 1) * srcRect.h) / sheetHeight},
+		{(px * srcRect.w) / sheetWidth, ((py + 1) * srcRect.h) / sheetHeight}
+		};
+
+		const glm::vec3 positions[] = {
+			{ drawPosX, drawPosY + drawHeight, 0.f},
+			{ drawPosX + drawWidth, drawPosY + drawHeight, 0.f},
+			{ drawPosX + drawWidth, drawPosY, 0.f },
+			{ drawPosX, drawPosY, 0.f}
+		};
+
+		for (int i = 0; i < 4; ++i)
+		{
+			RenderingData.QuadBufferPtr->Position = positions[i];
+			RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+			RenderingData.QuadBufferPtr->TexCoords = textureCoords[i];
+			RenderingData.QuadBufferPtr->TexID = textureIndex;
+			RenderingData.QuadBufferPtr++;
+		}
+		RenderingData.IndexCount += 6;
+	}
+
+		/*
+		/// OPEN GL RENDERING 
+		GLuint textureID = m_GLTextureMap[m_TextureMap[inID]];
+
+		SDL_Rect srcRect = { 0, 0, width, height };
+
+		float fX = srcRect.x / srcRect.w;
+		float fY = srcRect.y / srcRect.h;
+
+		float drawWidth = srcRect.w * xScale;
+		float drawHeight = srcRect.h * yScale;
+
+		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
+		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
+
+
+		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
+		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
+
+
+		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
+		{
+			EndBatch();
+			Flush();
+			BeginBatch();
+		}
+
+		// Check if this texture is already bond and used by other quad
+		float textureIndex = 0.f;
+
+		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
+		{
+			if (RenderingData.TextureSlots[i] == textureID)
+			{
+				textureIndex = (float)i;
+				break;
+			}
+		}
+
+		// If not, bound a new one
+		if (textureIndex == 0.f)
+		{
+			textureIndex = (float)RenderingData.TextureSlotIndex;
+			if (RenderingData.TextureSlotIndex < MaxTextures) {
+				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
+				RenderingData.TextureSlotIndex++;
+			}
+			else {
+				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
+			}
+		}
+
+		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex, srcRect, 1);
+
+		}
+		*/
+	
 }
 
 
