@@ -40,7 +40,7 @@ public:
 
 	void InitOpenGL();
 	void OpenGLLoop();
-
+	void AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, float drawHeight, float textureIndex);
 	static void ShutDown();
 	static void BeginBatch();
 	static void EndBatch();

@@ -493,40 +493,21 @@ void Renderer::Draw(std::string inID, int x, int y, int width, int height, float
 		if (textureIndex == 0.f)
 		{
 			textureIndex = (float)RenderingData.TextureSlotIndex;
-			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
-			RenderingData.TextureSlotIndex++;
+			if (RenderingData.TextureSlotIndex < MaxTextures) {
+				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = textureID;
+				RenderingData.TextureSlotIndex++;
+			}
+			else {
+				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
+			}
 		}
 
-		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 0.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 0.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 1.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.IndexCount += 6;
+		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex);
 
 	}
 }
 
-
+// This function handles the rendering of a sprite using Open GL
 void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
 
@@ -543,28 +524,33 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 	}
 	else
 	{
-		/// OPEN GL RENDERING ///
+		
+		// Get the GL texture ID associated with the given sprite ID
 		GLuint _TextureID = m_GLTextureMap[m_TextureMap[inID]];
 
+		// Determine the source rectangle for the current frame of the spritesheet
 		SDL_Rect _SrcRect = { (width * (currentFrame - startingFrame)), height * (row - 1), width, height };
 
+		// Get the current camera position
 		Vector2 _cameraPosition = Camera::GetInstance()->GetPosition();
 
+		// Determine the destination rectangle for the sprite, taking into account the camera position
 		SDL_Rect _DestRect = { (x - width / 2) - _cameraPosition.X, (y - height / 2) - _cameraPosition.Y, width, height };
 
-		float fX = _DestRect.x / _DestRect.w;
-		float fY = _DestRect.y / _DestRect.h;
-
+		
+		// Determine the width and height of the sprite in normalized space
 		float drawWidth = _DestRect.w;
 		float drawHeight = _DestRect.h;
 
+		// Calculate the normalized X and Y size of the sprite
 		drawWidth = MathHelper::MapClampRanged(drawWidth, 0.0f, 960, 0.0f, 2.0f);
 		drawHeight = MathHelper::MapClampRanged(drawHeight, 0.0f, 640, 0.0f, 2.0f);
 
+		// Determine the normalized X and Y position of the sprite
 		float drawPosX = MathHelper::MapClampRanged(x, 0.0f, 960, -1.0f, 1.0f) - drawWidth / 2;
 		float drawPosY = MathHelper::MapClampRanged(y, 640, 0, -1.0f, 1.0f) - drawHeight / 2;
 
-
+		// If the current index count exceeds the maximum or the number of textures used is greater than 31, end the current batch and start a new one
 		if (RenderingData.IndexCount >= m_MaxIndexCount || RenderingData.TextureSlotIndex > 31)
 		{
 			EndBatch();
@@ -572,7 +558,7 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 			BeginBatch();
 		}
 
-		// Check if this texture is already bond and used by other quad
+		// Check if the current texture is already boundand being used by another quad
 		float textureIndex = 0.f;
 
 		for (uint32_t i = 1; i < RenderingData.TextureSlotIndex; i++)
@@ -585,42 +571,61 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		}
 
 
-		// If not, bound a new one
+		// If the texture is not already bound, bind it
 		if (textureIndex == 0.f)
 		{
 			textureIndex = (float)RenderingData.TextureSlotIndex;
-			RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = _TextureID;
-			RenderingData.TextureSlotIndex++;
+			
+			if (RenderingData.TextureSlotIndex < MaxTextures) {
+				RenderingData.TextureSlots[RenderingData.TextureSlotIndex] = _TextureID;
+				RenderingData.TextureSlotIndex++;
+			}
+			else 
+			{
+				std::cout << "[OPENGL ERROR]: Maximum number of textures reached" << std::endl;
+			}
 		}
 
-
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 0.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 0.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX + drawWidth, drawPosY + drawHeight, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.QuadBufferPtr->Position = { drawPosX, drawPosY + drawHeight, 0.f };
-		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
-		RenderingData.QuadBufferPtr->TexCoords = { 0.f, 1.f };
-		RenderingData.QuadBufferPtr->TexID = textureIndex;
-		RenderingData.QuadBufferPtr++;
-
-		RenderingData.IndexCount += 6;
+		AddQuadToBuffer(drawPosX, drawPosY, drawWidth, drawHeight, textureIndex);
 	}
+
+}
+
+/*
+Add new quad to the buffer.
+It creates 4 vertices for the quad, each with a different position and texture coordinate,
+and assigns the same color and texture index to all of them. And it also increments the index count by 6.
+It is important to have this in the renderer because it is actually adding the quad to the buffer and specifying its properties.
+Without it, the quad won't be added to the buffer and therefore won't be rendered.
+*/
+void Renderer::AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, float drawHeight, float textureIndex) 
+{
+	// Create an array of vertex positions
+	glm::vec3 vertexPositions[] = {
+		{ drawPosX, drawPosY, 0.f },
+		{ drawPosX + drawWidth, drawPosY, 0.f },
+		{ drawPosX + drawWidth, drawPosY + drawHeight, 0.f },
+		{ drawPosX, drawPosY + drawHeight, 0.f }
+	};
+
+	// Create an array of texture coordinates
+	glm::vec2 texCoords[] = {
+		{ 0.f, 0.f },
+		{ 1.f, 0.f },
+		{ 1.f, 1.f },
+		{ 0.f, 1.f }
+	};
+
+	for (int i = 0; i < 4; i++) {
+		RenderingData.QuadBufferPtr->Position = vertexPositions[i];
+		RenderingData.QuadBufferPtr->Color = { 1.f, 1.f, 1.f };
+		RenderingData.QuadBufferPtr->TexCoords = texCoords[i];
+		RenderingData.QuadBufferPtr->TexID = textureIndex;
+		RenderingData.QuadBufferPtr++;
+	}
+
+	// Update index count
+	RenderingData.IndexCount += 6;
 }
 
 
