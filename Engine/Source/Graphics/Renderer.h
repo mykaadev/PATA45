@@ -36,11 +36,8 @@ public:
 
 #pragma region OPENGL
 
-	void GLClear();
-
 	void InitOpenGL();
 	void OpenGLLoop();
-	void AddQuadToBuffer(float drawPosX, float drawPosY, float drawWidth, float drawHeight, float textureIndex, SDL_Rect srcRect, int frameCount);
 	static void ShutDown();
 	static void BeginBatch();
 	static void EndBatch();
@@ -49,9 +46,6 @@ public:
 	std::map<SDL_Texture*, GLuint> m_GLTextureMap;
 	std::map<std::string, std::string> m_TextureMapPath;
 	std::map<std::string, SDL_Texture*> m_TextureMap;
-
-
-	void RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue);
 
 	
 #pragma endregion

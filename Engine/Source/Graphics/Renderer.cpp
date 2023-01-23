@@ -27,7 +27,6 @@
 
 Renderer* Renderer::m_Instance = nullptr;
 
-
 bool Renderer::ParseTextures(std::string source)
 {
 	TiXmlDocument _xml;
@@ -54,12 +53,12 @@ bool Renderer::ParseTextures(std::string source)
 	return true;
 }
 
-
 bool Renderer::Load(std::string inID, std::string inFileName)
 {
+	// Check if the engine is using the legacy renderer
 	if (Engine::GetInstance()->UseLegacyRenderer())
 	{
-		/// LEGACY SDL LOADING
+		// Use SDL to load the BMP file
 		SDL_Surface* surface = SDL_LoadBMP(inFileName.c_str());
 		if (surface == nullptr)
 		{
@@ -67,8 +66,10 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 			return false;
 		}
 
+		// Set the color key for transparent pixels
 		SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format, 255, 0, 255));
 
+		// Create a texture from the surface
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(Engine::GetInstance()->GetRenderer(), surface);
 		if (texture == nullptr)
 		{
@@ -76,78 +77,59 @@ bool Renderer::Load(std::string inID, std::string inFileName)
 			return false;
 		}
 
+		// Store the texture in the texture map
 		m_TextureMap[inID] = texture;
+		m_TextureMapPath[inID] = inFileName;
 
-		m_TextureMapPath[inID] = inFileName.c_str();
 		return true;
 	}
 	else
 	{
-		// Load the texture using SOIL
-		int width = 0, height = 0, numComponents = 0;
-		GLint dataFormat = 0;
-		stbi_set_flip_vertically_on_load(0);
+		// Load the texture
+		int width, height, numComponents;
 		unsigned char* image = stbi_load(inFileName.c_str(), &width, &height, &numComponents, 0);
-
-
-
-		// Determine the format of the image data
- 		if (numComponents == 3)
- 		{
- 			dataFormat = GL_RGB;
- 		}
- 		else
- 		{
-			dataFormat = GL_RGBA;
+		if (!image)
+		{
+			SDL_Log("Failed to load texture: %s", stbi_failure_reason());
+			return false;
 		}
 
-		// Generate a texture and bind it
+		GLenum format;
+		if (numComponents == 3)
+			format = GL_RGB;
+		else if (numComponents == 4)
+			format = GL_RGBA;
+		else
+		{
+			SDL_Log("Unsupported texture format");
+			stbi_image_free(image);
+			return false;
+		}
+
 		GLuint _gltexture;
-		GLCall(glGenTextures(1, &_gltexture));
-		GLCall(glBindTexture(GL_TEXTURE_2D, _gltexture));
-
-		// Set the texture parameters
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-
-
-		// Upload the texture data
-		GLCall(glTexImage2D(GL_TEXTURE_2D, 0, dataFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, image));
-
-				
-		// Free the image data and unbind the texture
-		stbi_image_free(image);
-
-		GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+		glGenTextures(1, &_gltexture);
+		glBindTexture(GL_TEXTURE_2D, _gltexture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, image);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		// Store the texture in the texture map
 		SDL_Texture* sdlTexture = reinterpret_cast<SDL_Texture*>(_gltexture);
-
 		m_TextureMap[inID] = sdlTexture;
 		m_GLTextureMap[m_TextureMap[inID]] = _gltexture;
-
-		m_TextureMapPath[inID] = inFileName.c_str();
+		m_TextureMapPath[inID] = inFileName;
 
 		glEnable(GL_BLEND);
-		//glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		// free the image data
+		stbi_image_free(image);
 
 		return true;
 	}
 }
 
-void Renderer::RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue)
-{
-	for (int i = 0; i < width * height * 3; i += 3)
-	{
-		if (pixels[i] == red && pixels[i + 1] == green && pixels[i + 2] == blue)
-		{
-			pixels[i] = pixels[i + 1] = pixels[i + 2] = 0;
-		}
-	}
-}
 
 #pragma endregion
 
@@ -191,7 +173,6 @@ void GLClearError()
 	while (glGetError() != GL_NO_ERROR);
 }
 
-
 bool GLLogCall(const char* function, const char* file, int line)
 {
 	while (GLenum error = glGetError())
@@ -207,41 +188,44 @@ bool GLLogCall(const char* function, const char* file, int line)
 void Renderer::InitOpenGL()
  {
 
+	// Set the OpenGL version and attributes
 	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
 
+	// Create the OpenGL context
 	SDL_GLContext context = SDL_GL_CreateContext(Engine::GetInstance()->GetWindow());
 
+	// Initialize GLAD
 	if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		SDL_Quit();
 	}
 
+	// Create and compile the vertex shader
+	const char* vertexShaderSource = 
+	R"glsl(
 
-#pragma region VertexShader
+        #version 450 core
+       
+		layout (location = 0) in vec3 position;
+        layout (location = 1) in vec3 color;
+        layout (location = 2) in vec2 textureCoords;
+        layout (location = 3) in float textureIndex;
 
-	const char* vertexShaderSource = R"glsl(
-	#version 450 core
-	
-	layout (location = 0) in vec3 position;
-	layout (location = 1) in vec3 color;
-	layout (location = 2) in vec2 textureCoords;
-	layout (location = 3) in float textureIndex;
+        out vec3 Color;
+        out vec2 TextureCoords;
+        out float TextureIndex;
 
-	out vec3 Color;
-	out vec2 TextureCoords;
-	out float TextureIndex;
-	
-	void main()
-	{
-		Color = color;
-		TextureCoords = textureCoords;
-		TextureIndex = textureIndex;
-		gl_Position = vec4(position, 1.0);
-	}
+        void main()
+        {
+            Color = color;
+			TextureCoords = textureCoords;
+			TextureIndex = textureIndex;
+			gl_Position = vec4(position, 1.0);
+		}
 
 	)glsl";
 
@@ -262,25 +246,25 @@ void Renderer::InitOpenGL()
 		SDL_Quit();
 	}
 
-#pragma endregion
 
-#pragma region FragmentShader
+	const char* fragmentShaderSource = 
+	R"glsl(
 
-	const char* fragmentShaderSource = R"glsl(
-	#version 450 core
+		#version 450 core
 
-	in vec3 Color;
-	in vec2 TextureCoords;
-	in float TextureIndex;
-	uniform sampler2D Textures[32];
+		in vec3 Color;
+		in vec2 TextureCoords;
+		in float TextureIndex;
 
-	out vec4 outColor;
+		uniform sampler2D Textures[32];
 
-	void main()
-	{
-		int index = int(TextureIndex);
-		outColor = texture(Textures[index], TextureCoords);
-	}
+		out vec4 outColor;
+
+		void main()
+		{
+			int index = int(TextureIndex);
+			outColor = texture(Textures[index], TextureCoords);
+		}
 
 	)glsl";
 
@@ -298,9 +282,6 @@ void Renderer::InitOpenGL()
 		SDL_Quit();
 	}
 
-#pragma endregion
-
-#pragma region ShaderProgram
 
 	m_ShaderProgram = glCreateProgram();
 	GLCall(glAttachShader(m_ShaderProgram, vertexShader));
@@ -315,8 +296,6 @@ void Renderer::InitOpenGL()
 	}
 
 	GLCall(glUseProgram(m_ShaderProgram));
-
-#pragma endregion
 
 
 	auto textureUniformLocation = glGetUniformLocation(m_ShaderProgram, "Textures");
@@ -387,11 +366,8 @@ void Renderer::OpenGLLoop()
 //	Renderer::GetInstance()->Draw("Mykaa", 960 / 2 - 100, 640 / 2 - 200, 100, 100, 1, 1);
 
 	Renderer::BeginBatch();
-
-	World::GetInstance()->Render();
-	
+	World::GetInstance()->Render();	
 	Renderer::EndBatch();
-
 	Renderer::Flush();
 	
 	GLCall(glClearColor(0.1f, 0.1f, 0.1f, 1.f));
@@ -399,14 +375,20 @@ void Renderer::OpenGLLoop()
 
 void Renderer::BeginBatch()
 {
+	//Sets the pointer RenderingData.QuadBufferPtr to the beginning of the buffer RenderingData.QuadBuffer that holds the data for the quads that will be rendered
 	RenderingData.QuadBufferPtr = RenderingData.QuadBuffer;
 }
 
 void Renderer::EndBatch()
 {
+	//called to indicate that the batch of quads has been prepared and is ready to be rendered. 
+	//it calculates the size of the data in the buffer by subtracting the address of the end of the buffer from the start of the buffer. 
+	//and sends the data in the buffer to the dynamic VBO.
+	
 	// Calculate the amount of things that need to be rendered. 
 	GLsizeiptr size = (uint8_t*)RenderingData.QuadBufferPtr - (uint8_t*)RenderingData.QuadBuffer;
 	glBindBuffer(GL_ARRAY_BUFFER, RenderingData.Vbo);
+
 	// Send that data do the dynamic VBO
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, RenderingData.QuadBuffer);
 }
@@ -441,7 +423,6 @@ void Renderer::ShutDown()
 // This function handles the rendering of a sprite using Open GL
 void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
 {
-
 	if (Engine::GetInstance()->UseLegacyRenderer())
 	{
 		/// LEGACY SDL RENDERING  ///
@@ -559,8 +540,6 @@ void Renderer::DrawFrame(std::string inID, int x, int y, int width, int height, 
 		}
 		RenderingData.IndexCount += 6;
 	}
-		
-		
 }
 
 
@@ -575,7 +554,6 @@ void Renderer::DrawTile(std::string inTilesetID, int tileSize, int x, int y, int
 
 	SDL_RenderCopyEx(Engine::GetInstance()->GetRenderer(), m_TextureMap[inTilesetID], &srcRect, &destRect, 0, nullptr, flip);
 }
-
 
 
 void Renderer::Draw(std::string inID, int x, int y, int width, int height, float xScale /*= 1.0f*/, float yScale /*= 1.0f*/, float lagRatio /*= 0.0f*/, SDL_RendererFlip flip /*= SDL_FLIP_NONE*/)
