@@ -119,7 +119,6 @@ void World::Update(float deltaTime)
 
 void World::Render()
 {
-
 	for (int i = 0; i < GameObjectLoaded.size(); ++i)
 	{
 		if (GameObjectLoaded[i] != nullptr && !dynamic_cast<GameObject*>(GameObjectLoaded[i])->IsPendingKill())

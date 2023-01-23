@@ -11,6 +11,8 @@
 #include "../../Game/Player.h"
 #include "World.h"
 #include "glad/glad.h"
+#include "FontLoader.h"
+#include "../../Game/Text.h"
 
 Engine* Engine::m_Instance = nullptr;
 
@@ -23,7 +25,7 @@ Engine::Engine()
 
 	m_bIsRunning = false;
 
-	useLegacyRenderer = true;
+	useLegacyRenderer = false;
 }
 
 Engine::~Engine()
@@ -32,6 +34,7 @@ Engine::~Engine()
 	delete m_Window;
 	delete m_Instance;
 }
+
 
 bool Engine::Init()
 {
@@ -89,9 +92,9 @@ bool Engine::Init()
 		Renderer::GetInstance()->InitOpenGL();
 	}
 
+
 	return m_bIsRunning = true;
 }
-
 
 
 
@@ -105,7 +108,9 @@ void Engine::Update()
 {
 	float deltaTime = EngineTime::GetInstance()->GetDeltaTime();
 	World::GetInstance()->Update(deltaTime);
+
 }
+
 
 
 void Engine::Renders()
@@ -124,6 +129,7 @@ void Engine::Renders()
 	{
 		Renderer::GetInstance()->OpenGLLoop();
 		SDL_GL_SwapWindow(m_Window);
+		SDL_RenderClear(m_Renderer);
  	}
 }
 

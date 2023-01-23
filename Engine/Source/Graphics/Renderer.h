@@ -48,6 +48,8 @@ public:
 
 	std::map<SDL_Texture*, GLuint> m_GLTextureMap;
 	std::map<std::string, std::string> m_TextureMapPath;
+	std::map<std::string, SDL_Texture*> m_TextureMap;
+
 
 	void RemoveColor(unsigned char* pixels, int width, int height, unsigned char red, unsigned char green, unsigned char blue);
 
@@ -65,10 +67,8 @@ public:
 	void DrawTile(std::string inTilesetID, int tileSize, int x, int y, int row, int frame, SDL_RendererFlip flip = SDL_FLIP_NONE);
 	void DrawFrame(std::string inID, int x, int y, int width, int height, int row, int currentFrame, int startingFrame, int frameCount, SDL_RendererFlip flip = SDL_FLIP_NONE);
 
-private:
 	Renderer() { };
 	static Renderer* m_Instance;
-	std::map<std::string, SDL_Texture*> m_TextureMap;
 
 
 #pragma endregion

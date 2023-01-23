@@ -11,7 +11,7 @@
 Uint32 Fire(Uint32 interval, void* data)
 {
 
-	if (!World::GetInstance()->GetWorld()->IsLocked()) {
+	if (!World::GetInstance()->GetWorld()->IsLocked() && dynamic_cast<LonerEnemy*>((LonerEnemy*)data)->GetBody() != nullptr) {
 
 		EnemyBullet* bullet = nullptr;
 

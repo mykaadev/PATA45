@@ -151,6 +151,7 @@
     <ClCompile Include="RusherEnemy.cpp" />
     <ClCompile Include="ShieldPowerUp.cpp" />
     <ClCompile Include="StoneAsteroid.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="WeaponPowerUp.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="RusherEnemy.h" />
     <ClInclude Include="ShieldPowerUp.h" />
     <ClInclude Include="StoneAsteroid.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="WeaponPowerUp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

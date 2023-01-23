@@ -46,7 +46,6 @@ void BasePowerUp::SetupBody()
 		_BodyDef.fixedRotation = true;
 		_BodyDef.bullet = true;
 
-
 		m_Body = World::GetInstance()->GetWorld()->CreateBody(&_BodyDef);
 
 		b2PolygonShape _boxShape;
@@ -57,7 +56,6 @@ void BasePowerUp::SetupBody()
 		_fixtureDef.density = 1.0f;
 		_fixtureDef.isSensor = true;
 		_fixtureDef.userData.pointer = (uintptr_t)this;
-
 
 		b2Fixture* _Fixture;
 		_Fixture = m_Body->CreateFixture(&_fixtureDef);

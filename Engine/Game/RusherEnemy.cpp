@@ -39,7 +39,7 @@ void RusherEnemy::Update(float deltaTime)
 
 	SetOriginPoint();
 
-	if (m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
+  	if (m_Body->GetPosition().y > 700.0f && !m_IsDead && m_Body != nullptr)
 	{
 		m_IsDead = true;
 		m_Height = m_Width;
@@ -52,8 +52,6 @@ void RusherEnemy::Update(float deltaTime)
 		m_Animation->SetProperties("ExplosionMob", 1, 0, 11, 150, false);
 		m_Animation->SetCurrentSprite(0);
 		SetSize(64, 64);
-
-
 	}
 
 	if (m_IsDead)

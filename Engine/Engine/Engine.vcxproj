@@ -146,6 +146,7 @@
     <ClInclude Include="..\Source\Components\Camera.h" />
     <ClInclude Include="..\Source\Core\Core.h" />
     <ClInclude Include="..\Source\Core\Engine.h" />
+    <ClInclude Include="..\Source\Core\FontLoader.h" />
     <ClInclude Include="..\Source\Core\InputHandler.h" />
     <ClInclude Include="..\Source\Core\Level.h" />
     <ClInclude Include="..\Source\Core\LevelParser.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="..\Source\Components\Camera.cpp" />
     <ClCompile Include="..\Source\Core\Core.cpp" />
     <ClCompile Include="..\Source\Core\Engine.cpp" />
+    <ClCompile Include="..\Source\Core\FontLoader.cpp" />
     <ClCompile Include="..\Source\Core\InputHandler.cpp" />
     <ClCompile Include="..\Source\Core\Level.cpp" />
     <ClCompile Include="..\Source\Core\LevelParser.cpp" />
